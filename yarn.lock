@@ -218,10 +218,10 @@ process@^0.11.1:
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
   integrity sha1-czIwDoQBYb2j5podHZGn1LwW8YI=
 
-rus-anonym-utils@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/rus-anonym-utils/-/rus-anonym-utils-1.0.8.tgz#d8060bae5b6e3df74dc6249af531a4d06372a356"
-  integrity sha512-KpzyxfzK5yebwAkZyIM23s6HFCeZpkWocLY/TCOzoXSEbiHJ+VLpjOFoV+UKAQ7OOfLivlc0/KwvhqaW3lyHdA==
+rus-anonym-utils@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/rus-anonym-utils/-/rus-anonym-utils-1.0.10.tgz#728562ca1ec0eb3feff9f169172721630c19362e"
+  integrity sha512-g7gE41p/0dXIqNqdlka9hJeijPXcW3Tq8ovEGiU3TLG6ir26qKO8yizeEtz514K5aDYSmVre2QB2HXnVZC7rWg==
 
 sandwich-stream@^2.0.2:
   version "2.0.2"
