@@ -1,0 +1,16 @@
+{
+	"name": "MPT-Assistant",
+	"version": "1.0.0",
+	"main": "index.js",
+	"repository": "https://github.com/RusAnonym/MPT-Assistant",
+	"author": "rus_anonym <alexandrsemin2033@gmail.com>",
+	"license": "MIT",
+	"scripts": {
+		"start": "yarn build && cd out && node main.js",
+		"build": "tsc"
+	},
+	"dependencies": {
+		"rus-anonym-utils": "^1.0.6",
+		"simple-scheduler-task": "^3.0.11"
+	}
+}
