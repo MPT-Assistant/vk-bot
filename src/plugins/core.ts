@@ -126,7 +126,7 @@ async function main() {
 	await utils.logger.console(`Successfull data update`);
 	await utils.logger.console(`Loading commands...`);
 	fs.readdirSync("./commands")
-		.filter((x) => x.endsWith(".js"))
+		.filter((x) => x.endsWith(".ts"))
 		.map((x) => commands.push(require("./commands/" + x)));
 	await utils.logger.console(
 		`Successfull loading commands (${commands.length})`,
