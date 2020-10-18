@@ -1,8 +1,7 @@
 "use strict";
 import { MPTCommand } from "./types";
 import mongoose from "mongoose";
-import VK_IO, { MessageContext } from "vk-io";
-const { VK, Keyboard } = VK_IO;
+import { MessageContext, VK } from "vk-io";
 import moment from "moment";
 import scheduler from "simple-scheduler-task";
 import fs from "fs";
@@ -12,7 +11,6 @@ const questionManager = new QuestionManager();
 import { mpt } from "./mpt";
 
 import models from "./models";
-import schemes from "./schemes";
 import { MessagesSendParams } from "vk-io/lib/api/schemas/params";
 import utils from "rus-anonym-utils";
 const commands: Array<MPTCommand> = [];
