@@ -597,10 +597,10 @@ rimraf@^2.6.1:
   dependencies:
     glob "^7.1.3"
 
-rus-anonym-utils@^1.0.10:
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/rus-anonym-utils/-/rus-anonym-utils-1.0.10.tgz#728562ca1ec0eb3feff9f169172721630c19362e"
-  integrity sha512-g7gE41p/0dXIqNqdlka9hJeijPXcW3Tq8ovEGiU3TLG6ir26qKO8yizeEtz514K5aDYSmVre2QB2HXnVZC7rWg==
+rus-anonym-utils@^1.0.11:
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/rus-anonym-utils/-/rus-anonym-utils-1.0.11.tgz#c9c8554fb5bd9cf7689ac22b4169d3f2cca84d95"
+  integrity sha512-OY+ONfIq1Ipml7H6wBu4AdxWuseWd76IhRbfbEENf/vrHAc958AofVb5iOj+P70i+1jbyfkq6nUFdRrejTgI/Q==
 
 safe-buffer@^5.1.2:
   version "5.2.1"
