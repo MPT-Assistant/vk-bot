@@ -2,7 +2,7 @@ import { MessageContext, Keyboard } from "vk-io";
 import models from "../plugins/models";
 import utils from "rus-anonym-utils";
 
-module.exports = {
+export = {
 	regexp: /^(?:установить группу|уг)\s?([^]+)?/i,
 	process: async (message: MessageContext) => {
 		let group_name: any;
