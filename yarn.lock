@@ -1153,10 +1153,10 @@ simple-get@^3.0.3:
     once "^1.3.1"
     simple-concat "^1.0.0"
 
-simple-scheduler-task@^3.0.11:
-  version "3.0.11"
-  resolved "https://registry.yarnpkg.com/simple-scheduler-task/-/simple-scheduler-task-3.0.11.tgz#d5500c8a81a629a03edc842b6f6c3d9bf51bb741"
-  integrity sha512-0rDmkkxtpKf+OrBrTosps6xfULg3GsgMW6Ln6x8iEZaS/mzUBGsAbqYFY6WzPrDJyV6hwxem+4IZiDBzjlqmxA==
+simple-scheduler-task@^3.0.12:
+  version "3.0.12"
+  resolved "https://registry.yarnpkg.com/simple-scheduler-task/-/simple-scheduler-task-3.0.12.tgz#96f428deef0a5ea8d2df02d2d1dcc8de82722e6a"
+  integrity sha512-d2JKhaa8HY7aBiPv3oWY+mgPdxEEbxxZ9/a2U2caWhLd1Va1fAlftTSnZS8GgqVinr3IzfjmkYPoC52CWLYRGg==
   dependencies:
     "@types/events" "^3.0.0"
     "@types/node" "^14.11.8"

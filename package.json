@@ -24,7 +24,7 @@
 		"request": "^2.88.2",
 		"request-promise": "^4.2.6",
 		"rus-anonym-utils": "^1.0.12",
-		"simple-scheduler-task": "^3.0.11",
+		"simple-scheduler-task": "^3.0.12",
 		"vk-io": "^4.0.3",
 		"vk-io-question": "^2.0.1"
 	}

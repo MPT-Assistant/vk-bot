@@ -125,9 +125,14 @@ async function main() {
 	await mpt.Update_all_replacements();
 	await utils.logger.console(`Successfull data update`);
 	await utils.logger.console(`Loading commands...`);
-	fs.readdirSync("./commands")
-		.filter((x) => x.endsWith(".ts"))
-		.map((x) => commands.push(require("./commands/" + x)));
+	let arrayWithCommands = fs.readdirSync("./commands");
+	for (let i in arrayWithCommands) {
+		let tempScript = require(`./commands/${arrayWithCommands[i]}`);
+		commands.push({
+			regexp: tempScript.regexp,
+			process: tempScript.process,
+		});
+	}
 	await utils.logger.console(
 		`Successfull loading commands (${commands.length})`,
 	);
