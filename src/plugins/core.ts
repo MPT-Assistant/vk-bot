@@ -5,13 +5,11 @@ import VK_IO, { MessageContext } from "vk-io";
 const { VK, Keyboard } = VK_IO;
 import moment from "moment";
 import scheduler from "simple-scheduler-task";
-import temp_requester from "request-promise";
-import parser from "cheerio";
 import fs from "fs";
-import os from "os";
 moment.locale(`ru`);
 import { QuestionManager } from "vk-io-question";
 const questionManager = new QuestionManager();
+import { mpt } from "./mpt";
 
 import models from "./models";
 import schemes from "./schemes";
@@ -115,3 +113,38 @@ const internal = {
 		return data;
 	},
 };
+
+async function main() {
+	await utils.logger.console(`Connect to database...`);
+	await mongoose.connect("mongodb://194.32.248.158:27017/mpt_bot", {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+	});
+	await utils.logger.console(`Successfull connection to database`);
+	await utils.logger.console(`Updating data...`);
+	await mpt.Update_all_shedule();
+	await mpt.Update_all_replacements();
+	await utils.logger.console(`Successfull data update`);
+	await utils.logger.console(`Loading commands...`);
+	fs.readdirSync("./commands")
+		.filter((x) => x.endsWith(".js"))
+		.map((x) => commands.push(require("./commands/" + x)));
+	await utils.logger.console(
+		`Successfull loading commands (${commands.length})`,
+	);
+	await utils.logger.console(`Connect to VK LongPoll...`);
+	await vk.updates.startPolling();
+	await utils.logger.console(`Successfull connection to VK LongPoll`);
+	await utils.logger.console(`Beginning task scheduling...`);
+	await scheduler.tasks.add({
+		isInterval: true,
+		intervalTimer: 5 * 60 * 1000,
+		code: async function () {
+			await mpt.Update_all_shedule();
+			await mpt.Update_all_replacements();
+		},
+	});
+	await utils.logger.console(`Tasks are planned`);
+	await utils.logger.console(`Script start`);
+}
+export { main };
