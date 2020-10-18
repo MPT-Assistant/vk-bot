@@ -20,7 +20,7 @@ export = {
 				message.user.data.unical_group_id === 0) ||
 			(message.user.data.unical_group_id === 0 && !message.isChat)
 		) {
-			return await message.send_message(
+			return await message.sendMessage(
 				`Вы не установили свою группу. Для установки своей группы введите команду: "Установить группу [Название группы]", либо же для установки стандартной группы для чата: "regchat [Название группы].`,
 			);
 		}
@@ -138,7 +138,7 @@ export = {
 				let temp_date = new Date(`${data[2]}-${data[1]}-${data[0]}T15:00:00`);
 				selected_date = temp_date.getTime();
 			} catch (error) {
-				return await message.send_message(`неверная дата.`);
+				return await message.sendMessage(`неверная дата.`);
 			}
 		} else {
 			for (let i in array_with_days) {
@@ -159,7 +159,7 @@ export = {
 		}
 
 		if (!selected_date) {
-			return await message.send_message(`неверная дата.`);
+			return await message.sendMessage(`неверная дата.`);
 		}
 
 		let keyboard_data = [
@@ -235,7 +235,7 @@ export = {
 		];
 
 		if (new Date(selected_date).getDay() === 0) {
-			return await message.send_message(
+			return await message.sendMessage(
 				`${await utils.time.getDateByMS(selected_date)} воскресенье.`,
 				{ keyboard: Keyboard.keyboard(keyboard_data).inline() },
 			);
@@ -408,7 +408,7 @@ export = {
 			return days[date.getDay()];
 		}
 
-		return message.send_message(
+		return message.sendMessage(
 			`расписание на ${await utils.time.getDateByMS(selected_date)}:
 Группа: ${group_data.name}
 День: ${getWeekDay(new Date(selected_date))}

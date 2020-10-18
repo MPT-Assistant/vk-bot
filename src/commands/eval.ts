@@ -6,7 +6,7 @@ export = {
 			return;
 		}
 		try {
-			const v = await eval(message.args[1]);
+			const v: string | number | JSON = await eval(message.args[1]);
 			if (typeof v === "string") {
 				return await message.send(`Результат: ${v}`);
 			} else if (typeof v === "number") {

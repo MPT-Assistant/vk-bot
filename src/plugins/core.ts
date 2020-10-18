@@ -41,7 +41,7 @@ vk.updates.use(async (message: MessageContext, next) => {
 	}
 	if (!message.text) return;
 	if (message.user.ban === true) return;
-	message.send_message = async (text: string, params: MessagesSendParams) => {
+	message.sendMessage = async (text: string, params: MessagesSendParams) => {
 		try {
 			let params_for_send = await Object.assign(
 				{ disable_mentions: true },

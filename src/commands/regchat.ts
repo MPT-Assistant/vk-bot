@@ -8,13 +8,13 @@ export = {
 	regexp: /^(?:regchat)\s?([^]+)?/i,
 	process: async (message: MessageContext) => {
 		if (!message.isChat) {
-			return message.send_message(`доступно только в беседах`);
+			return message.sendMessage(`доступно только в беседах`);
 		}
 		let group_name: any;
 		if (!message.args[1]) {
 			let answer = await message.question(`Введите Вашу группу:`);
 			if (!answer.text) {
-				return await message.send_message(`неверное название группы.`);
+				return await message.sendMessage(`неверное название группы.`);
 			}
 			group_name = answer.text;
 		} else {
@@ -80,13 +80,13 @@ export = {
 			for (let i = 0; i < 3; i++) {
 				text += `\n${i + 1}. ${diff[i].group_name}`;
 			}
-			return await message.send_message(
+			return await message.sendMessage(
 				`группы ${group_name} не найдено, попробуйте ещё раз.${text}`,
 				{ keyboard: keyboard_data },
 			);
 		}
 		message.chat.unical_group_id = group_data.uid;
-		return await message.send_message(
+		return await message.sendMessage(
 			`Вы привязали беседу к группе ${group_data.name}.\n(${group_data.specialty})`,
 		);
 	},

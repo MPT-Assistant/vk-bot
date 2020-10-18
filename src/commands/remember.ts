@@ -17,7 +17,7 @@ export = {
 			!message.replyMessage &&
 			message.forwards.length !== 1
 		) {
-			return message.send_message(
+			return message.sendMessage(
 				`отправьте ссылку на человека или перешлите сообщение`,
 			);
 		}
@@ -34,12 +34,12 @@ export = {
 				});
 				user = data.id;
 			} catch (error) {
-				return message.send_message(`отправьте валидную ссылку на человека.`);
+				return message.sendMessage(`отправьте валидную ссылку на человека.`);
 			}
 		}
 
 		if (user < 0) {
-			return message.send_message(`отправьте валидную ссылку на человека.`);
+			return message.sendMessage(`отправьте валидную ссылку на человека.`);
 		}
 
 		message.send(
