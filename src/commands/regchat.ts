@@ -1,13 +1,13 @@
-import { MessageContext, Keyboard } from "vk-io";
-
+import { Keyboard } from "vk-io";
+import { MPTMessage } from "../plugins/types";
 import utils from "rus-anonym-utils";
 
 import models from "../plugins/models";
 
 export = {
 	regexp: /^(?:regchat)\s?([^]+)?/i,
-	process: async (message: MessageContext) => {
-		if (!message.isChat) {
+	process: async (message: MPTMessage) => {
+		if (!message.chat) {
 			return message.sendMessage(`доступно только в беседах`);
 		}
 		let group_name: any;

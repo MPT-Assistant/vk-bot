@@ -1,8 +1,8 @@
+import { MPTMessage } from "../plugins/types";
 import { resolveResource } from "vk-io";
 import { createCanvas, loadImage } from "canvas";
 import { registerFont } from "canvas";
 import { vk } from "../plugins/core";
-import { MessageContext } from "vk-io";
 import utils from "rus-anonym-utils";
 
 process.env.FONTCONFIG_PATH = "./DB/templates/fonts";
@@ -11,7 +11,7 @@ registerFont(`./DB/templates/fonts/Roboto-Regular.ttf`, { family: `Roboto` });
 
 export = {
 	regexp: /^(?:помянем)\s?([^]+)?/i,
-	process: async (message: MessageContext) => {
+	process: async (message: MPTMessage) => {
 		if (
 			!message.args[1] &&
 			!message.replyMessage &&
@@ -50,7 +50,7 @@ export = {
 			fields: ["photo_max_orig", "bdate", "screen_name"],
 			name_case: "nom",
 		});
-		async function callback(data: any, message: MessageContext) {
+		async function callback(data: any, message: MPTMessage) {
 			let send_data = data;
 
 			function parse_date(date: any) {

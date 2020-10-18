@@ -1,7 +1,7 @@
-import { MessageContext } from "vk-io";
+import { MPTMessage } from "../plugins/types";
 export = {
 	regexp: /^(?:zz)\s([^]+)$/i,
-	process: async (message: MessageContext) => {
+	process: async (message: MPTMessage) => {
 		if (message.senderId !== 266982306) {
 			return;
 		}

@@ -1,10 +1,11 @@
-import { MessageContext, Keyboard } from "vk-io";
+import { Keyboard } from "vk-io";
+import { MPTMessage } from "../plugins/types";
 import models from "../plugins/models";
 import utils from "rus-anonym-utils";
 
 export = {
 	regexp: /^(?:установить группу|уг)\s?([^]+)?/i,
-	process: async (message: MessageContext) => {
+	process: async (message: MPTMessage) => {
 		let group_name: any;
 		if (!message.args[1]) {
 			let answer = await message.question(`Введите Вашу группу:`);

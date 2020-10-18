@@ -1,14 +1,14 @@
 import utils from "rus-anonym-utils";
-import { MessageContext } from "vk-io";
+import { MPTMessage } from "../plugins/types";
 import { Keyboard } from "vk-io";
 
 import models from "../plugins/models";
 
 export = {
 	regexp: /^(?:замены)\s?([^]+)?/i,
-	process: async (message: MessageContext) => {
+	process: async (message: MPTMessage) => {
 		if (
-			(message.isChat &&
+			(message.chat &&
 				message.chat.unical_group_id === 0 &&
 				message.user.data.unical_group_id === 0) ||
 			(message.user.data.unical_group_id === 0 && !message.isChat)
@@ -18,7 +18,7 @@ export = {
 			);
 		}
 		let group_data: any;
-		if (message.user.data.unical_group_id === 0) {
+		if (message.user.data.unical_group_id === 0 && message.chat) {
 			group_data = await models.utilityGroup.findOne({
 				uid: message.chat.unical_group_id,
 			});
