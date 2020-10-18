@@ -27,7 +27,7 @@ const config: {
 const vk = new VK({
 	token: config.token,
 	apiMode: "parallel",
-	apiVersion: "5.124",
+	apiVersion: "5.130",
 	pollingGroupId: config.groupID,
 });
 
