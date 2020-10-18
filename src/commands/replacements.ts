@@ -19,11 +19,11 @@ export = {
 		}
 		let group_data: any;
 		if (message.user.data.unical_group_id === 0) {
-			group_data = await models.utility_group.findOne({
+			group_data = await models.utilityGroup.findOne({
 				uid: message.chat.unical_group_id,
 			});
 		} else {
-			group_data = await models.utility_group.findOne({
+			group_data = await models.utilityGroup.findOne({
 				uid: message.user.data.unical_group_id,
 			});
 		}

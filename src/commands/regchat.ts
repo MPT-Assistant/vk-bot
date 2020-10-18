@@ -20,7 +20,7 @@ export = {
 		} else {
 			group_name = message.args[1];
 		}
-		let all_groups: any = await models.utility_group.find(
+		let all_groups: any = await models.utilityGroup.find(
 			{},
 			{ name: 1, uid: 1, specialty: 1 },
 		);

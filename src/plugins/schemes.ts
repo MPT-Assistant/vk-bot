@@ -1,8 +1,7 @@
 "use strict";
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
+import mongoose, { Schema } from "mongoose";
 
-const user = new Schema({
+const user: Schema = new Schema({
 	id: Number,
 	vk_id: Number,
 	ban: Boolean,
@@ -13,19 +12,19 @@ const user = new Schema({
 	},
 });
 
-const chat = new Schema({
+const chat: Schema = new Schema({
 	id: Number,
 	unical_group_id: Number,
 	inform: Boolean,
 });
 
-const lesson = new Schema({
+const lesson: Schema = new Schema({
 	num: Number,
 	name: [String],
 	teacher: [String],
 });
 
-const replacement = new Schema({
+const replacement: Schema = new Schema({
 	date: String,
 	unical_group_id: Number,
 	specialty_id: Number,
@@ -39,26 +38,26 @@ const replacement = new Schema({
 	new_lesson_teacher: String,
 });
 
-const day = new Schema({
+const day: Schema = new Schema({
 	num: Number,
 	place: String,
 	lessons: [lesson],
 });
 
-const group = new Schema({
+const group: Schema = new Schema({
 	id: Number,
 	uid: Number,
 	name: String,
 	weekly_schedule: [day],
 });
 
-const specialty = new Schema({
+const specialty: Schema = new Schema({
 	id: Number,
 	name: String,
 	groups: [group],
 });
 
-const utility_group = new Schema({
+const utilityGroup: Schema = new Schema({
 	uid: Number,
 	name: String,
 	id: Number,
@@ -72,5 +71,5 @@ export = {
 	group,
 	specialty,
 	replacement,
-	utility_group,
+	utilityGroup,
 };

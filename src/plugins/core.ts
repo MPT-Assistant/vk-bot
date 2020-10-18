@@ -1,7 +1,8 @@
 "use strict";
 import { MPTCommand } from "./types";
 import mongoose from "mongoose";
-import { MessageContext, VK } from "vk-io";
+import { VK } from "vk-io";
+import { MPTMessage } from "./types";
 import moment from "moment";
 import scheduler from "simple-scheduler-task";
 import fs from "fs";
@@ -29,15 +30,15 @@ const vk = new VK({
 });
 
 vk.updates.use(questionManager.middleware);
-vk.updates.use(async (message: MessageContext, next) => {
+vk.updates.use(async (message: MPTMessage) => {
 	if (message.type !== `message` || message.senderId <= 0) return;
-	message.user = await internal.VK_reg_user_in_bot(message.senderId);
+	message.user = await internal.regUserInBot(message.senderId);
 	if (message.messagePayload && message.messagePayload) {
 		let payload_data = message.messagePayload;
 		message.text = payload_data.command;
 	}
 	if (message.isChat && message.chatId) {
-		message.chat = await internal.VK_reg_chat_in_bot(message.chatId);
+		message.chat = await internal.regChatInBot(message.chatId);
 	}
 	if (!message.text) return;
 	if (message.user.ban === true) return;
@@ -83,7 +84,7 @@ vk.updates.use(async (message: MessageContext, next) => {
 });
 
 const internal = {
-	VK_reg_user_in_bot: async (vk_id: any) => {
+	regUserInBot: async (vk_id: any) => {
 		let data = await models.user.findOne({ vk_id: vk_id });
 		if (!data) {
 			let [user] = await vk.api.users.get({ user_ids: vk_id });
@@ -100,7 +101,7 @@ const internal = {
 		}
 		return data;
 	},
-	VK_reg_chat_in_bot: async (chat_id: number) => {
+	regChatInBot: async (chat_id: number) => {
 		let data = await models.chat.findOne({ id: chat_id });
 		if (!data) {
 			data = await new models.chat({
