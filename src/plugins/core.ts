@@ -33,7 +33,7 @@ vk.updates.use(async (message: MessageContext, next) => {
 	if (message.type !== `message` || message.senderId <= 0) return;
 	message.user = await internal.VK_reg_user_in_bot(message.senderId);
 	if (message.messagePayload && message.messagePayload) {
-		let payload_data = await JSON.parse(message.messagePayload);
+		let payload_data = message.messagePayload;
 		message.text = payload_data.command;
 	}
 	if (message.isChat && message.chatId) {
@@ -127,7 +127,7 @@ async function main() {
 	await utils.logger.console(`Loading commands...`);
 	let arrayWithCommands = fs.readdirSync("./commands");
 	for (let i in arrayWithCommands) {
-		let tempScript = require(`./commands/${arrayWithCommands[i]}`);
+		let tempScript = require(`../commands/${arrayWithCommands[i]}`);
 		commands.push({
 			regexp: tempScript.regexp,
 			process: tempScript.process,

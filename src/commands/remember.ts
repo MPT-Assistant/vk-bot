@@ -5,9 +5,9 @@ import { vk } from "../plugins/core";
 import { MessageContext } from "vk-io";
 import utils from "rus-anonym-utils";
 
-process.env.FONTCONFIG_PATH = "./templates/fonts";
+process.env.FONTCONFIG_PATH = "./DB/templates/fonts";
 
-registerFont(`./templates/fonts/Roboto-Regular.ttf`, { family: `Roboto` });
+registerFont(`./DB/templates/fonts/Roboto-Regular.ttf`, { family: `Roboto` });
 
 export = {
 	regexp: /^(?:помянем)\s?([^]+)?/i,
@@ -132,7 +132,7 @@ export = {
 			});
 		}
 		return await callback(
-			require(`fs`).readFileSync(`./templates/photos/ledger.png`),
+			require(`fs`).readFileSync(`./DB/templates/photos/ledger.png`),
 			message,
 		);
 	},
