@@ -20,6 +20,7 @@ const commands: Array<MPTCommand> = [];
 const config: {
 	token: string;
 	groupID: number;
+	mongo: string;
 } = require(`../DB/config.json`);
 
 const vk = new VK({
@@ -116,7 +117,7 @@ const internal = {
 
 async function main() {
 	await utils.logger.console(`Connect to database...`);
-	await mongoose.connect("mongodb://194.32.248.158:27017/mpt_bot", {
+	await mongoose.connect(config.mongo, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 	});

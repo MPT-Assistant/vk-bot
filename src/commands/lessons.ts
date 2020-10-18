@@ -5,6 +5,12 @@ import { Keyboard } from "vk-io";
 import models from "../plugins/models";
 import { mpt } from "../plugins/mpt";
 
+declare global {
+	interface Date {
+		getWeek: () => number;
+	}
+}
+
 export = {
 	regexp: /^(?:расписание|расписание|рп|какие пары|какие пары|пары|уроки|lessons|pairs|pair)\s?([^]+)?/i,
 	process: async (message: MessageContext) => {
@@ -234,6 +240,7 @@ export = {
 				{ keyboard: Keyboard.keyboard(keyboard_data).inline() },
 			);
 		}
+
 		Date.prototype.getWeek = function (): any {
 			let date = new Date(this.getTime());
 			date.setHours(0, 0, 0, 0);
