@@ -147,4 +147,4 @@ async function main() {
 	await utils.logger.console(`Tasks are planned`);
 	await utils.logger.console(`Script start`);
 }
-export { main };
+export { main, vk };
