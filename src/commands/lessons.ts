@@ -302,7 +302,7 @@ export = {
 			}
 		}
 
-		let numerator = await !Number.isInteger(
+		let numerator = await Number.isInteger(
 			new Date(selected_date).getWeek() / 2,
 		);
 
