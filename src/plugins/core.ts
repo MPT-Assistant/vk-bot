@@ -1,7 +1,7 @@
 "use strict";
 import { MPTCommand } from "./types";
 import mongoose from "mongoose";
-import { VK } from "vk-io";
+import { VK, MessageContext, IMessageContextSendOptions } from "vk-io";
 import { MPTMessage } from "./types";
 import moment from "moment";
 import scheduler from "simple-scheduler-task";
@@ -12,7 +12,6 @@ const questionManager = new QuestionManager();
 import { mpt } from "./mpt";
 
 import models from "./models";
-import { MessagesSendParams } from "vk-io/lib/api/schemas/params";
 import utils from "rus-anonym-utils";
 const commands: Array<MPTCommand> = [];
 
@@ -42,19 +41,19 @@ vk.updates.use(async (message: MPTMessage) => {
 	}
 	if (!message.text) return;
 	if (message.user.ban === true) return;
-	message.sendMessage = async (text: string, params: MessagesSendParams) => {
+	message.sendMessage = async (
+		text: string | IMessageContextSendOptions,
+		params?: IMessageContextSendOptions | undefined,
+	): Promise<MessageContext<Record<string, any>>> => {
 		try {
-			let params_for_send = await Object.assign(
-				{ disable_mentions: true },
-				params,
-			);
+			let params_for_send = Object.assign({ disable_mentions: true }, params);
 			return await message.send(
 				`@id${message.user.vk_id} (${message.user.nickname}), ${text}`,
 				params_for_send,
 			);
 		} catch (error) {
 			console.log(error);
-			return;
+			return error;
 		}
 	};
 	message.text = await message.text

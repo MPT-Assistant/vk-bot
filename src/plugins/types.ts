@@ -1,12 +1,15 @@
-import { Document, MongooseDocument, DocumentQuery, Model } from "mongoose";
-import { MessageContext } from "vk-io";
+import { Document } from "mongoose";
+import { MessageContext, IMessageContextSendOptions } from "vk-io";
 export interface MPTCommand {
 	regexp: RegExp;
 	process: Function;
 }
 
 export interface MPTMessage extends MessageContext {
-	sendMessage: Function;
+	sendMessage(
+		text: string | IMessageContextSendOptions,
+		params?: IMessageContextSendOptions | undefined,
+	): Promise<MessageContext<Record<string, any>>>;
 	user: UserInterface;
 	chat?: ChatInterface;
 }
