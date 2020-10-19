@@ -79,7 +79,7 @@ vk.updates.use(async (message: MPTMessage) => {
 		}
 		return;
 	} catch (err) {
-		await message.send_message(`ошиб очка.`);
+		await message.sendMessage(`ошиб очка.`);
 		await message.send({
 			sticker_id: await utils.array.random([18464, 16588, 18466, 18484, 14088]),
 		});
