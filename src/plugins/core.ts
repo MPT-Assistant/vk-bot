@@ -60,8 +60,14 @@ vk.updates.use(async (message: MPTMessage) => {
 		.replace(/(\[club188434642\|[@a-z_A-ZА-Яа-я0-9]+\])/gi, ``)
 		.replace(/(^\s*)|(\s*)$/g, "");
 
-	let command = await commands.find((x) => x.regexp.test(message.text || ""));
+	let command = commands.find((x) => x.regexp.test(message.text || ""));
 	if (!command) {
+		if (!message.isChat) {
+			return await message.send(
+				`Такой команды не существует, список команд можно посмотреть тут:`,
+				{ attachment: `article-188434642_189203_12d88f37969ae1c641` },
+			);
+		}
 		return;
 	}
 	message.args = await message.text.match(command.regexp);
