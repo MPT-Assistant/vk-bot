@@ -1,3 +1,4 @@
+import { Keyboard } from "vk-io";
 import models from "../plugins/models";
 import { MPTMessage } from "../plugins/types";
 export = {
@@ -20,16 +21,18 @@ export = {
 					payload: {
 						command: `изменения ${groupData.inform ? "выкл" : "вкл"}`,
 					},
-					color: groupdData.inform
+					color: groupData.inform
 						? Keyboard.POSITIVE_COLOR
 						: Keyboard.NEGATIVE_COLOR,
 				}),
 			],
 		];
-		return message.sendMessage(`информация о чате:
+		return message.sendMessage(
+			`информация о чате:
 ID: ${message.chat.id}
 Привязан к группе: ${groupData.name}
-Информирование о заменах: ${groupData.inform ? `Включено` : `Отключено`}`);
+Информирование о заменах: ${groupData.inform ? `Включено` : `Отключено`}`,
+			{ keyboard: Keyboard.keyboard(keyboardData).inline() },
+		);
 	},
-	keyboard: keyboardData,
 };
