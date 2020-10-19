@@ -12,7 +12,7 @@ export = {
 			message.args[1].toLowerCase() === `включить`
 		) {
 			message.chat.inform = true;
-			return await message.send_message(
+			return await message.sendMessage(
 				`рассылка изменений в расписании группы включена!`,
 			);
 		}
@@ -22,7 +22,7 @@ export = {
 			message.args[1].toLowerCase() === `выключить`
 		) {
 			message.chat.inform = false;
-			return await message.send_message(
+			return await message.sendMessage(
 				`рассылка изменений в расписании группы отключена!`,
 			);
 		}

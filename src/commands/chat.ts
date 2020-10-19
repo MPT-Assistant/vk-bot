@@ -16,14 +16,16 @@ export = {
 			[
 				Keyboard.textButton({
 					label: `${
-						groupData.inform ? "Отключить" : "Включить"
+						message.chat.inform === true ? "Отключить" : "Включить"
 					} рассылку изменений`,
 					payload: {
-						command: `изменения ${groupData.inform ? "выкл" : "вкл"}`,
+						command: `изменения ${
+							message.chat.inform === true ? "выкл" : "вкл"
+						}`,
 					},
-					color: groupData.inform
-						? Keyboard.POSITIVE_COLOR
-						: Keyboard.NEGATIVE_COLOR,
+					color: message.chat.inform
+						? Keyboard.NEGATIVE_COLOR
+						: Keyboard.POSITIVE_COLOR,
 				}),
 			],
 		];
@@ -31,7 +33,9 @@ export = {
 			`информация о чате:
 ID: ${message.chat.id}
 Привязан к группе: ${groupData.name}
-Информирование о заменах: ${groupData.inform ? `Включено` : `Отключено`}`,
+Информирование о заменах: ${
+				message.chat.inform === true ? `Включено` : `Отключено`
+			}`,
 			{ keyboard: Keyboard.keyboard(keyboardData).inline() },
 		);
 	},
