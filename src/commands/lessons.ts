@@ -272,7 +272,7 @@ export = {
 			(x: any) => x.num === new Date(selected_date).getDay(),
 		);
 
-		let timetable: any = await mpt.parse_timetable();
+		let timetable: any = await mpt.parseTimetable();
 		if (
 			timetable.find(
 				(x: any) =>

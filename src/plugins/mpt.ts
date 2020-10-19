@@ -1,9 +1,11 @@
+import { Keyboard } from "vk-io";
 import moment from "moment";
 import "moment-precise-range-plugin";
 import parser from "cheerio";
 import temp_requester from "request-promise";
 import utils from "rus-anonym-utils";
 import models from "./models";
+import { vk } from "./core";
 
 const timetable = require(`../DB/timetable.json`);
 
@@ -333,7 +335,6 @@ const mpt = {
 						);
 					}
 					for (let c in temp_change.replacements) {
-						let lesson_num = temp_change.replacements[c].lesson_num;
 						let lesson_name = temp_change.replacements[c].lesson_name.replace(
 							/(^\s*)|(\s*)$/g,
 							"",
@@ -404,7 +405,19 @@ const mpt = {
 		for (let i in new_replacement_data) {
 			for (let j in new_replacement_data[i].groups) {
 				for (let c in new_replacement_data[i].groups[j].replacements) {
-					let parsed_data: any = {
+					let parsed_data: {
+						date: Date;
+						unical_group_id: number;
+						specialty_id: number;
+						group_id: number;
+						detected: number;
+						add_to_site: number;
+						lesson_num: number;
+						old_lesson_name: string;
+						old_lesson_teacher: string;
+						new_lesson_name: string;
+						new_lesson_teacher: string;
+					} = {
 						date: new_replacement_data[i].day,
 						unical_group_id: new_replacement_data[i].groups[j].unical_group_id,
 						specialty_id: new_replacement_data[i].groups[j].flow_id,
@@ -426,6 +439,7 @@ const mpt = {
 							new_replacement_data[i].groups[j].replacements[c]
 								.new_teacher_name,
 					};
+
 					if (
 						!(await models.replacement.exists({
 							date: parsed_data.date,
@@ -435,17 +449,116 @@ const mpt = {
 						}))
 					) {
 						await new models.replacement(parsed_data).save();
+						let chatsWithThisGroups = await models.chat.find({
+							unical_group_id: parsed_data.unical_group_id,
+						});
+						for (let chat of chatsWithThisGroups) {
+							if (chat.inform === true) {
+								try {
+									let keyboardData = [
+										[
+											Keyboard.textButton({
+												label: "ПН",
+												payload: {
+													command: `Замены понедельник`,
+												},
+												color: Keyboard.SECONDARY_COLOR,
+											}),
+											Keyboard.textButton({
+												label: "ВТ",
+												payload: {
+													command: `Замены вторник`,
+												},
+												color: Keyboard.SECONDARY_COLOR,
+											}),
+											Keyboard.textButton({
+												label: "СР",
+												payload: {
+													command: `Замены Среда`,
+												},
+												color: Keyboard.SECONDARY_COLOR,
+											}),
+										],
+										[
+											Keyboard.textButton({
+												label: "ЧТ",
+												payload: {
+													command: `Замены четверг`,
+												},
+												color: Keyboard.SECONDARY_COLOR,
+											}),
+											Keyboard.textButton({
+												label: "ПТ",
+												payload: {
+													command: `Замены пятница`,
+												},
+												color: Keyboard.SECONDARY_COLOR,
+											}),
+											Keyboard.textButton({
+												label: "СБ",
+												payload: {
+													command: `Замены суббота`,
+												},
+												color: Keyboard.SECONDARY_COLOR,
+											}),
+										],
+										[
+											Keyboard.textButton({
+												label: "Вчера",
+												payload: {
+													command: `Замены вчера`,
+												},
+												color: Keyboard.NEGATIVE_COLOR,
+											}),
+											Keyboard.textButton({
+												label: "Сегодня",
+												payload: {
+													command: `Замены`,
+												},
+												color: Keyboard.SECONDARY_COLOR,
+											}),
+											Keyboard.textButton({
+												label: "Завтра",
+												payload: {
+													command: `Замены завтра`,
+												},
+												color: Keyboard.POSITIVE_COLOR,
+											}),
+										],
+									];
+									await vk.api.messages.send({
+										chat_id: chat.id,
+										message: `Обнаружена новая замена на ${await utils.time.getDateByMS(
+											Number(parsed_data.date),
+										)}\nПара: ${parsed_data.lesson_num}\nЗаменяемая пара: ${
+											parsed_data.old_lesson_name
+										}\nПреподаватель: ${
+											parsed_data.old_lesson_teacher
+										}\nНовая пара: ${
+											parsed_data.new_lesson_name
+										}\nПреподаватель на новой паре: ${
+											parsed_data.new_lesson_teacher
+										}\nДобавлена на сайт: ${await utils.time.getDateTimeByMS(
+											parsed_data.add_to_site,
+										)}\nОбнаружена ботом: ${await utils.time.getDateTimeByMS(
+											parsed_data.detected,
+										)}\n\n`,
+										keyboard: Keyboard.keyboard(keyboardData).inline(),
+									});
+								} catch (error) {}
+							}
+						}
 					}
 				}
 			}
 		}
+
 		return true;
 	},
-	parse_timetable: async () => {
+	parseTimetable: async () => {
 		let output = [];
 		let lesson_num = 0;
 		let break_num = 0;
-		let check_last_date = new Date();
 		for (let i in timetable) {
 			let start_lesson_date = new Date();
 			let end_lesson_date = new Date();
