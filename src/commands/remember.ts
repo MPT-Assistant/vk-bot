@@ -126,7 +126,11 @@ export = {
 					631,
 				);
 				ctx.fillText(`@${user_info.screen_name}`, 651, 691);
-				ctx.fillText(`${parse_bdate} - ${utils.time.currentDate()}`, 651, 750);
+				ctx.fillText(
+					`${parse_bdate} - ${await utils.time.currentDate()}`,
+					651,
+					750,
+				);
 				let new_send_data = canvas.toBuffer();
 				return await message.sendPhotos({ value: new_send_data });
 			});
