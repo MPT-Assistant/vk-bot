@@ -177,11 +177,11 @@ const mpt = {
 						group_in_database.weekly_schedule = current_group.weekly_schedule;
 					}
 
-					let check_utility_group: any = await models.utility_group.findOne({
+					let check_utility_group: any = await models.utilityGroup.findOne({
 						uid: current_group.uid,
 					});
 					if (!check_utility_group) {
-						check_utility_group = await new models.utility_group({
+						check_utility_group = await new models.utilityGroup({
 							uid: current_group.uid,
 							name: current_group.name,
 							id: current_group.id,
@@ -311,7 +311,7 @@ const mpt = {
 							temp_change.group[g].toLowerCase().replace(/(^\s*)|(\s*)$/g, ""),
 					);
 					if (!new_temp_current_Date_replacement_data) {
-						let group_data: any = await models.utility_group.findOne({
+						let group_data: any = await models.utilityGroup.findOne({
 							name: new RegExp(
 								temp_change.group[g]
 									.toLowerCase()
