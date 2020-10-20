@@ -1,4 +1,4 @@
-import { Keyboard } from "vk-io";
+import { getRandomId, Keyboard } from "vk-io";
 import moment from "moment";
 import "moment-precise-range-plugin";
 import parser from "cheerio";
@@ -449,104 +449,32 @@ const mpt = {
 						}))
 					) {
 						await new models.replacement(parsed_data).save();
-						let chatsWithThisGroups = await models.chat.find({
+						let chatsWithInformThisGroups = await models.chat.find({
 							unical_group_id: parsed_data.unical_group_id,
+							inform: true,
 						});
-						for (let chat of chatsWithThisGroups) {
-							if (chat.inform === true) {
-								try {
-									let keyboardData = [
-										[
-											Keyboard.textButton({
-												label: "ПН",
-												payload: {
-													command: `Замены понедельник`,
-												},
-												color: Keyboard.SECONDARY_COLOR,
-											}),
-											Keyboard.textButton({
-												label: "ВТ",
-												payload: {
-													command: `Замены вторник`,
-												},
-												color: Keyboard.SECONDARY_COLOR,
-											}),
-											Keyboard.textButton({
-												label: "СР",
-												payload: {
-													command: `Замены Среда`,
-												},
-												color: Keyboard.SECONDARY_COLOR,
-											}),
-										],
-										[
-											Keyboard.textButton({
-												label: "ЧТ",
-												payload: {
-													command: `Замены четверг`,
-												},
-												color: Keyboard.SECONDARY_COLOR,
-											}),
-											Keyboard.textButton({
-												label: "ПТ",
-												payload: {
-													command: `Замены пятница`,
-												},
-												color: Keyboard.SECONDARY_COLOR,
-											}),
-											Keyboard.textButton({
-												label: "СБ",
-												payload: {
-													command: `Замены суббота`,
-												},
-												color: Keyboard.SECONDARY_COLOR,
-											}),
-										],
-										[
-											Keyboard.textButton({
-												label: "Вчера",
-												payload: {
-													command: `Замены вчера`,
-												},
-												color: Keyboard.NEGATIVE_COLOR,
-											}),
-											Keyboard.textButton({
-												label: "Сегодня",
-												payload: {
-													command: `Замены`,
-												},
-												color: Keyboard.SECONDARY_COLOR,
-											}),
-											Keyboard.textButton({
-												label: "Завтра",
-												payload: {
-													command: `Замены завтра`,
-												},
-												color: Keyboard.POSITIVE_COLOR,
-											}),
-										],
-									];
-									await vk.api.messages.send({
-										chat_id: chat.id,
-										message: `Обнаружена новая замена на ${await utils.time.getDateByMS(
-											Number(parsed_data.date),
-										)}\nПара: ${parsed_data.lesson_num}\nЗаменяемая пара: ${
-											parsed_data.old_lesson_name
-										}\nПреподаватель: ${
-											parsed_data.old_lesson_teacher
-										}\nНовая пара: ${
-											parsed_data.new_lesson_name
-										}\nПреподаватель на новой паре: ${
-											parsed_data.new_lesson_teacher
-										}\nДобавлена на сайт: ${await utils.time.getDateTimeByMS(
-											parsed_data.add_to_site,
-										)}\nОбнаружена ботом: ${await utils.time.getDateTimeByMS(
-											parsed_data.detected,
-										)}\n\n`,
-										keyboard: Keyboard.keyboard(keyboardData).inline(),
-									});
-								} catch (error) {}
-							}
+						for (let chat of chatsWithInformThisGroups) {
+							try {
+								await vk.api.messages.send({
+									chat_id: chat.id,
+									message: `Обнаружена новая замена на ${
+										parsed_data.date
+									}\nПара: ${parsed_data.lesson_num}\nЗаменяемая пара: ${
+										parsed_data.old_lesson_name
+									}\nПреподаватель: ${
+										parsed_data.old_lesson_teacher
+									}\nНовая пара: ${
+										parsed_data.new_lesson_name
+									}\nПреподаватель на новой паре: ${
+										parsed_data.new_lesson_teacher
+									}\nДобавлена на сайт: ${await utils.time.getDateTimeByMS(
+										parsed_data.add_to_site,
+									)}\nОбнаружена ботом: ${await utils.time.getDateTimeByMS(
+										parsed_data.detected,
+									)}\n\n`,
+									random_id: getRandomId(),
+								});
+							} catch (error) {}
 						}
 					}
 				}
