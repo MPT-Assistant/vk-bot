@@ -1,6 +1,6 @@
 import { GoogleUserData } from "./types";
 import { google as googleAPI } from "googleapis";
-import { classroom } from "./google/classroom";
+import { classroomUser } from "./google/classroom";
 
 const googleCredentials: {
 	installed: {
@@ -15,12 +15,17 @@ const googleCredentials: {
 } = require(`../DB/google.json`);
 
 const google = {
-	create_oAuth2Client: async () => {
+	create_oAuth2Client: () => {
 		const oAuth2Client = new googleAPI.auth.OAuth2(
 			googleCredentials.installed.client_id,
 			googleCredentials.installed.client_secret,
 			googleCredentials.installed.redirect_uris[0],
 		);
+		return oAuth2Client;
+	},
+	createUser_oAuth2Client: (userData: GoogleUserData) => {
+		let oAuth2Client = google.create_oAuth2Client();
+		oAuth2Client.setCredentials(userData);
 		return oAuth2Client;
 	},
 	getURLtoGetToken: async () => {
@@ -54,4 +59,4 @@ const google = {
 	},
 };
 
-export { google, classroom };
+export { google, classroomUser };

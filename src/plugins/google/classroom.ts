@@ -1,7 +1,24 @@
-import { google } from "googleapis";
+import { GoogleUserData } from "./../types";
+import { google as googleAPI, oauth2_v2 } from "googleapis";
+import { google } from "../google";
 
-const classroomAPI = google.classroom(`v1`);
+class classroomUser {
+	private classroom: any;
+	private getClassroomInstance(userData: GoogleUserData) {
+		return googleAPI.classroom({
+			version: "v1",
+			auth: google.createUser_oAuth2Client(userData),
+		});
+	}
 
-const classroom = {};
+	constructor(userData: GoogleUserData) {
+		this.classroom = this.getClassroomInstance(userData);
+	}
 
-export { classroom };
+	async getCourses() {
+		let user = await this.classroom.courses.list();
+		return user.data;
+	}
+}
+
+export { classroomUser };
