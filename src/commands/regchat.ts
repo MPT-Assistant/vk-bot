@@ -53,7 +53,7 @@ export = {
 					Keyboard.textButton({
 						label: diff[0].group_name,
 						payload: {
-							command: `установить группу ${diff[0].group_name}`,
+							command: `regchat ${diff[0].group_name}`,
 						},
 						color: Keyboard.POSITIVE_COLOR,
 					}),
@@ -62,7 +62,7 @@ export = {
 					Keyboard.textButton({
 						label: diff[1].group_name,
 						payload: {
-							command: `установить группу ${diff[1].group_name}`,
+							command: `regchat ${diff[1].group_name}`,
 						},
 						color: Keyboard.SECONDARY_COLOR,
 					}),
@@ -71,7 +71,7 @@ export = {
 					Keyboard.textButton({
 						label: diff[2].group_name,
 						payload: {
-							command: `установить группу ${diff[2].group_name}`,
+							command: `regchat ${diff[2].group_name}`,
 						},
 						color: Keyboard.NEGATIVE_COLOR,
 					}),
