@@ -30,3 +30,11 @@ export interface ChatInterface extends Document {
 	unical_group_id: number;
 	inform: boolean;
 }
+
+export interface GoogleUserData {
+	access_token: string;
+	refresh_token: string;
+	scope: string;
+	token_type: string;
+	expiry_data: number;
+}

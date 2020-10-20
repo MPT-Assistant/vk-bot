@@ -6,6 +6,7 @@
 	"author": "rus_anonym <alexandrsemin2033@gmail.com>",
 	"license": "MIT",
 	"scripts": {
+		"test": "yarn build && cd out && node test.js",
 		"start": "yarn build && cd out && node main.js",
 		"build": "tsc"
 	},
@@ -19,6 +20,7 @@
 		"@types/request-promise": "^4.1.46",
 		"canvas": "^2.6.1",
 		"cheerio": "^1.0.0-rc.3",
+		"googleapis": "^61.0.0",
 		"moment-precise-range-plugin": "^1.3.0",
 		"mongoose": "^5.10.9",
 		"request": "^2.88.2",
