@@ -1,5 +1,6 @@
 import { GoogleUserData } from "./types";
 import { google as googleAPI } from "googleapis";
+import { classroom } from "./google/classroom";
 
 const googleCredentials: {
 	installed: {
@@ -53,4 +54,4 @@ const google = {
 	},
 };
 
-export { google };
+export { google, classroom };
