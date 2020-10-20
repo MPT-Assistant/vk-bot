@@ -45,6 +45,22 @@ class classroomUser {
 			return announcementData.data;
 		},
 	};
+
+	courseWork = {
+		list: async (courseID: string) => {
+			let announcementsList = await this.classroom.courses.courseWork.list({
+				courseId: courseID,
+			});
+			return announcementsList.data.courseWork;
+		},
+		get: async (courseID: string, courseWorkID: string) => {
+			let announcementData = await this.classroom.courses.courseWork.get({
+				courseId: courseID,
+				id: courseWorkID,
+			});
+			return announcementData.data;
+		},
+	};
 }
 
 export { classroomUser };
