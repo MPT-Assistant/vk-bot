@@ -1,9 +1,9 @@
 import { GoogleUserData } from "./../types";
-import { google as googleAPI, oauth2_v2 } from "googleapis";
+import { classroom_v1, google as googleAPI, oauth2_v2 } from "googleapis";
 import { google } from "../google";
 
 class classroomUser {
-	private classroom: any;
+	private classroom: classroom_v1.Classroom;
 	private getClassroomInstance(userData: GoogleUserData) {
 		return googleAPI.classroom({
 			version: "v1",
@@ -15,9 +15,14 @@ class classroomUser {
 		this.classroom = this.getClassroomInstance(userData);
 	}
 
-	async getCourses() {
-		let user = await this.classroom.courses.list();
-		return user.data;
+	async getCoursesList() {
+		let coursesList = await this.classroom.courses.list();
+		return coursesList.data;
+	}
+
+	async getCourse(courseID: string) {
+		let course = await this.classroom.courses.get({ id: courseID });
+		return course.data;
 	}
 }
 
