@@ -60,6 +60,44 @@ class classroomUser {
 			});
 			return announcementData.data;
 		},
+		studentSubmissions: {
+			list: async (courseID: string) => {
+				let announcementsList = await this.classroom.courses.courseWork.studentSubmissions.list(
+					{
+						courseId: courseID,
+					},
+				);
+				return announcementsList.data.studentSubmissions;
+			},
+			get: async (courseID: string, courseWorkID: string) => {
+				let announcementData = await this.classroom.courses.courseWork.studentSubmissions.get(
+					{
+						courseId: courseID,
+						id: courseWorkID,
+					},
+				);
+				return announcementData.data;
+			},
+		},
+		materials: {
+			list: async (courseID: string) => {
+				let announcementsList = await this.classroom.courses.courseWorkMaterials.list(
+					{
+						courseId: courseID,
+					},
+				);
+				return announcementsList.data.courseWorkMaterial;
+			},
+			get: async (courseID: string, courseWorkID: string) => {
+				let announcementData = await this.classroom.courses.courseWorkMaterials.get(
+					{
+						courseId: courseID,
+						id: courseWorkID,
+					},
+				);
+				return announcementData.data;
+			},
+		},
 	};
 }
 
