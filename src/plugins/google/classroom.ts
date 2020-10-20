@@ -19,17 +19,25 @@ class classroomUser {
 		return this.classroom;
 	}
 
-	async getCoursesList() {
-		let coursesList = await this.classroom.courses.list();
-		return coursesList.data;
-	}
+	courses = {
+		list: async () => {
+			let coursesList = await this.classroom.courses.list();
+			return coursesList.data.courses;
+		},
+		get: async (courseID: string) => {
+			let course = await this.classroom.courses.get({ id: courseID });
+			return course.data;
+		},
+	};
 
-	async getCourse(courseID: string) {
-		let course = await this.classroom.courses.get({ id: courseID });
-		return course.data;
-    }
-    
-    
+	announcements = {
+		list: async (courseID: string) => {
+			let announcementsList = await this.classroom.courses.announcements.list({
+				courseId: courseID,
+			});
+			return announcementsList.data.announcements;
+		},
+	};
 }
 
 export { classroomUser };
