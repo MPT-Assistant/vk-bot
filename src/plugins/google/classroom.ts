@@ -37,6 +37,13 @@ class classroomUser {
 			});
 			return announcementsList.data.announcements;
 		},
+		get: async (courseID: string, announcementID: string) => {
+			let announcementData = await this.classroom.courses.announcements.get({
+				courseId: courseID,
+				id: announcementID,
+			});
+			return announcementData.data;
+		},
 	};
 }
 
