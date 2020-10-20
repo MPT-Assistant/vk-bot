@@ -15,6 +15,10 @@ class classroomUser {
 		this.classroom = this.getClassroomInstance(userData);
 	}
 
+	async getInstance(): Promise<classroom_v1.Classroom> {
+		return this.classroom;
+	}
+
 	async getCoursesList() {
 		let coursesList = await this.classroom.courses.list();
 		return coursesList.data;
@@ -23,7 +27,9 @@ class classroomUser {
 	async getCourse(courseID: string) {
 		let course = await this.classroom.courses.get({ id: courseID });
 		return course.data;
-	}
+    }
+    
+    
 }
 
 export { classroomUser };
