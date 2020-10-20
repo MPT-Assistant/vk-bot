@@ -248,7 +248,7 @@ const mpt = {
 		let new_replacement_data: any = [];
 		for (let i in new_array_with_replacement) {
 			let date_of_replacement = new_array_with_replacement[i].day_data; //получает дату
-			let temp_time_data: any = await utils.time.getDateTimeByMS(
+			let temp_time_data: any = await utils.time.getDateByMS(
 				Number(date_of_replacement),
 			);
 			if (
