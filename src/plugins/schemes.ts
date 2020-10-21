@@ -106,6 +106,17 @@ const classroomUser: Schema = new Schema({
 	inform: Boolean,
 });
 
+const googleScheme: Schema = new Schema({
+	token: {
+		access_token: String,
+		refresh_token: String,
+		scope: String,
+		token_type: String,
+		expiry_date: Number,
+	},
+	classroom: classroomUser,
+});
+
 export = {
 	user,
 	chat,
@@ -116,5 +127,5 @@ export = {
 	courseAnnouncement,
 	courseScheme,
 	courseWork,
-	classroomUser,
+	googleScheme,
 };

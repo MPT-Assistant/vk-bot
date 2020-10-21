@@ -17,11 +17,7 @@ const utilityGroup = mongoose.model(
 	schemes.utilityGroup,
 	`groups`,
 );
-const classroomUser = mongoose.model(
-	"classroomUser",
-	schemes.classroomUser,
-	`classroom`,
-);
+const userGoogle = mongoose.model("userGoogle", schemes.googleScheme, `google`);
 
 export = {
 	user,
