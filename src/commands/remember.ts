@@ -25,7 +25,7 @@ export = {
 		let user: any;
 
 		if (!message.args[1] && (message.replyMessage || message.forwards[0])) {
-			user = message.replyMessage.senderId || message.forwards[0].senderId;
+			user = message.replyMessage?.senderId || message.forwards[0].senderId;
 		} else {
 			try {
 				let data = await resolveResource({
