@@ -28,7 +28,7 @@ const vk = new VK({
 	pollingGroupId: config.groupID,
 });
 
-vk.updates.use(questionManager.middleware);
+vk.updates.use(questionManager.middleware: QuestionManager);
 vk.updates.use(async (message: MPTMessage) => {
 	if (message.type !== `message` || message.senderId <= 0) return;
 	message.user = await internal.regUserInBot(message.senderId);

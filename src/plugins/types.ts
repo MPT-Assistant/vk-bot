@@ -1,3 +1,4 @@
+import { IQuestionMessageContext } from "vk-io-question";
 import { Document } from "mongoose";
 import { MessageContext, IMessageContextSendOptions } from "vk-io";
 export interface MPTCommand {
@@ -5,7 +6,7 @@ export interface MPTCommand {
 	process: Function;
 }
 
-export interface MPTMessage extends MessageContext {
+export interface MPTMessage extends MessageContext, IQuestionMessageContext {
 	sendMessage(
 		text: string | IMessageContextSendOptions,
 		params?: IMessageContextSendOptions | undefined,
