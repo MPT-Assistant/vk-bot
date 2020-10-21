@@ -65,6 +65,47 @@ const utilityGroup: Schema = new Schema({
 	specialty_id: Number,
 });
 
+const courseAnnouncement: Schema = new Schema({
+	id: String,
+	text: String,
+	materials: [],
+	status: String,
+	link: String,
+	created: Date,
+	lastUpdate: Date,
+});
+
+const courseWork: Schema = new Schema({
+	id: String,
+	title: String,
+	description: String,
+	materials: [],
+	status: String,
+	link: String,
+	created: Date,
+	lastUpdate: Date,
+	deadline: Date,
+});
+
+const courseScheme: Schema = new Schema({
+	id: String,
+	name: String,
+	section: String,
+	descriptionHeading: String,
+	created: Date,
+	lastUpdate: Date,
+	link: String,
+	status: String,
+	announcements: [courseAnnouncement],
+	works: [courseWork],
+});
+
+const classroomUser: Schema = new Schema({
+	id: Number,
+	courseList: [courseScheme],
+	inform: Boolean,
+});
+
 export = {
 	user,
 	chat,
