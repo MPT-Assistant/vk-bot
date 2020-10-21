@@ -25,4 +25,5 @@ export = {
 	specialty,
 	replacement,
 	utilityGroup,
+	userGoogle,
 };
