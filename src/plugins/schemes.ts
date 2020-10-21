@@ -113,4 +113,8 @@ export = {
 	specialty,
 	replacement,
 	utilityGroup,
+	courseAnnouncement,
+	courseScheme,
+	courseWork,
+	classroomUser,
 };
