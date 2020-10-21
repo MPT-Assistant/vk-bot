@@ -1,4 +1,4 @@
-# MPT-Assistant
+# MPT Assistant
 
 # Bot for VK on [**Node.JS**](https://nodejs.org/en/download/)
 

@@ -1,7 +1,7 @@
 {
 	"name": "mpt_assistant",
 	"version": "1.0.0",
-	"main": "index.js",
+	"main": "./out/main.js",
 	"repository": "https://github.com/RusAnonym/MPT-Assistant",
 	"author": "rus_anonym <alexandrsemin2033@gmail.com>",
 	"license": "MIT",
