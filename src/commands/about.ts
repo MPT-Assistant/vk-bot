@@ -6,6 +6,8 @@ export = {
 	process: async (message: MPTMessage) => {
 		let VKAPI = await getAPIStatus();
 		let output = ``;
+		output += `Bot work already ${process.uptime()} sec\n`;
+		output += `VK API: `;
 		for (let i in VKAPI) {
 			output += `${Number(i) + 1}. ${VKAPI[i].section} [${
 				VKAPI[i].performance
