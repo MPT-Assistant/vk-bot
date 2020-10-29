@@ -1,0 +1,5 @@
+/out/
+/node_modules/
+/src/DB/config.json
+/src/DB/google.json
+/test.js
