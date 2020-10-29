@@ -19,8 +19,6 @@ const utilityGroup = mongoose.model(
 );
 const userGoogle = mongoose.model("userGoogle", schemes.googleScheme, `google`);
 
-user.mapReduce()
-
 export = {
 	user,
 	chat,
