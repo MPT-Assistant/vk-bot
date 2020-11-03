@@ -485,48 +485,48 @@ const mpt = {
 	},
 	parseTimetable: async () => {
 		let output = [];
-		let lesson_num = 0;
-		let break_num = 0;
+		let lessonNum = 0;
+		let breakNum = 0;
 		for (let i in timetable) {
-			let start_lesson_date = new Date();
-			let end_lesson_date = new Date();
+			let startLessonDate = new Date();
+			let endLessonDate = new Date();
 			let status = `not_start`;
-			start_lesson_date.setHours(timetable[i].start.hour);
-			start_lesson_date.setMinutes(timetable[i].start.minute);
-			start_lesson_date.setSeconds(0);
-			end_lesson_date.setHours(timetable[i].end.hour);
-			end_lesson_date.setMinutes(timetable[i].end.minute);
-			end_lesson_date.setSeconds(0);
-			if (start_lesson_date < new Date()) {
-				start_lesson_date.setDate(new Date().getDate() + 1);
+			startLessonDate.setHours(timetable[i].start.hour);
+			startLessonDate.setMinutes(timetable[i].start.minute);
+			startLessonDate.setSeconds(0);
+			endLessonDate.setHours(timetable[i].end.hour);
+			endLessonDate.setMinutes(timetable[i].end.minute);
+			endLessonDate.setSeconds(0);
+			if (startLessonDate < new Date()) {
+				startLessonDate.setDate(new Date().getDate() + 1);
 				status = `started`;
 			}
-			if (end_lesson_date < new Date()) {
-				end_lesson_date.setDate(new Date().getDate() + 1);
+			if (endLessonDate < new Date()) {
+				endLessonDate.setDate(new Date().getDate() + 1);
 				status = `finished`;
 			}
 			let output_data = {
 				lesson: timetable[i].lesson,
-				start: start_lesson_date,
-				end: end_lesson_date,
+				start: startLessonDate,
+				end: endLessonDate,
 				status: status,
 				diff_start: moment.preciseDiff(
 					moment(new Date()),
-					moment(new Date(start_lesson_date)),
+					moment(new Date(startLessonDate)),
 					true,
 				),
 				diff_end: moment.preciseDiff(
 					moment(new Date()),
-					moment(new Date(end_lesson_date)),
+					moment(new Date(endLessonDate)),
 					true,
 				),
 			};
 			if (timetable[i].lesson === true) {
-				lesson_num += 1;
-				output.push(Object.assign(output_data, { num: lesson_num }));
+				lessonNum += 1;
+				output.push(Object.assign(output_data, { num: lessonNum }));
 			} else {
-				break_num += 1;
-				output.push(Object.assign(output_data, { num: break_num }));
+				breakNum += 1;
+				output.push(Object.assign(output_data, { num: breakNum }));
 			}
 		}
 		return output;

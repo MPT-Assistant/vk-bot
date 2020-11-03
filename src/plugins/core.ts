@@ -46,7 +46,7 @@ vk.updates.use(async (message: MPTMessage) => {
 		params?: IMessageContextSendOptions | undefined,
 	): Promise<MessageContext<Record<string, any>>> => {
 		try {
-			let params_for_send = Object.assign(
+			let paramsForSend = Object.assign(
 				{
 					disable_mentions: true,
 					forward: JSON.stringify({
@@ -59,7 +59,7 @@ vk.updates.use(async (message: MPTMessage) => {
 			);
 			return await message.send(
 				`@id${message.user.vk_id} (${message.user.nickname}), ${text}`,
-				params_for_send,
+				paramsForSend,
 			);
 		} catch (error) {
 			console.log(error);
