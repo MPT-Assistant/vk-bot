@@ -29,7 +29,7 @@ const google = {
 		return oAuth2Client;
 	},
 	getURLtoGetToken: async () => {
-		const oAuth2Client = await google.create_oAuth2Client();
+		const oAuth2Client = google.create_oAuth2Client();
 		const authUrl = oAuth2Client.generateAuthUrl({
 			access_type: "offline",
 			scope: [
@@ -48,12 +48,12 @@ const google = {
 		return authUrl;
 	},
 	refreshToken: async (userData: GoogleUserData) => {
-		const oAuth2Client = await google.create_oAuth2Client();
+		const oAuth2Client = google.create_oAuth2Client();
 		oAuth2Client.setCredentials(userData);
 		return (await oAuth2Client.getAccessToken()).token;
 	},
 	getUserTokenByTempToken: async (accessCode: string) => {
-		const oAuth2Client = await google.create_oAuth2Client();
+		const oAuth2Client = google.create_oAuth2Client();
 		let userToken = await oAuth2Client.getToken(accessCode);
 		return userToken.tokens;
 	},

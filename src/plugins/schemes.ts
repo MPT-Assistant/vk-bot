@@ -1,5 +1,5 @@
 "use strict";
-import mongoose, { Schema } from "mongoose";
+import { Schema } from "mongoose";
 
 const user: Schema = new Schema({
 	id: Number,
@@ -9,6 +9,13 @@ const user: Schema = new Schema({
 	nickname: String,
 	data: {
 		unical_group_id: Number,
+		google: {
+			access_token: String,
+			refresh_token: String,
+			scope: String,
+			token_type: String,
+			expiry_data: Number,
+		},
 	},
 });
 
