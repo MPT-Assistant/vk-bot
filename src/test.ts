@@ -1,16 +1,10 @@
-import * as google from "./plugins/google";
-import * as fs from "fs";
-
+import mongoose from "mongoose";
+import utils from "rus-anonym-utils";
 (async function () {
-	console.log(`Start test at ${new Date()}`);
-	let userData = require(`./out.json`);
-	let user = new google.classroomUser(userData);
-	let userCourses = await user.courses.list();
-	if (userCourses && userCourses[0].id) {
-		let data = await user.announcements.list(`181540834150`);
-		// console.log(userCourses);
-		console.log(data);
-	}
-
-	// fs.writeFileSync(`./out.json`, JSON.stringify(data));
+	utils.logger.console(`Connect to database...`);
+	await mongoose.connect(`mongodb://194.32.248.158:27017/mpt_bot`, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+	});
+	utils.logger.console(`Successfull connection to database`);
 })();

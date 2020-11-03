@@ -114,6 +114,7 @@ const classroomUser: Schema = new Schema({
 });
 
 const googleScheme: Schema = new Schema({
+	vk_id: Number,
 	token: {
 		access_token: String,
 		refresh_token: String,
