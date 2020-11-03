@@ -22,9 +22,7 @@ import utils from "rus-anonym-utils";
 	utils.logger.console(`Successfull data update`);
 	utils.logger.console(`Loading commands...`);
 	await commandsLoader(`./commands`);
-	await utils.logger.console(
-		`Successfull loading commands (${commands.length})`,
-	);
+	utils.logger.console(`Successfull loading commands (${commands.length})`);
 	utils.logger.console(`Connect to VK LongPoll...`);
 	await vk.updates.startPolling();
 	utils.logger.console(`Successfull connection to VK LongPoll`);

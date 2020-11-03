@@ -52,10 +52,28 @@ const google = {
 		oAuth2Client.setCredentials(userData);
 		return (await oAuth2Client.getAccessToken()).token;
 	},
-	getUserTokenByTempToken: async (accessCode: string) => {
+	getUserDataByTempToken: async (
+		accessCode: string,
+	): Promise<GoogleUserData> => {
 		const oAuth2Client = google.create_oAuth2Client();
 		let userToken = await oAuth2Client.getToken(accessCode);
-		return userToken.tokens;
+		if (
+			!userToken.tokens.access_token ||
+			!userToken.tokens.expiry_date ||
+			!userToken.tokens.refresh_token ||
+			!userToken.tokens.scope ||
+			!userToken.tokens.token_type
+		) {
+			throw new Error(`Invalid token`);
+		} else {
+			return {
+				access_token: userToken.tokens.access_token,
+				refresh_token: userToken.tokens.refresh_token,
+				scope: userToken.tokens.scope,
+				token_type: userToken.tokens.token_type,
+				expiry_date: userToken.tokens.expiry_date,
+			};
+		}
 	},
 };
 

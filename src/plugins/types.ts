@@ -37,5 +37,5 @@ export interface GoogleUserData {
 	refresh_token: string;
 	scope: string;
 	token_type: string;
-	expiry_data: number;
+	expiry_date: number;
 }

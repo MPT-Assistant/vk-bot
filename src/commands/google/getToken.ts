@@ -2,6 +2,7 @@ import { MPTMessage } from "../../plugins/types";
 import { vk } from "../../plugins/core";
 import { google } from "../../plugins/google";
 import models from "../../plugins/models";
+import { gmailUser } from "../../plugins/google/gmail";
 export = {
 	regexp: /^(?:привязка)$/i,
 	process: async (message: MPTMessage) => {
@@ -21,10 +22,11 @@ export = {
 			await message.sendMessage(`проверяю токен...`);
 			try {
 				if (token.text) {
-					let userData = await google.getUserTokenByTempToken(token.text);
+					let userData = await google.getUserDataByTempToken(token.text);
 					let userGoogleAccount: any = await models.userGoogle.findOne({
 						vk_id: message.senderId,
 					});
+					let gmailInstance = await new gmailUser(userData);
 					if (!userGoogleAccount) {
 						userGoogleAccount = new models.userGoogle({
 							vk_id: message.senderId,
