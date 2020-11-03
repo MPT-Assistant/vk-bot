@@ -26,8 +26,8 @@ export = {
 					let userGoogleAccount: any = await models.userGoogle.findOne({
 						vk_id: message.senderId,
 					});
-					let gmailInstance = await new gmailUser(userData);
-					
+					let gmailInstance = new gmailUser(userData);
+					let userEmail = await gmailInstance.getEmailAddress();
 					if (!userGoogleAccount) {
 						userGoogleAccount = new models.userGoogle({
 							vk_id: message.senderId,
@@ -36,8 +36,11 @@ export = {
 					} else {
 						userGoogleAccount.token = userData;
 					}
-					await message.sendMessage(`токен указан верно.`);
-					return await userGoogleAccount.save();
+					await message.sendMessage(
+						`токен указан верно.\nE-mail: ${userEmail}`,
+					);
+					return;
+					// await userGoogleAccount.save();
 				} else {
 					return await message.sendMessage(`неверно указан токен.`);
 				}
