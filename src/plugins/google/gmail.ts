@@ -18,6 +18,15 @@ class gmailUser {
 	async getInstance(): Promise<gmail_v1.Gmail> {
 		return this.gmail;
 	}
+
+	async getEmailAddress(): Promise<string> {
+		let data = await this.gmail.users.getProfile({ userId: `me` });
+		if (data.data.emailAddress) {
+			return data.data.emailAddress;
+		} else {
+			throw new Error(`Unknown error`);
+		}
+	}
 }
 
 export { gmailUser };

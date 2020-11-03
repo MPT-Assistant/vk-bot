@@ -27,6 +27,7 @@ export = {
 						vk_id: message.senderId,
 					});
 					let gmailInstance = await new gmailUser(userData);
+					
 					if (!userGoogleAccount) {
 						userGoogleAccount = new models.userGoogle({
 							vk_id: message.senderId,
