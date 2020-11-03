@@ -66,7 +66,7 @@ vk.updates.use(async (message: MPTMessage) => {
 			return error;
 		}
 	};
-	message.text = await message.text
+	message.text = message.text
 		.replace(/(\[club188434642\|[@a-z_A-ZА-Яа-я0-9]+\])/gi, ``)
 		.replace(/(^\s*)|(\s*)$/g, "");
 
@@ -80,7 +80,7 @@ vk.updates.use(async (message: MPTMessage) => {
 		}
 		return;
 	}
-	message.args = await message.text.match(command.regexp);
+	message.args = message.text.match(command.regexp);
 	try {
 		await command.process(message);
 		await message.user.save();
@@ -103,7 +103,7 @@ const internal = {
 		let data = await models.user.findOne({ vk_id: vk_id });
 		if (!data) {
 			let [user] = await vk.api.users.get({ user_ids: vk_id });
-			data = await new models.user({
+			data = new models.user({
 				id: await models.user.countDocuments(),
 				vk_id: vk_id,
 				ban: false,
@@ -119,7 +119,7 @@ const internal = {
 	regChatInBot: async (chat_id: number) => {
 		let data = await models.chat.findOne({ id: chat_id });
 		if (!data) {
-			data = await new models.chat({
+			data = new models.chat({
 				id: chat_id,
 				unical_group_id: 0,
 				inform: false,
@@ -129,42 +129,20 @@ const internal = {
 	},
 };
 
-async function main() {
-	await utils.logger.console(`Connect to database...`);
-	await mongoose.connect(config.mongo, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	});
-	await utils.logger.console(`Successfull connection to database`);
-	await utils.logger.console(`Updating data...`);
-	await mpt.Update_all_shedule();
-	await mpt.Update_all_replacements();
-	await utils.logger.console(`Successfull data update`);
-	await utils.logger.console(`Loading commands...`);
-	let arrayWithCommands = fs.readdirSync("./commands");
+async function commandsLoader(path: string) {
+	let arrayWithCommands = fs.readdirSync(path);
 	for (let i in arrayWithCommands) {
-		let tempScript = require(`../commands/${arrayWithCommands[i]}`);
-		commands.push({
-			regexp: tempScript.regexp,
-			process: tempScript.process,
-		});
+		let currentElement = `${path}/${arrayWithCommands[i]}`;
+		if (fs.statSync(currentElement).isDirectory()) {
+			await commandsLoader(currentElement);
+		} else {
+			let tempScript = require(`.` + currentElement);
+			commands.push({
+				regexp: tempScript.regexp,
+				process: tempScript.process,
+			});
+		}
 	}
-	await utils.logger.console(
-		`Successfull loading commands (${commands.length})`,
-	);
-	await utils.logger.console(`Connect to VK LongPoll...`);
-	await vk.updates.startPolling();
-	await utils.logger.console(`Successfull connection to VK LongPoll`);
-	await utils.logger.console(`Beginning task scheduling...`);
-	await scheduler.tasks.add({
-		isInterval: true,
-		intervalTimer: 5 * 60 * 1000,
-		code: async function () {
-			await mpt.Update_all_shedule();
-			await mpt.Update_all_replacements();
-		},
-	});
-	await utils.logger.console(`Tasks are planned`);
-	await utils.logger.console(`Script start`);
 }
-export { main, vk };
+
+export { commandsLoader, vk, commands, mongoose, scheduler, mpt, config };
