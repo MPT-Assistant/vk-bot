@@ -1,10 +1,10 @@
-import { getAPIStatus } from "../plugins/vk";
+import utils from "rus-anonym-utils";
 
 import { MPTMessage } from "../plugins/types";
 export = {
 	regexp: /^(?:stats|about|bot)$/i,
 	process: async (message: MPTMessage) => {
-		let VKAPI = await getAPIStatus();
+		let VKAPI = await utils.vk.api.status();
 		let output = ``;
 		output += `Bot work already ${process.uptime()} sec\n`;
 		output += `VK API: `;
