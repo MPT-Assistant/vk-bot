@@ -1,8 +1,8 @@
-import { MPTMessage } from "../plugins/types";
+import { MPTMessage } from "../../plugins/types";
 import { resolveResource } from "vk-io";
 import { createCanvas, loadImage } from "canvas";
 import { registerFont } from "canvas";
-import { vk } from "../plugins/core";
+import { vk } from "../../plugins/core";
 import utils from "rus-anonym-utils";
 
 process.env.FONTCONFIG_PATH = "./DB/templates/fonts";

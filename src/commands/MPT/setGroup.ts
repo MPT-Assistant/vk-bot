@@ -1,6 +1,6 @@
 import { Keyboard } from "vk-io";
-import { MPTMessage } from "../plugins/types";
-import models from "../plugins/models";
+import { MPTMessage } from "../../plugins/types";
+import models from "../../plugins/models";
 import utils from "rus-anonym-utils";
 
 export = {

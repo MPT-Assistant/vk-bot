@@ -1,8 +1,8 @@
 import { Keyboard } from "vk-io";
-import { MPTMessage } from "../plugins/types";
+import { MPTMessage } from "../../plugins/types";
 import utils from "rus-anonym-utils";
 
-import models from "../plugins/models";
+import models from "../../plugins/models";
 
 export = {
 	regexp: /^(?:regchat)\s?([^]+)?/i,

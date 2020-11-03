@@ -1,6 +1,6 @@
 import { Keyboard } from "vk-io";
-import models from "../plugins/models";
-import { MPTMessage } from "../plugins/types";
+import models from "../../plugins/models";
+import { MPTMessage } from "../../plugins/types";
 export = {
 	regexp: /^(?:чат|chat)$/i,
 	process: async (message: MPTMessage) => {

@@ -1,9 +1,9 @@
 import utils from "rus-anonym-utils";
-import { MPTMessage } from "../plugins/types";
+import { MPTMessage } from "../../plugins/types";
 import { Keyboard } from "vk-io";
 
-import models from "../plugins/models";
-import { mpt } from "../plugins/mpt";
+import models from "../../plugins/models";
+import { mpt } from "../../plugins/mpt";
 
 declare global {
 	interface Date {

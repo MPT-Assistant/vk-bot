@@ -1,4 +1,4 @@
-import { MPTMessage } from "../plugins/types";
+import { MPTMessage } from "../../plugins/types";
 export = {
 	regexp: /^(?:помощь|help|хелп|памаги|начать|памагити|помоги|start|команды)$/i,
 	process: async (message: MPTMessage) => {
