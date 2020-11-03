@@ -1,6 +1,6 @@
-import { MPTMessage } from "../plugins/types";
-import { vk } from "../plugins/core";
-import { google } from "../plugins/google";
+import { MPTMessage } from "../../plugins/types";
+import { vk } from "../../plugins/core";
+import { google } from "../../plugins/google";
 export = {
 	regexp: /^(?:привязка)$/i,
 	process: async (message: MPTMessage) => {
