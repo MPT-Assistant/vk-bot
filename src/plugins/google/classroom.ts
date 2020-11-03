@@ -1,5 +1,5 @@
 import { GoogleUserData } from "./../types";
-import { classroom_v1, google as googleAPI, oauth2_v2 } from "googleapis";
+import { classroom_v1, google as googleAPI } from "googleapis";
 import { google } from "../google";
 
 class classroomUser {

@@ -113,6 +113,11 @@ const classroomUser: Schema = new Schema({
 	inform: Boolean,
 });
 
+const gmailUser: Schema = new Schema({
+	email: String,
+	inform: Boolean,
+});
+
 const googleScheme: Schema = new Schema({
 	vk_id: Number,
 	token: {
@@ -123,6 +128,7 @@ const googleScheme: Schema = new Schema({
 		expiry_date: Number,
 	},
 	classroom: classroomUser,
+	gmail: gmailUser,
 });
 
 export = {
