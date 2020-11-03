@@ -46,7 +46,17 @@ vk.updates.use(async (message: MPTMessage) => {
 		params?: IMessageContextSendOptions | undefined,
 	): Promise<MessageContext<Record<string, any>>> => {
 		try {
-			let params_for_send = Object.assign({ disable_mentions: true }, params);
+			let params_for_send = Object.assign(
+				{
+					disable_mentions: true,
+					forward: JSON.stringify({
+						peer_id: message.peerId,
+						conversation_message_ids: message.conversationMessageId,
+						is_reply: 1,
+					}),
+				},
+				params,
+			);
 			return await message.send(
 				`@id${message.user.vk_id} (${message.user.nickname}), ${text}`,
 				params_for_send,
