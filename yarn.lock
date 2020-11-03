@@ -1357,10 +1357,10 @@ rimraf@^2.6.1:
   dependencies:
     glob "^7.1.3"
 
-rus-anonym-utils@^2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/rus-anonym-utils/-/rus-anonym-utils-2.0.8.tgz#c1468aa8416bda15de2acad3a9a8b584f8794c20"
-  integrity sha512-VbRRJteff73bIPPLSoW1FKrEKS07Fa6QV2wdMPqEsBrxRR0u3DZ8aIEnR4aQazPoWcksS0AQ+bjYhPi5+PSzEw==
+rus-anonym-utils@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/rus-anonym-utils/-/rus-anonym-utils-2.0.9.tgz#3cf2cf5aaf1fd8e537280c997876e9cefcc3358a"
+  integrity sha512-J6GBvbk5rziGI4PzBGhVthsPZw3eMwM3dDxFLGx/oLSgL7Ad74VX7RfG+Sh7zJ0mnvVvJcmgdKZy2xnkMIRt1g==
   dependencies:
     npm-api "^1.0.0"
     request "^2.88.2"
