@@ -12,27 +12,27 @@ export = {
 		let groupData: any = await models.utilityGroup.findOne({
 			uid: message.chat.unical_group_id,
 		});
-		let groupText = ``;
-		let keyboardData: any = [];
+		let groupText = `Группа не установлена`;
+		let keyboardData = [
+			[
+				Keyboard.textButton({
+					label: `${
+						message.chat.inform === true ? "Отключить" : "Включить"
+					} рассылку изменений`,
+					payload: {
+						command: `изменения ${
+							message.chat.inform === true ? "выкл" : "вкл"
+						}`,
+					},
+					color: message.chat.inform
+						? Keyboard.NEGATIVE_COLOR
+						: Keyboard.POSITIVE_COLOR,
+				}),
+			],
+		];
 		if (groupData) {
 			groupText = `Привязан к группе: ${groupData.name}`;
-			keyboardData = [
-				[
-					Keyboard.textButton({
-						label: `${
-							message.chat.inform === true ? "Отключить" : "Включить"
-						} рассылку изменений`,
-						payload: {
-							command: `изменения ${
-								message.chat.inform === true ? "выкл" : "вкл"
-							}`,
-						},
-						color: message.chat.inform
-							? Keyboard.NEGATIVE_COLOR
-							: Keyboard.POSITIVE_COLOR,
-					}),
-				],
-			];
+			keyboardData;
 		}
 
 		return message.sendMessage(
