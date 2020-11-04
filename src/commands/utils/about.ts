@@ -1,5 +1,4 @@
 import utils from "rus-anonym-utils";
-
 import { MPTMessage } from "../../plugins/types";
 export = {
 	regexp: /^(?:stats|about|bot)$/i,
