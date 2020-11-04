@@ -32,7 +32,7 @@ export = {
 		return message.sendMessage(
 			`информация о чате:
 ID: ${message.chat.id}
-Привязан к группе: ${groupData.name}
+Привязан к группе: ${groupData.name || "не привязан"}
 Информирование о заменах: ${
 				message.chat.inform === true ? `Включено` : `Отключено`
 			}`,
