@@ -4,6 +4,9 @@ import { MPTMessage } from "../../plugins/types";
 export = {
 	regexp: /^(?:report|репорт|предложение)$/i,
 	process: async (message: MPTMessage) => {
+		if (message.isChat) {
+			return message.sendMessage(`доступно только в ЛС бота`);
+		}
 		let answer = await message.question(
 			`Введите текст репорта:`,
 			Object.assign({
@@ -22,7 +25,7 @@ export = {
 			return await vk.api.messages.send({
 				chat_id: 1,
 				random_id: getRandomId(),
-				message: `@id266982306 (rus_anonym), новый репорт:\n\nРепорт: ${answer.text}`,
+				message: `@id266982306 (rus_anonym), новый репорт от @${message.senderId}\n\nТекст репорта: ${answer.text}`,
 			});
 		}
 	},
