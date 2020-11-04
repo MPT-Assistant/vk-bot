@@ -111,6 +111,7 @@ const internal = {
 				nickname: user.first_name,
 				data: {
 					unical_group_id: 0,
+					mailing: true,
 				},
 			});
 		}
@@ -123,6 +124,7 @@ const internal = {
 				id: chat_id,
 				unical_group_id: 0,
 				inform: false,
+				mailing: true,
 			});
 		}
 		return data;

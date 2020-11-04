@@ -9,6 +9,7 @@ const user: Schema = new Schema({
 	nickname: String,
 	data: {
 		unical_group_id: Number,
+		mailing: Boolean,
 		google: {
 			access_token: String,
 			refresh_token: String,
@@ -23,6 +24,7 @@ const chat: Schema = new Schema({
 	id: Number,
 	unical_group_id: Number,
 	inform: Boolean,
+	mailing: Boolean,
 });
 
 const lesson: Schema = new Schema({
