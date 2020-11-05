@@ -24,18 +24,18 @@ export = {
 				`Вы не установили свою группу. Для установки своей группы введите команду: "Установить группу [Название группы]", либо же для установки стандартной группы для чата: "regchat [Название группы].`,
 			);
 		}
-		let group_data: any;
+		let groupData: any;
 		if (message.user.data.unical_group_id === 0 && message.chat) {
-			group_data = await models.utilityGroup.findOne({
+			groupData = await models.utilityGroup.findOne({
 				uid: message.chat.unical_group_id,
 			});
 		} else {
-			group_data = await models.utilityGroup.findOne({
+			groupData = await models.utilityGroup.findOne({
 				uid: message.user.data.unical_group_id,
 			});
 		}
-		let selected_date: any;
-		let array_with_days: any = [
+		let selectedDate: any;
+		let arrayWithDays: any = [
 			{
 				template: `понедельник`,
 				day: 1,
@@ -108,20 +108,20 @@ export = {
 			!message.args[1] ||
 			/(?:^сегодня|с)$/gi.test(message.args[1]) === true
 		) {
-			selected_date = new Date().getTime();
+			selectedDate = new Date().getTime();
 		} else if (/(?:^завтра|^з)$/gi.test(message.args[1]) === true) {
-			selected_date = new Date().getTime() + 1 * 24 * 60 * 60 * 1000;
+			selectedDate = new Date().getTime() + 1 * 24 * 60 * 60 * 1000;
 		} else if (/(?:^послезавтра|^пз)$/gi.test(message.args[1]) === true) {
-			selected_date = new Date().getTime() + 2 * 24 * 60 * 60 * 1000;
+			selectedDate = new Date().getTime() + 2 * 24 * 60 * 60 * 1000;
 		} else if (/(?:^вчера|^в)$/gi.test(message.args[1]) === true) {
-			selected_date = new Date().getTime() - 1 * 24 * 60 * 60 * 1000;
+			selectedDate = new Date().getTime() - 1 * 24 * 60 * 60 * 1000;
 		} else if (/(?:^позавчера|^поз)$/gi.test(message.args[1]) === true) {
-			selected_date = new Date().getTime() - 2 * 24 * 60 * 60 * 1000;
+			selectedDate = new Date().getTime() - 2 * 24 * 60 * 60 * 1000;
 		} else if (
 			/([0-9]+)?(.)?([0-9]+)?(.)?([0-9]+)/.test(message.args[1]) === true
 		) {
 			let data = message.args[1].split(`.`);
-			let currentDate = await utils.time.currentDate();
+			let currentDate = utils.time.currentDate();
 			if (!data[1]) {
 				data[1] = currentDate.split(`.`)[1];
 			}
@@ -138,17 +138,17 @@ export = {
 				data[1] = `0${data[1]}`;
 			}
 			try {
-				let temp_date = new Date(`${data[2]}-${data[1]}-${data[0]}T15:00:00`);
-				selected_date = temp_date.getTime();
+				let tempDate = new Date(`${data[2]}-${data[1]}-${data[0]}T15:00:00`);
+				selectedDate = tempDate.getTime();
 			} catch (error) {
 				return await message.sendMessage(`неверная дата.`);
 			}
 		} else {
-			for (let i in array_with_days) {
-				let Regular_Expression = new RegExp(array_with_days[i].template, `gi`);
+			for (let i in arrayWithDays) {
+				let Regular_Expression = new RegExp(arrayWithDays[i].template, `gi`);
 				if (Regular_Expression.test(message.args[1]) === true) {
 					let date = new Date(),
-						targetDay = array_with_days[i].day,
+						targetDay = arrayWithDays[i].day,
 						targetDate = new Date(),
 						delta = targetDay - date.getDay();
 					if (delta >= 0) {
@@ -156,16 +156,16 @@ export = {
 					} else {
 						targetDate.setDate(date.getDate() + 7 + delta);
 					}
-					selected_date = Number(targetDate);
+					selectedDate = Number(targetDate);
 				}
 			}
 		}
 
-		if (!selected_date) {
+		if (!selectedDate) {
 			return await message.sendMessage(`неверная дата.`);
 		}
 
-		let keyboard_data = [
+		let keyboardData = [
 			[
 				Keyboard.textButton({
 					label: "ПН",
@@ -237,10 +237,10 @@ export = {
 			],
 		];
 
-		if (new Date(selected_date).getDay() === 0) {
+		if (new Date(selectedDate).getDay() === 0) {
 			return await message.sendMessage(
-				`${await utils.time.getDateByMS(selected_date)} воскресенье.`,
-				{ keyboard: Keyboard.keyboard(keyboard_data).inline() },
+				`${utils.time.getDateByMS(selectedDate)} воскресенье.`,
+				{ keyboard: Keyboard.keyboard(keyboardData).inline() },
 			);
 		}
 
@@ -259,92 +259,86 @@ export = {
 				)
 			);
 		};
-		let lessons_string = ``;
-		let selected_week_string;
-		let array_with_lessons: any = [];
-		let replacement_keyboard = [];
-		let user_specialty: any = await models.specialty.findOne({
-			id: group_data.specialty_id,
+		let lessonsString = ``;
+		let selectedWeekString;
+		let arrayWithLessons: any = [];
+		let replacementKeyboard = [];
+		let userSpecialty: any = await models.specialty.findOne({
+			id: groupData.specialty_id,
 		});
 
-		let user_group = await user_specialty.groups.find(
-			(x: any) => x.uid === group_data.uid,
+		let userGroup = await userSpecialty.groups.find(
+			(x: any) => x.uid === groupData.uid,
 		);
 
-		let selected_day = await user_group.weekly_schedule.find(
-			(x: any) => x.num === new Date(selected_date).getDay(),
+		let selectedDay = await userGroup.weekly_schedule.find(
+			(x: any) => x.num === new Date(selectedDate).getDay(),
 		);
 
 		let timetable: any = await mpt.parseTimetable();
 		if (
 			timetable.find(
 				(x: any) =>
-					x.num === selected_day.lessons[selected_day.lessons.length - 1].num &&
+					x.num === selectedDay.lessons[selectedDay.lessons.length - 1].num &&
 					x.lesson === true,
 			).status === `finished` &&
 			!message.args[1]
 		) {
-			if (new Date(selected_date).getDay() + 1 === 7) {
-				selected_day = await user_group.weekly_schedule.find(
+			if (new Date(selectedDate).getDay() + 1 === 7) {
+				selectedDay = await userGroup.weekly_schedule.find(
 					(x: any) => x.num === 1,
 				);
-				selected_date = Number(
-					new Date(selected_date).setDate(
-						new Date(selected_date).getDate() + 2,
-					),
+				selectedDate = Number(
+					new Date(selectedDate).setDate(new Date(selectedDate).getDate() + 2),
 				);
 			} else {
-				selected_day = await user_group.weekly_schedule.find(
-					(x: any) => x.num === new Date(selected_date).getDay() + 1,
+				selectedDay = await userGroup.weekly_schedule.find(
+					(x: any) => x.num === new Date(selectedDate).getDay() + 1,
 				);
-				selected_date = Number(
-					new Date(selected_date).setDate(
-						new Date(selected_date).getDate() + 1,
-					),
+				selectedDate = Number(
+					new Date(selectedDate).setDate(new Date(selectedDate).getDate() + 1),
 				);
 			}
 		}
 
-		let numerator = await Number.isInteger(
-			new Date(selected_date).getWeek() / 2,
-		);
+		let numerator = Number.isInteger(new Date(selectedDate).getWeek() / 2);
 
 		if (numerator === true) {
-			selected_week_string = `Числитель`;
+			selectedWeekString = `Числитель`;
 		} else {
-			selected_week_string = `Знаменатель`;
+			selectedWeekString = `Знаменатель`;
 		}
 
-		for (let i in selected_day.lessons) {
-			if (selected_day.lessons[i].name.length === 1) {
-				array_with_lessons.push({
-					lesson_num: selected_day.lessons[i].num,
-					lesson_name: selected_day.lessons[i].name[0],
-					lesson_teacher: selected_day.lessons[i].teacher[0],
+		for (let i in selectedDay.lessons) {
+			if (selectedDay.lessons[i].name.length === 1) {
+				arrayWithLessons.push({
+					lesson_num: selectedDay.lessons[i].num,
+					lesson_name: selectedDay.lessons[i].name[0],
+					lesson_teacher: selectedDay.lessons[i].teacher[0],
 				});
 			} else {
-				if (selected_day.lessons[i].name[0] != `-` && numerator === true) {
-					array_with_lessons.push({
-						lesson_num: selected_day.lessons[i].num,
-						lesson_name: selected_day.lessons[i].name[0],
-						lesson_teacher: selected_day.lessons[i].teacher[0],
+				if (selectedDay.lessons[i].name[0] != `-` && numerator === true) {
+					arrayWithLessons.push({
+						lesson_num: selectedDay.lessons[i].num,
+						lesson_name: selectedDay.lessons[i].name[0],
+						lesson_teacher: selectedDay.lessons[i].teacher[0],
 					});
 				} else if (
-					selected_day.lessons[i].name[1] != `-` &&
+					selectedDay.lessons[i].name[1] != `-` &&
 					numerator === false
 				) {
-					array_with_lessons.push({
-						lesson_num: selected_day.lessons[i].num,
-						lesson_name: selected_day.lessons[i].name[1],
-						lesson_teacher: selected_day.lessons[i].teacher[1],
+					arrayWithLessons.push({
+						lesson_num: selectedDay.lessons[i].num,
+						lesson_name: selectedDay.lessons[i].name[1],
+						lesson_teacher: selectedDay.lessons[i].teacher[1],
 					});
 				}
 			}
 		}
 
-		let replacement_checker = await models.replacement.exists({
-			date: await utils.time.getDateByMS(Number(selected_date)),
-			unical_group_id: group_data.uid,
+		let replacementChecker = await models.replacement.exists({
+			date: utils.time.getDateByMS(Number(selectedDate)),
+			unical_group_id: groupData.uid,
 		});
 
 		function sorter(a: any, b: any) {
@@ -353,48 +347,47 @@ export = {
 			return 0;
 		}
 
-		if (replacement_checker === true) {
-			let replacement_on_this_day_data: any = await models.replacement.find({
-				date: await utils.time.getDateByMS(Number(selected_date)),
-				unical_group_id: group_data.uid,
+		if (replacementChecker === true) {
+			let replacementOnThisDayData: any = await models.replacement.find({
+				date: utils.time.getDateByMS(Number(selectedDate)),
+				unical_group_id: groupData.uid,
 			});
 
-			for (let i in replacement_on_this_day_data) {
-				let check_lesson = array_with_lessons.find(
-					(x: any) =>
-						x.lesson_num === replacement_on_this_day_data[i].lesson_num,
+			for (let i in replacementOnThisDayData) {
+				let check_lesson = arrayWithLessons.find(
+					(x: any) => x.lesson_num === replacementOnThisDayData[i].lesson_num,
 				);
 				if (!check_lesson) {
-					array_with_lessons.push({
-						lesson_num: replacement_on_this_day_data[i].lesson_num,
-						lesson_name: replacement_on_this_day_data[i].new_lesson_name,
-						lesson_teacher: replacement_on_this_day_data[i].new_lesson_teacher,
+					arrayWithLessons.push({
+						lesson_num: replacementOnThisDayData[i].lesson_num,
+						lesson_name: replacementOnThisDayData[i].new_lesson_name,
+						lesson_teacher: replacementOnThisDayData[i].new_lesson_teacher,
 					});
 				} else {
 					check_lesson.lesson_name =
-						replacement_on_this_day_data[i].new_lesson_name;
+						replacementOnThisDayData[i].new_lesson_name;
 					check_lesson.lesson_teacher =
-						replacement_on_this_day_data[i].new_lesson_teacher;
+						replacementOnThisDayData[i].new_lesson_teacher;
 				}
 			}
-			array_with_lessons.sort(sorter);
-			for (let i in array_with_lessons) {
-				lessons_string += `\n${array_with_lessons[i].lesson_num}. ${array_with_lessons[i].lesson_name}\n(${array_with_lessons[i].lesson_teacher})\n`;
+			arrayWithLessons.sort(sorter);
+			for (let i in arrayWithLessons) {
+				lessonsString += `\n${arrayWithLessons[i].lesson_num}. ${arrayWithLessons[i].lesson_name}\n(${arrayWithLessons[i].lesson_teacher})\n`;
 			}
-			lessons_string += `\n\nВнимание:\nНа выбранный день есть замена.\nПросмотреть текущие замены можно командой "замены".`;
-			replacement_keyboard = [
+			lessonsString += `\n\nВнимание:\nНа выбранный день есть замена.\nПросмотреть текущие замены можно командой "замены".`;
+			replacementKeyboard = [
 				Keyboard.textButton({
 					label: `Замены`,
 					payload: {
-						command: `Замены ${await utils.time.getDateByMS(selected_date)}`,
+						command: `Замены ${utils.time.getDateByMS(selectedDate)}`,
 					},
 					color: Keyboard.SECONDARY_COLOR,
 				}),
 			];
-			keyboard_data.push(replacement_keyboard);
+			keyboardData.push(replacementKeyboard);
 		} else {
-			for (let i in array_with_lessons) {
-				lessons_string += `\n${array_with_lessons[i].lesson_num}. ${array_with_lessons[i].lesson_name}\n(${array_with_lessons[i].lesson_teacher})\n`;
+			for (let i in arrayWithLessons) {
+				lessonsString += `\n${arrayWithLessons[i].lesson_num}. ${arrayWithLessons[i].lesson_name}\n(${arrayWithLessons[i].lesson_teacher})\n`;
 			}
 		}
 
@@ -412,13 +405,13 @@ export = {
 		}
 
 		return message.sendMessage(
-			`расписание на ${await utils.time.getDateByMS(selected_date)}:
-Группа: ${group_data.name}
-День: ${getWeekDay(new Date(selected_date))}
-Место: ${selected_day.place}
-Неделя: ${selected_week_string} (${new Date(selected_date).getWeek()})
-${lessons_string}`,
-			{ keyboard: Keyboard.keyboard(keyboard_data).inline() },
+			`расписание на ${utils.time.getDateByMS(selectedDate)}:
+Группа: ${groupData.name}
+День: ${getWeekDay(new Date(selectedDate))}
+Место: ${selectedDay.place}
+Неделя: ${selectedWeekString} (${new Date(selectedDate).getWeek()})
+${lessonsString}`,
+			{ keyboard: Keyboard.keyboard(keyboardData).inline() },
 		);
 	},
 };
