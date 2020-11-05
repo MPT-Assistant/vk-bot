@@ -39,3 +39,28 @@ export interface GoogleUserData {
 	token_type: string;
 	expiry_date: number;
 }
+
+export interface timetableElement {
+	lesson: boolean;
+	start: Date;
+	end: Date;
+	status: "finished" | "started";
+	diff_start: {
+		years: number;
+		months: number;
+		days: number;
+		hours: number;
+		minutes: number;
+		seconds: number;
+		firstDateWasLater: boolean;
+	};
+	diff_end: {
+		years: number;
+		months: number;
+		days: number;
+		hours: number;
+		minutes: number;
+		seconds: number;
+		firstDateWasLater: boolean;
+	};
+}
