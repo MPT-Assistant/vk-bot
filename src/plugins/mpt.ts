@@ -1,3 +1,4 @@
+import { timetableElement } from "./types";
 import { getRandomId, Keyboard } from "vk-io";
 import moment from "moment";
 import "moment-precise-range-plugin";
@@ -483,7 +484,7 @@ const mpt = {
 
 		return true;
 	},
-	parseTimetable: async () => {
+	parseTimetable: async (): Promise<Array<timetableElement>> => {
 		let output = [];
 		let lessonNum = 0;
 		let breakNum = 0;
@@ -499,14 +500,15 @@ const mpt = {
 			endLessonDate.setSeconds(0);
 			if (startLessonDate < new Date()) {
 				startLessonDate.setDate(new Date().getDate() + 1);
-				status = `started`;
+				status = "started";
 			}
 			if (endLessonDate < new Date()) {
 				endLessonDate.setDate(new Date().getDate() + 1);
-				status = `finished`;
+				status = "finished";
 			}
-			let outputData = {
+			let outputData: timetableElement = {
 				lesson: timetable[i].lesson,
+				num: 0,
 				start: startLessonDate,
 				end: endLessonDate,
 				status: status,
@@ -523,10 +525,12 @@ const mpt = {
 			};
 			if (timetable[i].lesson === true) {
 				lessonNum += 1;
-				output.push(Object.assign(outputData, { num: lessonNum }));
+				outputData.num = lessonNum;
+				output.push(outputData);
 			} else {
 				breakNum += 1;
-				output.push(Object.assign(outputData, { num: breakNum }));
+				outputData.num = breakNum;
+				output.push(outputData);
 			}
 		}
 		return output;

@@ -42,9 +42,10 @@ export interface GoogleUserData {
 
 export interface timetableElement {
 	lesson: boolean;
+	num: number;
 	start: Date;
 	end: Date;
-	status: "finished" | "started";
+	status: "finished" | "started" | "not_start" | string;
 	diff_start: {
 		years: number;
 		months: number;
