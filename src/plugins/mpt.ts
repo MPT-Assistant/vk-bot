@@ -505,7 +505,7 @@ const mpt = {
 				endLessonDate.setDate(new Date().getDate() + 1);
 				status = `finished`;
 			}
-			let output_data = {
+			let outputData = {
 				lesson: timetable[i].lesson,
 				start: startLessonDate,
 				end: endLessonDate,
@@ -523,10 +523,10 @@ const mpt = {
 			};
 			if (timetable[i].lesson === true) {
 				lessonNum += 1;
-				output.push(Object.assign(output_data, { num: lessonNum }));
+				output.push(Object.assign(outputData, { num: lessonNum }));
 			} else {
 				breakNum += 1;
-				output.push(Object.assign(output_data, { num: breakNum }));
+				output.push(Object.assign(outputData, { num: breakNum }));
 			}
 		}
 		return output;
