@@ -104,7 +104,10 @@ export = {
 				day: 0,
 			},
 		];
-		if (!message.args[1] || /(?:^сегодня)$/gi.test(message.args[1]) === true) {
+		if (
+			!message.args[1] ||
+			/(?:^сегодня|с)$/gi.test(message.args[1]) === true
+		) {
 			selected_date = new Date().getTime();
 		} else if (/(?:^завтра|^з)$/gi.test(message.args[1]) === true) {
 			selected_date = new Date().getTime() + 1 * 24 * 60 * 60 * 1000;
