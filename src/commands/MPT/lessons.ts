@@ -383,9 +383,13 @@ export = {
 					arrayWithLessons[i].lesson_name
 				}\n(${arrayWithLessons[i].lesson_teacher})\n${
 					lessonTimetableData
-						? utils.time.getTimeByMS(Number(lessonTimetableData?.start)) +
+						? utils.time
+								.getTimeByMS(Number(lessonTimetableData?.start))
+								.slice(0, -3) +
 						  " - " +
-						  utils.time.getTimeByMS(Number(lessonTimetableData?.end))
+						  utils.time
+								.getTimeByMS(Number(lessonTimetableData?.end))
+								.slice(0, -3)
 						: ""
 				}\n`;
 			}
@@ -414,9 +418,13 @@ export = {
 					arrayWithLessons[i].lesson_name
 				}\n(${arrayWithLessons[i].lesson_teacher})\n${
 					lessonTimetableData
-						? utils.time.getTimeByMS(Number(lessonTimetableData?.start)) +
+						? utils.time
+								.getTimeByMS(Number(lessonTimetableData?.start))
+								.slice(0, -3) +
 						  " - " +
-						  utils.time.getTimeByMS(Number(lessonTimetableData?.end))
+						  utils.time
+								.getTimeByMS(Number(lessonTimetableData?.end))
+								.slice(0, -3)
 						: ""
 				}\n`;
 			}
