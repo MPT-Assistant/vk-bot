@@ -1,3 +1,4 @@
+import { timetableElement } from "./../../plugins/types";
 import utils from "rus-anonym-utils";
 import { MPTMessage } from "../../plugins/types";
 import { Keyboard } from "vk-io";
@@ -275,10 +276,11 @@ export = {
 			(x: any) => x.num === new Date(selectedDate).getDay(),
 		);
 
-		let timetable: any = await mpt.parseTimetable();
+		let timetable = await mpt.parseTimetable();
 		if (
+			//@ts-ignore
 			timetable.find(
-				(x: any) =>
+				(x: timetableElement) =>
 					x.num === selectedDay.lessons[selectedDay.lessons.length - 1].num &&
 					x.lesson === true,
 			).status === `finished` &&
@@ -372,7 +374,20 @@ export = {
 			}
 			arrayWithLessons.sort(sorter);
 			for (let i in arrayWithLessons) {
-				lessonsString += `\n${arrayWithLessons[i].lesson_num}. ${arrayWithLessons[i].lesson_name}\n(${arrayWithLessons[i].lesson_teacher})\n`;
+				let lessonTimetableData = timetable.find(
+					(x: timetableElement) =>
+						x.num === Number(arrayWithLessons[i].lesson_num) &&
+						x.lesson === true,
+				);
+				lessonsString += `\n${arrayWithLessons[i].lesson_num}. ${
+					arrayWithLessons[i].lesson_name
+				}\n(${arrayWithLessons[i].lesson_teacher})\n${
+					lessonTimetableData
+						? utils.time.getTimeByMS(Number(lessonTimetableData?.start)) +
+						  " - " +
+						  utils.time.getTimeByMS(Number(lessonTimetableData?.end))
+						: ""
+				}\n`;
 			}
 			lessonsString += `\n\nВнимание:\nНа выбранный день есть замена.\nПросмотреть текущие замены можно командой "замены".`;
 			replacementKeyboard = [
@@ -387,7 +402,23 @@ export = {
 			keyboardData.push(replacementKeyboard);
 		} else {
 			for (let i in arrayWithLessons) {
-				lessonsString += `\n${arrayWithLessons[i].lesson_num}. ${arrayWithLessons[i].lesson_name}\n(${arrayWithLessons[i].lesson_teacher})\n`;
+				console.log(timetable);
+				let lessonTimetableData = timetable.find(
+					(x: timetableElement) =>
+						x.num === Number(arrayWithLessons[i].lesson_num) &&
+						x.lesson === true,
+				);
+				console.log(arrayWithLessons[i]);
+				console.log(lessonTimetableData);
+				lessonsString += `\n${arrayWithLessons[i].lesson_num}. ${
+					arrayWithLessons[i].lesson_name
+				}\n(${arrayWithLessons[i].lesson_teacher})\n${
+					lessonTimetableData
+						? utils.time.getTimeByMS(Number(lessonTimetableData?.start)) +
+						  " - " +
+						  utils.time.getTimeByMS(Number(lessonTimetableData?.end))
+						: ""
+				}\n`;
 			}
 		}
 
