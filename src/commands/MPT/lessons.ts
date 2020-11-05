@@ -406,14 +406,11 @@ export = {
 			keyboardData.push(replacementKeyboard);
 		} else {
 			for (let i in arrayWithLessons) {
-				console.log(timetable);
 				let lessonTimetableData = timetable.find(
 					(x: timetableElement) =>
 						x.num === Number(arrayWithLessons[i].lesson_num) &&
 						x.lesson === true,
 				);
-				console.log(arrayWithLessons[i]);
-				console.log(lessonTimetableData);
 				lessonsString += `\n${arrayWithLessons[i].lesson_num}. ${
 					arrayWithLessons[i].lesson_name
 				}\n(${arrayWithLessons[i].lesson_teacher})\n${
