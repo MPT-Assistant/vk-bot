@@ -474,6 +474,17 @@ const mpt = {
 										parsed_data.detected,
 									)}\n\n`,
 									random_id: getRandomId(),
+									keyboard: Keyboard.keyboard([
+										[
+											Keyboard.textButton({
+												label: `Отключить рассылку изменений`,
+												payload: {
+													command: `изменения выкл`,
+												},
+												color: Keyboard.NEGATIVE_COLOR,
+											}),
+										],
+									]).inline(),
 								});
 							} catch (error) {}
 						}
