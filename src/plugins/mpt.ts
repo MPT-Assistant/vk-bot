@@ -186,7 +186,7 @@ const mpt = {
 		}
 		return true;
 	},
-	parseAllSchedule: async () => {
+	parseAllSchedule: async (): Promise<Array<lessonsList>> => {
 		const $ = parser.load(
 			await temp_requester(`https://mpt.ru/studentu/raspisanie-zanyatiy/`),
 		);
