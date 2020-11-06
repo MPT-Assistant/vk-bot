@@ -7,27 +7,9 @@ import temp_requester from "request-promise";
 import utils from "rus-anonym-utils";
 import models from "./models";
 import { vk } from "./core";
+import * as internalUtils from "./utils";
 
 const timetable = require(`../DB/timetable.json`);
-
-const internalUtils = {
-	getUpperLetter: async (str: string) => {
-		let array_with_str = str.split(``);
-		let data = `ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ`.split(``);
-		let temp_array = [];
-		for (let i in array_with_str) {
-			for (let j in data) {
-				if (array_with_str[i].indexOf(data[j]) != -1) {
-					temp_array.push({
-						letter: array_with_str[i],
-						index: i,
-					});
-				}
-			}
-		}
-		return temp_array;
-	},
-};
 
 const mpt = {
 	Update_all_shedule: async () => {
