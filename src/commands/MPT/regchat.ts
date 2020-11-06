@@ -6,6 +6,7 @@ import models from "../../plugins/models";
 
 export = {
 	regexp: /^(?:regchat)\s?([^]+)?/i,
+	template: ["regchat"],
 	process: async (message: MPTMessage) => {
 		if (!message.chat) {
 			return message.sendMessage(`доступно только в беседах`);

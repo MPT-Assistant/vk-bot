@@ -14,6 +14,7 @@ import { mpt } from "./mpt";
 import models from "./models";
 import utils from "rus-anonym-utils";
 const commands: Array<MPTCommand> = [];
+const commandsTemplates: Array<string> = [];
 
 const config: {
 	token: string;
@@ -50,8 +51,25 @@ vk.updates.on("message", async function (message: MPTMessage) {
 	let command = commands.find((x) => x.regexp.test(message.text || ""));
 	if (!command) {
 		if (!message.isChat) {
+			let possibleCommands = [];
+			for (let tempTemplate of commandsTemplates) {
+				possibleCommands.push({
+					template: tempTemplate,
+					diff: await utils.string.levenshtein(message.text, tempTemplate),
+				});
+			}
+			possibleCommands.sort(function (a, b) {
+				if (a.diff > b.diff) {
+					return 1;
+				}
+				if (a.diff < b.diff) {
+					return -1;
+				}
+				return 0;
+			});
+			let text = `\nВозможно вы имели в виду какую то из этих команд:\n1. ${possibleCommands[0].template}\n2. ${possibleCommands[1].template}\n3. ${possibleCommands[2].template}`;
 			return await message.send(
-				`Такой команды не существует, список команд можно посмотреть тут:`,
+				`Такой команды не существует, список команд можно посмотреть тут:\n${text}`,
 				{ attachment: `article-188434642_189203_12d88f37969ae1c641` },
 			);
 		}
@@ -142,6 +160,9 @@ async function commandsLoader(path: string) {
 			await commandsLoader(currentElement);
 		} else {
 			let tempScript = require(`.` + currentElement);
+			for (let template of tempScript.template) {
+				commandsTemplates.push(template);
+			}
 			commands.push({
 				regexp: tempScript.regexp,
 				process: tempScript.process,

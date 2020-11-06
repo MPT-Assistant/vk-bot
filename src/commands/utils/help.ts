@@ -1,6 +1,7 @@
 import { MPTMessage } from "../../plugins/types";
 export = {
-	regexp: /^(?:помощь|help|хелп|памаги|начать|памагити|помоги|start|команды)$/i,
+	regexp: /^(?:помощь|help|start|команды)$/i,
+	template: ["помощь", "help", "команды"],
 	process: async (message: MPTMessage) => {
 		return await message.sendMessage(
 			`${

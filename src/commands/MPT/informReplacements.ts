@@ -1,6 +1,7 @@
 import { MPTMessage } from "../../plugins/types";
 export = {
 	regexp: /^(?:изменения)\s(вкл|выкл|выключить|включить)$/i,
+	template: [],
 	process: async (message: MPTMessage) => {
 		if (!message.chat) {
 			return message.sendMessage(
