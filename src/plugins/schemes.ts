@@ -35,9 +35,7 @@ const lesson: Schema = new Schema({
 
 const replacement: Schema = new Schema({
 	date: String,
-	unical_group_id: Number,
-	specialty_id: Number,
-	group_id: Number,
+	unical_group_id: String,
 	detected: Date,
 	add_to_site: Date,
 	lesson_num: Number,

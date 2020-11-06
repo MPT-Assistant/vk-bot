@@ -10,16 +10,16 @@ export = {
 	process: async (message: MPTMessage) => {
 		if (
 			(message.chat &&
-				message.chat.unical_group_id === 0 &&
-				message.user.data.unical_group_id === 0) ||
-			(message.user.data.unical_group_id === 0 && !message.isChat)
+				message.chat.unical_group_id === "" &&
+				message.user.data.unical_group_id === "") ||
+			(message.user.data.unical_group_id === "" && !message.isChat)
 		) {
 			return await message.sendMessage(
 				`Вы не установили свою группу. Для установки своей группы введите команду: "Установить группу [Название группы]", либо же для установки стандартной группы для чата: "regchat [Название группы].`,
 			);
 		}
 		let group_data: any;
-		if (message.user.data.unical_group_id === 0 && message.chat) {
+		if (message.user.data.unical_group_id === "" && message.chat) {
 			group_data = await models.utilityGroup.findOne({
 				uid: message.chat.unical_group_id,
 			});

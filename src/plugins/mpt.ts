@@ -577,7 +577,7 @@ const mpt = {
 				for (let c in new_replacement_data[i].groups[j].replacements) {
 					let parsed_data: {
 						date: Date;
-						unical_group_id: number;
+						unical_group_id: string;
 						specialty_id: number;
 						group_id: number;
 						detected: number;
