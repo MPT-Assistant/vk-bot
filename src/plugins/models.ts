@@ -6,13 +6,17 @@ import * as types from "./types";
 
 const user = mongoose.model<types.UserInterface>("user", schemes.user, `users`);
 const chat = mongoose.model<types.ChatInterface>("chat", schemes.chat, `chats`);
-const specialty = mongoose.model("specialty", schemes.specialty, `specialties`);
+const specialty = mongoose.model<types.specialtyInterface>(
+	"specialty",
+	schemes.specialty,
+	`specialties`,
+);
 const replacement = mongoose.model(
 	"replacement",
 	schemes.replacement,
 	`replacements`,
 );
-const utilityGroup = mongoose.model(
+const utilityGroup = mongoose.model<types.utilityGroup>(
 	"utility_group",
 	schemes.utilityGroup,
 	`groups`,

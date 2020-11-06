@@ -67,7 +67,7 @@ export interface timetableElement {
 }
 
 export interface lessonsList {
-	id: string;
+	uid: string;
 	name: string;
 	groups: Array<{
 		id: string;
@@ -83,4 +83,14 @@ export interface lessonsList {
 			}>;
 		}>;
 	}>;
+}
+
+export interface specialtyInterface extends Document, lessonsList {}
+
+export interface utilityGroup extends Document {
+	uid: string;
+	name: string;
+	id: string;
+	specialty: string;
+	specialty_id: string;
 }

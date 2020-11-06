@@ -204,11 +204,11 @@ const mpt = {
 			);
 			const tempFlowNameHash = internalUtils.hash.md5(tempFlowName);
 			outputData.push({
-				id: tempFlowNameHash,
+				uid: tempFlowNameHash,
 				name: tempFlowName,
 				groups: [],
 			});
-			let tempFlowInstance = outputData.find((x) => x.id === tempFlowNameHash);
+			let tempFlowInstance = outputData.find((x) => x.uid === tempFlowNameHash);
 			for (let i = 1; i < tempFlow.children[3].children.length; i += 2) {
 				//@ts-ignore
 				let tempFlowGroupNames = tempFlow.children[3].children[
@@ -343,6 +343,35 @@ const mpt = {
 			}
 		}
 		return outputData;
+	},
+	updateAllSchedule: async (): Promise<true> => {
+		let scheduleList = await mpt.parseAllSchedule();
+		for (let tempFlow of scheduleList) {
+			let specialty = await models.specialty.findOne({
+				id: tempFlow.uid,
+			});
+			if (!specialty) {
+				specialty = new models.specialty(tempFlow);
+			} else {
+				specialty.groups = tempFlow.groups;
+			}
+			await specialty.save();
+			for (let tempGroup of tempFlow.groups) {
+				let utilityGroup = await models.utilityGroup.findOne({
+					id: tempGroup.id,
+				});
+				if (!utilityGroup) {
+					utilityGroup = new models.utilityGroup({
+						uid: tempGroup.uid,
+						id: tempGroup.id,
+						name: tempGroup.name,
+						specialty: tempFlow.name,
+						specialty_id: tempFlow.uid,
+					});
+				}
+			}
+		}
+		return true;
 	},
 	Update_all_replacements: async () => {
 		const $ = parser.load(
