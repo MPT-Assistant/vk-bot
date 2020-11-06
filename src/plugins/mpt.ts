@@ -202,13 +202,147 @@ const mpt = {
 				`Расписание занятий для `,
 				``,
 			);
+			const tempFlowNameHash = internalUtils.hash.md5(tempFlowName);
 			outputData.push({
-				id: internalUtils.hash.md5(tempFlowName),
+				id: tempFlowNameHash,
 				name: tempFlowName,
 				groups: [],
 			});
-			for (let i = 1; i < tempFlow.children[3].children.length; i += 2) {}
+			let tempFlowInstance = outputData.find((x) => x.id === tempFlowNameHash);
+			for (let i = 1; i < tempFlow.children[3].children.length; i += 2) {
+				//@ts-ignore
+				let tempFlowGroupNames = tempFlow.children[3].children[
+					i
+				].children[1].children[0].data
+					.replace(/(^\s*)|(\s*)$/g, "")
+					.split(`, `);
+				for (let tempGroupName of tempFlowGroupNames) {
+					const tempGroupNameHash = internalUtils.hash.md5(tempGroupName);
+					tempFlowInstance?.groups.push({
+						id: tempGroupNameHash,
+						uid: internalUtils.hash.md5(`${tempGroupName} | ${tempFlowName}`),
+						name: tempGroupName,
+						weekly_schedule: [],
+					});
+					let tempWeeklySchedule = tempFlow.children[5].children[
+						i
+					].children[3].children.filter(
+						(x: cheerio.Element) => x.type != `text`,
+					);
+					let tempGroupInstance = tempFlowInstance?.groups.find(
+						(x) => x.id === tempGroupNameHash,
+					);
+					for (let j = 1; j < tempWeeklySchedule.length; j += 2) {
+						let dayName =
+							tempWeeklySchedule[j].children[1].children[0].children[1]
+								.children[0].data || "";
+						let placeName: string | cheerio.Element =
+							tempWeeklySchedule[j].children[1].children[0].children[1]
+								.children[1];
+						if (!placeName) break;
+						if (placeName.children[0]) {
+							//@ts-ignore
+							placeName = placeName.children[0].data
+								.replace(`(`, ``)
+								.replace(`)`, ``);
+						} else {
+							placeName = `Не указано`;
+						}
+						let tempDayLessons = tempWeeklySchedule[j + 1].children.filter(
+							(x: cheerio.Element) => x.type != `text`,
+						);
+						const dayNum: number = Number(
+							dayName
+								.toString()
+								.replace(/понедельник/gi, "1")
+								.replace(/вторник/gi, "2")
+								.replace(/среда/gi, "3")
+								.replace(/четверг/gi, "4")
+								.replace(/пятница/gi, "5")
+								.replace(/суббота/gi, "6")
+								.replace(/воскресенье/gi, "0"),
+						);
+						tempGroupInstance?.weekly_schedule.push({
+							num: dayNum,
+							place: placeName,
+							lessons: [],
+						});
+						let tempDayInstance = tempGroupInstance?.weekly_schedule.find(
+							(x) => x.num === dayNum,
+						);
+						for (let k = 1; k < tempDayLessons.length; k++) {
+							if (tempDayLessons[k].children[0].children) {
+								let tempArrayWithNumLessons =
+									tempDayLessons[k].children[0].children;
+								let tempArrayWithNameLessons =
+									tempDayLessons[k].children[1].children;
+								let tempArrayWithTeachersName =
+									tempDayLessons[k].children[2].children;
+								let numLesson = tempArrayWithNumLessons[0].data;
+								let nameLesson: string[] = [];
+								let lessonTeacher: string[] = [];
+								if (tempArrayWithNameLessons[0].data) {
+									nameLesson.push(tempArrayWithNameLessons[0].data);
+									if (tempArrayWithTeachersName[0]) {
+										//@ts-ignore
+										lessonTeacher.push(tempArrayWithTeachersName[0].data);
+									} else {
+										lessonTeacher.push(`Отсутствует`);
+									}
+								} else {
+									let numeratorLessonName = tempArrayWithNameLessons.find(
+										(x: cheerio.Element) =>
+											x.attribs.class === "label label-danger",
+									);
+									let denominatorLessonName = tempArrayWithNameLessons.find(
+										(x: cheerio.Element) =>
+											x.attribs.class === "label label-info",
+									);
+									let numeratorTeacherName = tempArrayWithTeachersName.find(
+										(x: cheerio.Element) =>
+											x.attribs.class === "label label-danger",
+									);
+									let denominatorTeacherName = tempArrayWithTeachersName.find(
+										(x: cheerio.Element) =>
+											x.attribs.class === "label label-info",
+									);
+									nameLesson.push(
+										//@ts-ignore
+										numeratorLessonName?.children[0].data.replace(
+											/(^\s*)|(\s*)$/g,
+											"",
+										),
+										//@ts-ignore
+										denominatorLessonName?.children[0].data.replace(
+											/(^\s*)|(\s*)$/g,
+											"",
+										),
+									);
+									lessonTeacher.push(
+										//@ts-ignore
+										numeratorTeacherName?.children[0].data.replace(
+											/(^\s*)|(\s*)$/g,
+											"",
+										),
+										//@ts-ignore
+										denominatorTeacherName?.children[0].data.replace(
+											/(^\s*)|(\s*)$/g,
+											"",
+										),
+									);
+								}
+								tempDayInstance?.lessons.push({
+									num: Number(numLesson),
+									name: nameLesson,
+									teacher: lessonTeacher,
+								});
+							}
+						}
+					}
+				}
+			}
 		}
+		return outputData;
 	},
 	Update_all_replacements: async () => {
 		const $ = parser.load(
