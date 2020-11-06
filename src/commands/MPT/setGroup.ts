@@ -45,7 +45,7 @@ export = {
 				return 0;
 			});
 			let text = `\nВозможно вы имели в виду какую то из этих групп:`;
-			let keyboard_data = await Keyboard.keyboard([
+			let keyboard_data = Keyboard.keyboard([
 				[
 					Keyboard.textButton({
 						label: diff[0].group_name,

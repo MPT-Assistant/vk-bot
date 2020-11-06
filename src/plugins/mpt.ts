@@ -51,7 +51,7 @@ const mpt = {
 				name: specialty_name,
 			});
 			if (!specialty) {
-				specialty = await new models.specialty({
+				specialty = new models.specialty({
 					id: counter_specialty,
 					name: specialty_name,
 					groups: [],
@@ -184,7 +184,7 @@ const mpt = {
 						uid: current_group.uid,
 					});
 					if (!check_utility_group) {
-						check_utility_group = await new models.utilityGroup({
+						check_utility_group = new models.utilityGroup({
 							uid: current_group.uid,
 							name: current_group.name,
 							id: current_group.id,
@@ -211,7 +211,7 @@ const mpt = {
 		let table_with_replacements = $(
 			`body > div.page > main > div > div > div:nth-child(3)`,
 		);
-		let array_with_replacement: any = await table_with_replacements
+		let array_with_replacement: any = table_with_replacements
 			.children()
 			.toArray();
 		let new_array_with_replacement: any = [];
@@ -249,7 +249,7 @@ const mpt = {
 		let new_replacement_data: any = [];
 		for (let i in new_array_with_replacement) {
 			let date_of_replacement = new_array_with_replacement[i].day_data; //получает дату
-			let temp_time_data: any = await utils.time.getDateByMS(
+			let temp_time_data: any = utils.time.getDateByMS(
 				Number(date_of_replacement),
 			);
 			if (
@@ -468,9 +468,9 @@ const mpt = {
 										parsed_data.new_lesson_name
 									}\nПреподаватель на новой паре: ${
 										parsed_data.new_lesson_teacher
-									}\nДобавлена на сайт: ${await utils.time.getDateTimeByMS(
+									}\nДобавлена на сайт: ${utils.time.getDateTimeByMS(
 										parsed_data.add_to_site,
-									)}\nОбнаружена ботом: ${await utils.time.getDateTimeByMS(
+									)}\nОбнаружена ботом: ${utils.time.getDateTimeByMS(
 										parsed_data.detected,
 									)}\n\n`,
 									random_id: getRandomId(),

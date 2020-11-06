@@ -1,8 +1,8 @@
 import * as mpt from "./plugins/mpt";
-import * as fs from "fs";
+import cryptoJS from "crypto-js";
 
 console.log(`Start at ${new Date()}`);
 (async function () {
-	let timetable = await mpt.mpt.parseTimetable();
-	console.log(timetable);
+	console.log(cryptoJS.MD5(`БИ50-2-19`).toString());
+	console.log(cryptoJS.MD5(`БИ50-3-19`).toString());
 })();
