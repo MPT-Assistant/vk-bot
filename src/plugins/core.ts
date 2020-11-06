@@ -31,7 +31,7 @@ const vk = new VK({
 vk.updates.use(questionManager.middleware);
 
 vk.updates.on("message", async function (message: MPTMessage) {
-	if (message.isGroup) {
+	if (message.isGroup || message.isOutbox) {
 		return;
 	}
 	message.user = await internal.regUserInBot(message.senderId);

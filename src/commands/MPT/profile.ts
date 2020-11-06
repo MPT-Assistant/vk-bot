@@ -1,8 +1,7 @@
-import { Keyboard } from "vk-io";
 import models from "../../plugins/models";
 import { MPTMessage } from "../../plugins/types";
 export = {
-	regexp: /^(?:чат|chat)$/i,
+	regexp: /^(?:проф|профиль|profile)$/i,
 	process: async (message: MPTMessage) => {
 		let groupData: any = await models.utilityGroup.findOne({
 			uid: message.user.data.unical_group_id,
