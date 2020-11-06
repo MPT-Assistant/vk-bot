@@ -8,7 +8,7 @@ const user: Schema = new Schema({
 	reg_date: Date,
 	nickname: String,
 	data: {
-		unical_group_id: Number,
+		unical_group_id: String,
 		mailing: Boolean,
 		google: {
 			access_token: String,

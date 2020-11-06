@@ -22,7 +22,7 @@ export interface UserInterface extends Document {
 	reg_date: Date;
 	nickname: string;
 	data: {
-		unical_group_id: number;
+		unical_group_id: string;
 	};
 }
 
