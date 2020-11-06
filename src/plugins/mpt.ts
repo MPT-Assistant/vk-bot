@@ -486,8 +486,6 @@ const mpt = {
 	},
 	parseTimetable: async (): Promise<Array<timetableElement>> => {
 		let output = [];
-		let lessonNum = 0;
-		let breakNum = 0;
 		for (let i in timetable) {
 			let startLessonDate = new Date();
 			let endLessonDate = new Date();
@@ -508,7 +506,7 @@ const mpt = {
 			}
 			let outputData: timetableElement = {
 				lesson: timetable[i].lesson,
-				num: 0,
+				num: timetable[i].num,
 				start: startLessonDate,
 				end: endLessonDate,
 				status: status,
@@ -524,12 +522,8 @@ const mpt = {
 				),
 			};
 			if (timetable[i].lesson === true) {
-				lessonNum += 1;
-				outputData.num = lessonNum;
 				output.push(outputData);
 			} else {
-				breakNum += 1;
-				outputData.num = breakNum;
 				output.push(outputData);
 			}
 		}

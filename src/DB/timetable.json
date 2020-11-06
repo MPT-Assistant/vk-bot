@@ -1,5 +1,6 @@
 [
 	{
+		"num": 1,
 		"lesson": true,
 		"start": {
 			"hour": 8,
@@ -11,6 +12,7 @@
 		}
 	},
 	{
+		"num": 1,
 		"lesson": false,
 		"start": {
 			"hour": 10,
@@ -22,6 +24,7 @@
 		}
 	},
 	{
+		"num": 2,
 		"lesson": true,
 		"start": {
 			"hour": 10,
@@ -33,6 +36,7 @@
 		}
 	},
 	{
+		"num": 2,
 		"lesson": false,
 		"start": {
 			"hour": 11,
@@ -44,6 +48,7 @@
 		}
 	},
 	{
+		"num": 3,
 		"lesson": true,
 		"start": {
 			"hour": 12,
@@ -55,28 +60,7 @@
 		}
 	},
 	{
-		"lesson": false,
-		"start": {
-			"hour": 11,
-			"minute": 40
-		},
-		"end": {
-			"hour": 12,
-			"minute": 0
-		}
-	},
-	{
-		"lesson": true,
-		"start": {
-			"hour": 12,
-			"minute": 0
-		},
-		"end": {
-			"hour": 13,
-			"minute": 30
-		}
-	},
-	{
+		"num": 3,
 		"lesson": false,
 		"start": {
 			"hour": 13,
@@ -88,6 +72,7 @@
 		}
 	},
 	{
+		"num": 4,
 		"lesson": true,
 		"start": {
 			"hour": 14,
@@ -99,6 +84,7 @@
 		}
 	},
 	{
+		"num": 4,
 		"lesson": false,
 		"start": {
 			"hour": 15,
@@ -110,6 +96,7 @@
 		}
 	},
 	{
+		"num": 5,
 		"lesson": true,
 		"start": {
 			"hour": 15,
@@ -121,6 +108,7 @@
 		}
 	},
 	{
+		"num": 5,
 		"lesson": false,
 		"start": {
 			"hour": 17,
@@ -132,6 +120,7 @@
 		}
 	},
 	{
+		"num": 6,
 		"lesson": true,
 		"start": {
 			"hour": 17,
@@ -143,6 +132,7 @@
 		}
 	},
 	{
+		"num": 6,
 		"lesson": false,
 		"start": {
 			"hour": 18,
@@ -154,6 +144,7 @@
 		}
 	},
 	{
+		"num": 7,
 		"lesson": true,
 		"start": {
 			"hour": 18,

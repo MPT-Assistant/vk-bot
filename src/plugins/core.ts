@@ -29,8 +29,11 @@ const vk = new VK({
 });
 
 vk.updates.use(questionManager.middleware);
-vk.updates.use(async (message: MPTMessage) => {
-	if (message.type !== `message` || message.senderId <= 0) return;
+
+vk.updates.on("message", async function (message: MPTMessage) {
+	if (message.isGroup) {
+		return;
+	}
 	message.user = await internal.regUserInBot(message.senderId);
 	if (message.messagePayload && message.messagePayload) {
 		let payload_data = message.messagePayload;
@@ -40,6 +43,20 @@ vk.updates.use(async (message: MPTMessage) => {
 		message.chat = await internal.regChatInBot(message.chatId);
 	}
 	if (!message.text) return;
+	message.text = message.text
+		.replace(/(\[club188434642\|[@a-z_A-ZА-Яа-я0-9]+\])/gi, ``)
+		.replace(/(^\s*)|(\s*)$/g, "");
+
+	let command = commands.find((x) => x.regexp.test(message.text || ""));
+	if (!command) {
+		if (!message.isChat) {
+			return await message.send(
+				`Такой команды не существует, список команд можно посмотреть тут:`,
+				{ attachment: `article-188434642_189203_12d88f37969ae1c641` },
+			);
+		}
+		return;
+	}
 	if (message.user.ban === true) return;
 	message.sendMessage = async (
 		text: string | IMessageContextSendOptions,
@@ -66,20 +83,6 @@ vk.updates.use(async (message: MPTMessage) => {
 			return error;
 		}
 	};
-	message.text = message.text
-		.replace(/(\[club188434642\|[@a-z_A-ZА-Яа-я0-9]+\])/gi, ``)
-		.replace(/(^\s*)|(\s*)$/g, "");
-
-	let command = commands.find((x) => x.regexp.test(message.text || ""));
-	if (!command) {
-		if (!message.isChat) {
-			return await message.send(
-				`Такой команды не существует, список команд можно посмотреть тут:`,
-				{ attachment: `article-188434642_189203_12d88f37969ae1c641` },
-			);
-		}
-		return;
-	}
 	message.args = message.text.match(command.regexp);
 	try {
 		await command.process(message);
