@@ -65,3 +65,22 @@ export interface timetableElement {
 		firstDateWasLater: boolean;
 	};
 }
+
+export interface lessonsList {
+	id: string;
+	name: string;
+	groups: Array<{
+		id: string;
+		name: string;
+		uid: string;
+		weekly_schedule: Array<{
+			num: number;
+			place: string;
+			lessons: Array<{
+				num: number;
+				name: Array<string>;
+				teacher: Array<string>;
+			}>;
+		}>;
+	}>;
+}

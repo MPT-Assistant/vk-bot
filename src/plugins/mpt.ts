@@ -1,4 +1,4 @@
-import { timetableElement } from "./types";
+import { timetableElement, lessonsList } from "./types";
 import { getRandomId, Keyboard } from "vk-io";
 import moment from "moment";
 import "moment-precise-range-plugin";
@@ -185,6 +185,30 @@ const mpt = {
 			await specialty.save();
 		}
 		return true;
+	},
+	parseAllSchedule: async () => {
+		const $ = parser.load(
+			await temp_requester(`https://mpt.ru/studentu/raspisanie-zanyatiy/`),
+		);
+		let arrayWithAllFlow: cheerio.Element[] = $(
+			`body > div.page > main > div > div > div:nth-child(3) > div.col-xs-12.col-sm-12.col-md-7.col-md-pull-5 > div.tab-content`,
+		)
+			.children()
+			.toArray();
+		let outputData: Array<lessonsList> = [];
+		for (let tempFlow of arrayWithAllFlow) {
+			//@ts-ignore
+			let tempFlowName = tempFlow.children[1].children[0].data.replace(
+				`Расписание занятий для `,
+				``,
+			);
+			outputData.push({
+				id: internalUtils.hash.md5(tempFlowName),
+				name: tempFlowName,
+				groups: [],
+			});
+			for (let i = 1; i < tempFlow.children[3].children.length; i += 2) {}
+		}
 	},
 	Update_all_replacements: async () => {
 		const $ = parser.load(
