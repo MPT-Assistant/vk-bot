@@ -35,7 +35,7 @@ vk.updates.on("message", async function (message: MPTMessage) {
 	if (message.isGroup || message.isOutbox) {
 		return;
 	}
-	message.user = await internal.regUserInBot(message.senderId);
+	message.user = await internal.regUserInBot(message);
 	if (message.messagePayload && message.messagePayload) {
 		let payload_data = message.messagePayload;
 		message.text = payload_data.command;
@@ -120,13 +120,15 @@ vk.updates.on("message", async function (message: MPTMessage) {
 });
 
 const internal = {
-	regUserInBot: async (vk_id: any) => {
-		let data = await models.user.findOne({ vk_id: vk_id });
+	regUserInBot: async (message: MPTMessage) => {
+		let data = await models.user.findOne({ vk_id: message.senderId });
 		if (!data) {
-			let [user] = await vk.api.users.get({ user_ids: vk_id });
+			let [user] = await vk.api.users.get({
+				user_ids: message.senderId.toString(),
+			});
 			data = new models.user({
 				id: await models.user.countDocuments(),
-				vk_id: vk_id,
+				vk_id: message.senderId,
 				ban: false,
 				reg_date: new Date(),
 				nickname: user.first_name,
