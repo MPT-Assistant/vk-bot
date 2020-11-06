@@ -28,7 +28,7 @@ export interface UserInterface extends Document {
 
 export interface ChatInterface extends Document {
 	id: number;
-	unical_group_id: number;
+	unical_group_id: string;
 	inform: boolean;
 }
 

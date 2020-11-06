@@ -22,7 +22,7 @@ const user: Schema = new Schema({
 
 const chat: Schema = new Schema({
 	id: Number,
-	unical_group_id: Number,
+	unical_group_id: String,
 	inform: Boolean,
 	mailing: Boolean,
 });
