@@ -1,3 +1,4 @@
+import { utilityGroup } from "./../../plugins/types";
 import utils from "rus-anonym-utils";
 import { MPTMessage } from "../../plugins/types";
 import { Keyboard } from "vk-io";
@@ -18,7 +19,7 @@ export = {
 				`Вы не установили свою группу. Для установки своей группы введите команду: "Установить группу [Название группы]", либо же для установки стандартной группы для чата: "regchat [Название группы].`,
 			);
 		}
-		let group_data: any;
+		let group_data: utilityGroup | null;
 		if (message.user.data.unical_group_id === "" && message.chat) {
 			group_data = await models.utilityGroup.findOne({
 				uid: message.chat.unical_group_id,
@@ -27,6 +28,9 @@ export = {
 			group_data = await models.utilityGroup.findOne({
 				uid: message.user.data.unical_group_id,
 			});
+		}
+		if (!group_data) {
+			return message.sendMessage(`Group error`);
 		}
 		let selected_date;
 		let array_with_days: any = [
@@ -116,10 +120,10 @@ export = {
 		) {
 			let data = message.args[1].split(`.`);
 			if (!data[1]) {
-				data[1] = (await utils.time.currentDate()).split(`.`)[1];
+				data[1] = utils.time.currentDate().split(`.`)[1];
 			}
 			if (!data[2]) {
-				data[2] = (await utils.time.currentDate()).split(`.`)[2];
+				data[2] = utils.time.currentDate().split(`.`)[2];
 			}
 			data[0] = Number(data[0]);
 			data[1] = Number(data[1]);
@@ -159,7 +163,7 @@ export = {
 		}
 
 		let replacement_checker = await models.replacement.exists({
-			date: await utils.time.getDateByMS(Number(selected_date)),
+			date: utils.time.getDateByMS(Number(selected_date)),
 			unical_group_id: group_data.uid,
 		});
 
@@ -237,26 +241,26 @@ export = {
 
 		if (new Date(selected_date).getDay() === 0) {
 			return await message.sendMessage(
-				`${await utils.time.getDateByMS(selected_date)} воскресенье.`,
+				`${utils.time.getDateByMS(selected_date)} воскресенье.`,
 				{ keyboard: Keyboard.keyboard(keyboard_data).inline() },
 			);
 		}
 
 		if (replacement_checker === false) {
 			return message.sendMessage(
-				`на ${await utils.time.getDateByMS(selected_date)} нет замен.`,
+				`на ${utils.time.getDateByMS(selected_date)} нет замен.`,
 				{ keyboard: Keyboard.keyboard(keyboard_data).inline() },
 			);
 		}
 
 		let replacement_on_this_day_data: any = await models.replacement.find({
-			date: await utils.time.getDateByMS(Number(selected_date)),
+			date: utils.time.getDateByMS(Number(selected_date)),
 			unical_group_id: group_data.uid,
 		});
 
 		let replacements_string = `для Вашей группы ${
 			group_data.name
-		} на ${await utils.time.getDateByMS(selected_date)} найдено ${
+		} на ${utils.time.getDateByMS(selected_date)} найдено ${
 			replacement_on_this_day_data.length
 		} ${await utils.string.declOfNum(replacement_on_this_day_data.length, [
 			`замена`,
@@ -275,9 +279,9 @@ export = {
 				replacement_on_this_day_data[i].new_lesson_name
 			}\nПреподаватель на новой паре: ${
 				replacement_on_this_day_data[i].new_lesson_teacher
-			}\nДобавлена на сайт: ${await utils.time.getDateTimeByMS(
+			}\nДобавлена на сайт: ${utils.time.getDateTimeByMS(
 				replacement_on_this_day_data[i].add_to_site,
-			)}\nОбнаружена ботом: ${await utils.time.getDateTimeByMS(
+			)}\nОбнаружена ботом: ${utils.time.getDateTimeByMS(
 				replacement_on_this_day_data[i].detected,
 			)}\n\n`;
 		}
