@@ -10,13 +10,6 @@ const user: Schema = new Schema({
 	data: {
 		unical_group_id: String,
 		mailing: Boolean,
-		google: {
-			access_token: String,
-			refresh_token: String,
-			scope: String,
-			token_type: String,
-			expiry_data: Number,
-		},
 	},
 });
 
