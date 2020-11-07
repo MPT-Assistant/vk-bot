@@ -52,24 +52,24 @@ const day: Schema = new Schema({
 });
 
 const group: Schema = new Schema({
-	id: Number,
-	uid: Number,
+	id: String,
+	uid: String,
 	name: String,
 	weekly_schedule: [day],
 });
 
 const specialty: Schema = new Schema({
-	id: Number,
+	id: String,
 	name: String,
 	groups: [group],
 });
 
 const utilityGroup: Schema = new Schema({
-	uid: Number,
+	uid: String,
 	name: String,
-	id: Number,
+	id: String,
 	specialty: String,
-	specialty_id: Number,
+	specialty_id: String,
 });
 
 const courseAnnouncement: Schema = new Schema({
