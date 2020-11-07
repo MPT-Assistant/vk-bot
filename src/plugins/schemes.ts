@@ -59,7 +59,7 @@ const group: Schema = new Schema({
 });
 
 const specialty: Schema = new Schema({
-	id: String,
+	uid: String,
 	name: String,
 	groups: [group],
 });
