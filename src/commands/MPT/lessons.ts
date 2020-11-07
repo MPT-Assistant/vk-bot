@@ -266,7 +266,7 @@ export = {
 		let arrayWithLessons: any = [];
 		let replacementKeyboard = [];
 		let userSpecialty: any = await models.specialty.findOne({
-			id: groupData.specialty_id,
+			uid: groupData.specialty_id,
 		});
 
 		let userGroup = await userSpecialty.groups.find(
