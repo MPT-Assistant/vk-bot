@@ -5,7 +5,7 @@ import utils from "rus-anonym-utils";
 import models from "../../plugins/models";
 
 export = {
-	regexp: [/^(?:regchat)\s?([^]+)?/i],
+	regexp: [/^(?:regchat)\s?([^]+)?/i, /^(?:regchat)\s(.*)$/i],
 	template: ["regchat"],
 	process: async (message: MPTMessage) => {
 		if (!message.chat) {
