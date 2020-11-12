@@ -24,6 +24,8 @@ export interface UserInterface extends Document {
 	data: {
 		mailing: boolean;
 		unical_group_id: string;
+		lesson_notices: boolean;
+		replacement_notices: boolean;
 	};
 }
 
