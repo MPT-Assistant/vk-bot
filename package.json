@@ -19,7 +19,7 @@
 		"mongoose": "^5.10.9",
 		"request": "^2.88.2",
 		"request-promise": "^4.2.6",
-		"rus-anonym-utils": "^2.0.13",
+		"rus-anonym-utils": "^2.0.14",
 		"simple-scheduler-task": "^3.0.12",
 		"vk-io": "^4.0.3",
 		"vk-io-question": "^2.0.1"

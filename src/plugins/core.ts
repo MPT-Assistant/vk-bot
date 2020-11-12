@@ -6,6 +6,7 @@ import {
 	MessageContext,
 	IMessageContextSendOptions,
 	Keyboard,
+	getRandomId,
 } from "vk-io";
 import { MPTMessage } from "./types";
 import moment from "moment";
@@ -18,6 +19,7 @@ import { mpt } from "./mpt";
 
 import models from "./models";
 import utils from "rus-anonym-utils";
+import { MessagesSendParams } from "vk-io/lib/api/schemas/params";
 const commands: Array<MPTCommand> = [];
 const commandsTemplates: Array<string> = [];
 
@@ -138,8 +140,43 @@ vk.updates.on("message", async function (message: MPTMessage) {
 		await message.send({
 			sticker_id: await utils.array.random([18464, 16588, 18466, 18484, 14088]),
 		});
-		console.log(err);
-		return;
+		let errorInDocument = await vk.upload.messageDocument({
+			peer_id: message.peerId,
+			source: {
+				values: {
+					value: Buffer.from(await internal.errorGetData(err)),
+					filename: `output.txt`,
+					contentType: `text/plain`,
+				},
+			},
+		});
+		let forwardData: any = {};
+		if (message.isChat) {
+			forwardData.forward = JSON.stringify({
+				peer_id: message.peerId,
+				conversation_message_ids: message.conversationMessageId,
+				is_reply: 1,
+			});
+		} else {
+			forwardData.reply_to = message.id;
+		}
+		return await vk.api.messages.send(
+			Object.assign(
+				<MessagesSendParams>{
+					message: `@id266982306 (rus_anonym), Обнаружена новая ошибка:\nUser: @id${
+						message.senderId
+					}${
+						message.isChat ? `\nChat: ${message.chatId}` : ""
+					}\nMessage Date: ${new Date(
+						message.createdAt * 1000,
+					)}\nProcessed: ${new Date()}`,
+					random_id: getRandomId(),
+					chat_id: 1,
+					attachment: errorInDocument.toString(),
+				},
+				forwardData,
+			),
+		);
 	}
 });
 
@@ -175,6 +212,11 @@ const internal = {
 			});
 		}
 		return data;
+	},
+	errorGetData: async (error: Error): Promise<string> => {
+		return `Error ${utils.time.currentDateTime()}\n\n\n\nScript uptime: ${process.uptime()}sec\n\n\n\nError Name: ${
+			error.name
+		}\nError Message: ${error.message}\n\nError Stack: ${error.stack}`;
 	},
 };
 
