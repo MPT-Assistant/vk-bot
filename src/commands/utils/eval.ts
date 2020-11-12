@@ -1,6 +1,6 @@
 import { MPTMessage } from "../../plugins/types";
 export = {
-	regexp: /^(?:zz)\s([^]+)$/i,
+	regexp: [/^(?:zz)\s([^]+)$/i],
 	template: [],
 	process: async (message: MPTMessage) => {
 		if (message.senderId !== 266982306) {

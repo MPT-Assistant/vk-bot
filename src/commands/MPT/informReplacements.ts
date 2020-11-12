@@ -1,7 +1,7 @@
 import { MPTMessage } from "../../plugins/types";
 import { Keyboard } from "vk-io";
 export = {
-	regexp: /^(?:изменения)\s(вкл|выкл|выключить|включить)$/i,
+	regexp: [/^(?:изменения)\s(вкл|выкл|выключить|включить)$/i],
 	template: [],
 	process: async (message: MPTMessage) => {
 		if (!message.chat) {

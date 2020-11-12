@@ -1,6 +1,6 @@
 import { MPTMessage } from "../../plugins/types";
 export = {
-	regexp: /^(?:ник)\s(.*)$/i,
+	regexp: [/^(?:ник)\s(.*)$/i],
 	template: ["ник"],
 	process: async (message: MPTMessage) => {
 		if (message.args[1].length > 25) {

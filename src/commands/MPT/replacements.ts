@@ -6,7 +6,7 @@ import { Keyboard } from "vk-io";
 import models from "../../plugins/models";
 
 export = {
-	regexp: /^(?:замены)\s?([^]+)?/i,
+	regexp: [/^(?:замены)\s?([^]+)?/i],
 	template: ["замены"],
 	process: async (message: MPTMessage) => {
 		if (

@@ -10,7 +10,7 @@ process.env.FONTCONFIG_PATH = "./DB/templates/fonts";
 registerFont(`./DB/templates/fonts/Roboto-Regular.ttf`, { family: `Roboto` });
 
 export = {
-	regexp: /^(?:помянем)\s?([^]+)?/i,
+	regexp: [/^(?:помянем)\s?([^]+)?/i],
 	template: ["помянем"],
 	process: async (message: MPTMessage) => {
 		if (
