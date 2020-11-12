@@ -1,7 +1,12 @@
 "use strict";
 import { MPTCommand } from "./types";
 import mongoose from "mongoose";
-import { VK, MessageContext, IMessageContextSendOptions } from "vk-io";
+import {
+	VK,
+	MessageContext,
+	IMessageContextSendOptions,
+	Keyboard,
+} from "vk-io";
 import { MPTMessage } from "./types";
 import moment from "moment";
 import scheduler from "simple-scheduler-task";
@@ -30,6 +35,25 @@ const vk = new VK({
 });
 
 vk.updates.use(questionManager.middleware);
+
+vk.updates.on("chat_invite_user", async function (message: MessageContext) {
+	message.send(
+		`Всем привет!\nЧтобы бот полноценно работал в беседе, выдайте ему права администратора, либо право на чтение переписки.`,
+		{
+			keyboard: Keyboard.keyboard([
+				[
+					Keyboard.textButton({
+						label: `Зарегистрировать чат`,
+						payload: {
+							command: `regchat`,
+						},
+						color: Keyboard.POSITIVE_COLOR,
+					}),
+				],
+			]).inline(),
+		},
+	);
+});
 
 vk.updates.on("message", async function (message: MPTMessage) {
 	if (message.isGroup || message.isOutbox) {
