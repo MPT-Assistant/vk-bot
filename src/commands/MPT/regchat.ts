@@ -9,7 +9,22 @@ export = {
 	template: ["regchat"],
 	process: async (message: MPTMessage) => {
 		if (!message.chat) {
-			return message.sendMessage(`доступно только в беседах`);
+			return message.sendMessage(
+				`доступно только в беседах.\nВозможно Вы хотели установить свою группу, для этого можно воспользоваться командой: "установить группу".`,
+				{
+					keyboard: Keyboard.keyboard([
+						[
+							Keyboard.textButton({
+								label: `Установить группу`,
+								payload: {
+									command: `Установить группу`,
+								},
+								color: Keyboard.POSITIVE_COLOR,
+							}),
+						],
+					]).inline(),
+				},
+			);
 		}
 		let group_name: any;
 		if (!message.args[1]) {
