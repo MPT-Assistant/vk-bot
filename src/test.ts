@@ -14,6 +14,8 @@ console.time(`Executed in: `);
 	});
 	let allUsers = await models.user.find();
 	for (let user of allUsers) {
+		user.data.lesson_notices = true;
+		user.data.replacement_notices = true;
 		await user.save();
 	}
 	console.timeEnd(`Executed in: `);
