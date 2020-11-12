@@ -9,7 +9,7 @@ import models from "./models";
 import { vk } from "./core";
 import * as internalUtils from "./utils";
 
-const timetable = require(`../DB/timetable.json`);
+const TIMETABLE = require(`../DB/timetable.json`);
 
 const mpt = {
 	Update_all_shedule: async () => {
@@ -664,17 +664,17 @@ const mpt = {
 
 		return true;
 	},
-	parseTimetable: async (): Promise<Array<timetableElement>> => {
+	parseTimetable(): Array<timetableElement> {
 		let output = [];
-		for (let i in timetable) {
+		for (let i in TIMETABLE) {
 			let startLessonDate = new Date();
 			let endLessonDate = new Date();
 			let status = `not_start`;
-			startLessonDate.setHours(timetable[i].start.hour);
-			startLessonDate.setMinutes(timetable[i].start.minute);
+			startLessonDate.setHours(TIMETABLE[i].start.hour);
+			startLessonDate.setMinutes(TIMETABLE[i].start.minute);
 			startLessonDate.setSeconds(0);
-			endLessonDate.setHours(timetable[i].end.hour);
-			endLessonDate.setMinutes(timetable[i].end.minute);
+			endLessonDate.setHours(TIMETABLE[i].end.hour);
+			endLessonDate.setMinutes(TIMETABLE[i].end.minute);
 			endLessonDate.setSeconds(0);
 			if (startLessonDate < new Date()) {
 				startLessonDate.setDate(new Date().getDate() + 1);
@@ -685,8 +685,8 @@ const mpt = {
 				status = "finished";
 			}
 			let outputData: timetableElement = {
-				lesson: timetable[i].lesson,
-				num: timetable[i].num,
+				lesson: TIMETABLE[i].lesson,
+				num: TIMETABLE[i].num,
 				start: startLessonDate,
 				end: endLessonDate,
 				status: status,
@@ -701,7 +701,7 @@ const mpt = {
 					true,
 				),
 			};
-			if (timetable[i].lesson === true) {
+			if (TIMETABLE[i].lesson === true) {
 				output.push(outputData);
 			} else {
 				output.push(outputData);
@@ -711,4 +711,6 @@ const mpt = {
 	},
 };
 
-export { mpt };
+const timetable = mpt.parseTimetable();
+
+export { mpt, timetable };
