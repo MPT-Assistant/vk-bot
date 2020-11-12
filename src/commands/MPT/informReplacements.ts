@@ -1,4 +1,5 @@
 import { MPTMessage } from "../../plugins/types";
+import { Keyboard } from "vk-io";
 export = {
 	regexp: /^(?:изменения)\s(вкл|выкл|выключить|включить)$/i,
 	template: [],
@@ -8,23 +9,43 @@ export = {
 				`команду можно использовать только в беседах.`,
 			);
 		}
-		if (
-			message.args[1].toLowerCase() === "вкл" ||
-			message.args[1].toLowerCase() === `включить`
-		) {
+		if (/вкл|включить/gi.test(message.args[1]) === true) {
 			message.chat.inform = true;
 			return await message.sendMessage(
 				`рассылка изменений в расписании группы включена!`,
+				{
+					keyboard: Keyboard.keyboard([
+						[
+							Keyboard.textButton({
+								label: `Выключить рассылку изменений`,
+								payload: {
+									command: `изменения выкл`,
+								},
+								color: Keyboard.NEGATIVE_COLOR,
+							}),
+						],
+					]).inline(),
+				},
 			);
 		}
 
-		if (
-			message.args[1].toLowerCase() === "выкл" ||
-			message.args[1].toLowerCase() === `выключить`
-		) {
+		if (/выкл|выключить/gi.test(message.args[1]) === true) {
 			message.chat.inform = false;
 			return await message.sendMessage(
 				`рассылка изменений в расписании группы отключена!`,
+				{
+					keyboard: Keyboard.keyboard([
+						[
+							Keyboard.textButton({
+								label: `Включить рассылку изменений`,
+								payload: {
+									command: `изменения вкл`,
+								},
+								color: Keyboard.POSITIVE_COLOR,
+							}),
+						],
+					]).inline(),
+				},
 			);
 		}
 	},
