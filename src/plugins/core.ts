@@ -196,6 +196,7 @@ const internal = {
 				data: {
 					unical_group_id: "",
 					lesson_notices: true,
+					replacement_notices: true,
 					mailing: true,
 				},
 			});

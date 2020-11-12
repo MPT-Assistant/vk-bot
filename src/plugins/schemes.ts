@@ -10,6 +10,7 @@ const user: Schema = new Schema({
 	data: {
 		unical_group_id: String,
 		lesson_notices: Boolean,
+		replacement_notices: Boolean,
 		mailing: Boolean,
 	},
 });
