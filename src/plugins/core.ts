@@ -195,6 +195,7 @@ const internal = {
 				nickname: user.first_name,
 				data: {
 					unical_group_id: "",
+					lesson_notices: true,
 					mailing: true,
 				},
 			});

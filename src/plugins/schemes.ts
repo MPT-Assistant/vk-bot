@@ -9,6 +9,7 @@ const user: Schema = new Schema({
 	nickname: String,
 	data: {
 		unical_group_id: String,
+		lesson_notices: Boolean,
 		mailing: Boolean,
 	},
 });
