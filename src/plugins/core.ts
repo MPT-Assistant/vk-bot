@@ -133,7 +133,7 @@ const internal = {
 				reg_date: new Date(),
 				nickname: user.first_name,
 				data: {
-					unical_group_id: 0,
+					unical_group_id: "",
 					mailing: true,
 				},
 			});

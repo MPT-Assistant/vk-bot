@@ -11,5 +11,7 @@ console.log(`Start at ${new Date()}`);
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 	});
+	let bugUsers = await models.user.find({ "data.unical_group_id": "0" });
+	console.log(bugUsers.length);
 	process.exit();
 })();

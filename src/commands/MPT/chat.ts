@@ -7,10 +7,23 @@ export = {
 	process: async (message: MPTMessage) => {
 		if (!message.chat) {
 			return message.sendMessage(
-				`команду чат можно использовать только в беседах, удивительно не правда ли?`,
+				`команду чат можно использовать только в беседах, удивительно не правда ли?\nВозможно Вы имели в виду команду "профиль".`,
+				{
+					keyboard: Keyboard.keyboard([
+						[
+							Keyboard.textButton({
+								label: `Профиль`,
+								payload: {
+									command: `профиль`,
+								},
+								color: Keyboard.POSITIVE_COLOR,
+							}),
+						],
+					]).inline(),
+				},
 			);
 		}
-		let groupData: any = await models.utilityGroup.findOne({
+		let groupData = await models.utilityGroup.findOne({
 			uid: message.chat.unical_group_id,
 		});
 		let groupText = `Группа не установлена`;
