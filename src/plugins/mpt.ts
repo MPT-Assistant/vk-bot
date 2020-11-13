@@ -7,7 +7,7 @@ import { getRandomId, Keyboard } from "vk-io";
 import moment from "moment";
 import "moment-precise-range-plugin";
 import parser from "cheerio";
-import temp_requester from "request-promise";
+import tempRequester from "request-promise";
 import utils from "rus-anonym-utils";
 import models from "./models";
 import { vk } from "./core";
@@ -18,7 +18,7 @@ const TIMETABLE = require(`../DB/timetable.json`);
 const mpt = {
 	Update_all_shedule: async () => {
 		const $ = parser.load(
-			await temp_requester(`https://mpt.ru/studentu/raspisanie-zanyatiy/`),
+			await tempRequester(`https://mpt.ru/studentu/raspisanie-zanyatiy/`),
 		);
 		let array_with_all_flow: any = $(
 			`body > div.page > main > div > div > div:nth-child(3) > div.col-xs-12.col-sm-12.col-md-7.col-md-pull-5 > div.tab-content`,
@@ -192,7 +192,7 @@ const mpt = {
 	},
 	parseSchedule: async (): Promise<Array<specialtyInterface>> => {
 		const $ = parser.load(
-			await temp_requester(`https://mpt.ru/studentu/raspisanie-zanyatiy/`),
+			await tempRequester(`https://mpt.ru/studentu/raspisanie-zanyatiy/`),
 		);
 		let arrayWithAllFlow: cheerio.Element[] = $(
 			`body > div.page > main > div > div > div:nth-child(3) > div.col-xs-12.col-sm-12.col-md-7.col-md-pull-5 > div.tab-content`,
@@ -377,10 +377,90 @@ const mpt = {
 		}
 		return true;
 	},
-	parseReplacements: async (): Promise<any> => {},
+	parseReplacements: async (): Promise<Array<replacementInterface>> => {
+		let outputData: Array<replacementInterface> = [];
+
+		const $ = parser.load(
+			await tempRequester(`https://mpt.ru/studentu/izmeneniya-v-raspisanii/`),
+		);
+
+		let tableWithReplacements = $(
+			`body > div.page > main > div > div > div:nth-child(3)`,
+		);
+
+		let arrayWithReplacements = tableWithReplacements.children().toArray();
+
+		let tempArrayWithReplacement: Array<{
+			id: number;
+			day_data: Date;
+			data: [];
+		}> = [];
+
+		let currentDay = 0;
+
+		for (let i = 1; i < arrayWithReplacements.length; i++) {
+			if (
+				arrayWithReplacements[i].children.length != 0 &&
+				arrayWithReplacements[i].children[0].data ===
+					`На ближайшее время замен нет`
+			) {
+				return [];
+			}
+			let tag = arrayWithReplacements[i].tagName;
+			if (tag == `h4`) {
+				currentDay += 1;
+				tempArrayWithReplacement.push({
+					id: currentDay,
+					day_data: new Date(
+						//@ts-ignore
+						arrayWithReplacements[i].children[1].children[0].data
+							.split(`.`)
+							.reverse()
+							.join(`-`),
+					),
+					data: [],
+				});
+			} else if (
+				tag == `div` &&
+				arrayWithReplacements[i].children[1].tagName === `table`
+			) {
+				let data = tempArrayWithReplacement.find((x) => x.id === currentDay);
+				//@ts-ignore
+				data.data.push(arrayWithReplacements[i].children[1]);
+			}
+		}
+
+		let tempArrayReplacementData: Array<{
+			day: string;
+			groups: [];
+		}> = [];
+
+		tempArrayWithReplacement.map(async function (tempElement) {
+			let dateOfReplacement = tempElement.day_data;
+			let temp_time_data: any = utils.time.getDateByMS(
+				Number(dateOfReplacement),
+			);
+
+			if (!tempArrayReplacementData.find((x) => x.day === temp_time_data)) {
+				tempArrayReplacementData.push({
+					day: temp_time_data,
+					groups: [],
+				});
+			}
+
+			let currentDateReplacementData = tempArrayReplacementData.find(
+				(x) => x.day === temp_time_data,
+			);
+
+			tempElement.data.map(async function (tempReplacement) {});
+			// TODO
+		});
+
+		return outputData;
+	},
 	Update_all_replacements: async () => {
 		const $ = parser.load(
-			await temp_requester(`https://mpt.ru/studentu/izmeneniya-v-raspisanii/`),
+			await tempRequester(`https://mpt.ru/studentu/izmeneniya-v-raspisanii/`),
 		);
 		let table_with_replacements = $(
 			`body > div.page > main > div > div > div:nth-child(3)`,
