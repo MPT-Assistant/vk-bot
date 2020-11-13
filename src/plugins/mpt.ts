@@ -619,51 +619,52 @@ const mpt = {
 						}))
 					) {
 						await new models.replacement(parsed_data).save();
-						await models.chat
-							.find({
+						(
+							await models.chat.find({
 								unical_group_id: parsed_data.unical_group_id,
 								inform: true,
 							})
-							.map(async function (chat) {
-								// await vk.api.messages
-								// 	.send({
-								// 		peer_id: chat.id,
-								// 		message: `Обнаружена новая замена на ${
-								// 			parsed_data.date
-								// 		}\nПара: ${parsed_data.lesson_num}\nЗаменяемая пара: ${
-								// 			parsed_data.old_lesson_name
-								// 		}\nПреподаватель: ${
-								// 			parsed_data.old_lesson_teacher
-								// 		}\nНовая пара: ${
-								// 			parsed_data.new_lesson_name
-								// 		}\nПреподаватель на новой паре: ${
-								// 			parsed_data.new_lesson_teacher
-								// 		}\nДобавлена на сайт: ${utils.time.getDateTimeByMS(
-								// 			parsed_data.add_to_site,
-								// 		)}\nОбнаружена ботом: ${utils.time.getDateTimeByMS(
-								// 			parsed_data.detected,
-								// 		)}\n\n`,
-								// 		random_id: getRandomId(),
-								// 		keyboard: Keyboard.keyboard([
-								// 			[
-								// 				Keyboard.textButton({
-								// 					label: `Отключить рассылку изменений`,
-								// 					payload: {
-								// 						command: `изменения выкл`,
-								// 					},
-								// 					color: Keyboard.NEGATIVE_COLOR,
-								// 				}),
-								// 			],
-								// 		]).inline(),
-								// 	})
-								// 	.catch((err) => {});
-							});
-
-						let usersWithInformThisGroups = await models.user.find({
-							"data.replacement_notices": true,
-							"data.unical_group_id": parsed_data.unical_group_id,
+						).map(async function (chat) {
+							await vk.api.messages
+								.send({
+									peer_id: chat.id,
+									message: `Обнаружена новая замена на ${
+										parsed_data.date
+									}\nПара: ${parsed_data.lesson_num}\nЗаменяемая пара: ${
+										parsed_data.old_lesson_name
+									}\nПреподаватель: ${
+										parsed_data.old_lesson_teacher
+									}\nНовая пара: ${
+										parsed_data.new_lesson_name
+									}\nПреподаватель на новой паре: ${
+										parsed_data.new_lesson_teacher
+									}\nДобавлена на сайт: ${utils.time.getDateTimeByMS(
+										parsed_data.add_to_site,
+									)}\nОбнаружена ботом: ${utils.time.getDateTimeByMS(
+										parsed_data.detected,
+									)}\n\n`,
+									random_id: getRandomId(),
+									keyboard: Keyboard.keyboard([
+										[
+											Keyboard.textButton({
+												label: `Отключить рассылку изменений`,
+												payload: {
+													command: `изменения выкл`,
+												},
+												color: Keyboard.NEGATIVE_COLOR,
+											}),
+										],
+									]).inline(),
+								})
+								.catch((err) => {});
 						});
-						for (let user of usersWithInformThisGroups) {
+
+						(
+							await models.user.find({
+								"data.replacement_notices": true,
+								"data.unical_group_id": parsed_data.unical_group_id,
+							})
+						).map(async function (user) {
 							await vk.api.messages
 								.send({
 									peer_id: user.vk_id,
@@ -696,7 +697,7 @@ const mpt = {
 									]).inline(),
 								})
 								.catch((err) => {});
-						}
+						});
 					}
 				}
 			}
