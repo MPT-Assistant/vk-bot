@@ -6,7 +6,7 @@ import * as types from "./types";
 
 const user = mongoose.model<types.UserInterface>("user", schemes.user, `users`);
 const chat = mongoose.model<types.ChatInterface>("chat", schemes.chat, `chats`);
-const specialty = mongoose.model<types.specialtyInterface>(
+const specialty = mongoose.model<types.mongoSpecialtyInterface>(
 	"specialty",
 	schemes.specialty,
 	`specialties`,

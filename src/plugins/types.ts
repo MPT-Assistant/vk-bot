@@ -70,7 +70,7 @@ export interface timetableElement {
 	};
 }
 
-export interface lessonsList {
+export interface specialtyInterface {
 	uid: string;
 	name: string;
 	groups: Array<{
@@ -89,7 +89,9 @@ export interface lessonsList {
 	}>;
 }
 
-export interface specialtyInterface extends Document, lessonsList {}
+export interface replacementInterface {}
+
+export interface mongoSpecialtyInterface extends Document, specialtyInterface {}
 
 export interface utilityGroup extends Document {
 	uid: string;

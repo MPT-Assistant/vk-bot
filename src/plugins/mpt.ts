@@ -1,4 +1,4 @@
-import { timetableElement, lessonsList } from "./types";
+import { timetableElement, specialtyInterface } from "./types";
 import { getRandomId, Keyboard } from "vk-io";
 import moment from "moment";
 import "moment-precise-range-plugin";
@@ -186,7 +186,7 @@ const mpt = {
 		}
 		return true;
 	},
-	parseAllSchedule: async (): Promise<Array<lessonsList>> => {
+	parseSchedule: async (): Promise<Array<specialtyInterface>> => {
 		const $ = parser.load(
 			await temp_requester(`https://mpt.ru/studentu/raspisanie-zanyatiy/`),
 		);
@@ -195,7 +195,7 @@ const mpt = {
 		)
 			.children()
 			.toArray();
-		let outputData: Array<lessonsList> = [];
+		let outputData: Array<specialtyInterface> = [];
 		for (let tempFlow of arrayWithAllFlow) {
 			//@ts-ignore
 			let tempFlowName = tempFlow.children[1].children[0].data.replace(
@@ -344,8 +344,8 @@ const mpt = {
 		}
 		return outputData;
 	},
-	updateAllSchedule: async (): Promise<true> => {
-		let scheduleList = await mpt.parseAllSchedule();
+	updateSchedule: async (): Promise<true> => {
+		let scheduleList = await mpt.parseSchedule();
 		for (let tempFlow of scheduleList) {
 			let specialty = await models.specialty.findOne({
 				id: tempFlow.uid,
@@ -373,6 +373,7 @@ const mpt = {
 		}
 		return true;
 	},
+	parseReplacements: async (): Promise<any> => {},
 	Update_all_replacements: async () => {
 		const $ = parser.load(
 			await temp_requester(`https://mpt.ru/studentu/izmeneniya-v-raspisanii/`),
