@@ -11,7 +11,7 @@ const specialty = mongoose.model<types.mongoSpecialtyInterface>(
 	schemes.specialty,
 	`specialties`,
 );
-const replacement = mongoose.model(
+const replacement = mongoose.model<types.mongoReplacementInterface>(
 	"replacement",
 	schemes.replacement,
 	`replacements`,

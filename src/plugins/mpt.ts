@@ -1,4 +1,8 @@
-import { timetableElement, specialtyInterface } from "./types";
+import {
+	timetableElement,
+	specialtyInterface,
+	replacementInterface,
+} from "./types";
 import { getRandomId, Keyboard } from "vk-io";
 import moment from "moment";
 import "moment-precise-range-plugin";
@@ -576,23 +580,9 @@ const mpt = {
 		for (let i in new_replacement_data) {
 			for (let j in new_replacement_data[i].groups) {
 				for (let c in new_replacement_data[i].groups[j].replacements) {
-					let parsed_data: {
-						date: Date;
-						unical_group_id: string;
-						specialty_id: number;
-						group_id: number;
-						detected: number;
-						add_to_site: number;
-						lesson_num: number;
-						old_lesson_name: string;
-						old_lesson_teacher: string;
-						new_lesson_name: string;
-						new_lesson_teacher: string;
-					} = {
+					let parsed_data: replacementInterface = {
 						date: new_replacement_data[i].day,
 						unical_group_id: new_replacement_data[i].groups[j].unical_group_id,
-						specialty_id: new_replacement_data[i].groups[j].flow_id,
-						group_id: new_replacement_data[i].groups[j].group_id,
 						detected:
 							new_replacement_data[i].groups[j].replacements[c].detected,
 						add_to_site:
@@ -640,9 +630,9 @@ const mpt = {
 									}\nПреподаватель на новой паре: ${
 										parsed_data.new_lesson_teacher
 									}\nДобавлена на сайт: ${utils.time.getDateTimeByMS(
-										parsed_data.add_to_site,
+										Number(parsed_data.add_to_site),
 									)}\nОбнаружена ботом: ${utils.time.getDateTimeByMS(
-										parsed_data.detected,
+										Number(parsed_data.detected),
 									)}\n\n`,
 									random_id: getRandomId(),
 									keyboard: Keyboard.keyboard([
@@ -680,9 +670,9 @@ const mpt = {
 									}\nПреподаватель на новой паре: ${
 										parsed_data.new_lesson_teacher
 									}\nДобавлена на сайт: ${utils.time.getDateTimeByMS(
-										parsed_data.add_to_site,
+										Number(parsed_data.add_to_site),
 									)}\nОбнаружена ботом: ${utils.time.getDateTimeByMS(
-										parsed_data.detected,
+										Number(parsed_data.detected),
 									)}\n\n`,
 									random_id: getRandomId(),
 									keyboard: Keyboard.keyboard([

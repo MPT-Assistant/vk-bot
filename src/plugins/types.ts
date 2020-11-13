@@ -89,9 +89,23 @@ export interface specialtyInterface {
 	}>;
 }
 
-export interface replacementInterface {}
-
 export interface mongoSpecialtyInterface extends Document, specialtyInterface {}
+
+export interface replacementInterface {
+	date: string;
+	unical_group_id: string;
+	detected: Date;
+	add_to_site: Date;
+	lesson_num: number;
+	old_lesson_name: string;
+	old_lesson_teacher: string;
+	new_lesson_name: string;
+	new_lesson_teacher: string;
+}
+
+export interface mongoReplacementInterface
+	extends Document,
+		replacementInterface {}
 
 export interface utilityGroup extends Document {
 	uid: string;
