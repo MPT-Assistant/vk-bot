@@ -6,7 +6,7 @@ import * as types from "./plugins/types";
 import * as internalUtils from "./plugins/utils";
 
 console.log(`Start at ${new Date()}`);
-console.time(`Executed in: `);
+console.time(`Executed in`);
 (async function () {
 	await mongoose.connect("mongodb://194.32.248.158:27017/mpt_bot", {
 		useNewUrlParser: true,
@@ -18,6 +18,6 @@ console.time(`Executed in: `);
 		user.data.replacement_notices = true;
 		await user.save();
 	}
-	console.timeEnd(`Executed in: `);
+	console.timeEnd(`Executed in`);
 	process.exit();
 })();

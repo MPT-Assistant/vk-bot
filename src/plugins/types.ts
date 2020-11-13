@@ -33,6 +33,7 @@ export interface ChatInterface extends Document {
 	id: number;
 	unical_group_id: string;
 	inform: boolean;
+	mailing: boolean;
 }
 
 export interface GoogleUserData {
