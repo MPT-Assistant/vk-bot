@@ -217,7 +217,7 @@ const internal = {
 		if (!data) {
 			data = new models.chat({
 				id: chat_id,
-				unical_group_id: 0,
+				unical_group_id: "",
 				inform: false,
 				mailing: true,
 			});

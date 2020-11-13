@@ -12,12 +12,17 @@ console.time(`Executed in`);
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 	});
-	let allUsers = await models.user.find();
-	for (let user of allUsers) {
-		user.data.lesson_notices = true;
-		user.data.replacement_notices = true;
-		await user.save();
-	}
+	(
+		await models.chat.find({
+			inform: true,
+		})
+	).map(async function (chat) {
+		if (chat.unical_group_id === "0") {
+			chat.unical_group_id = "";
+			chat.save();
+			console.log(chat);
+		}
+	});
 	console.timeEnd(`Executed in`);
 	process.exit();
 })();

@@ -619,14 +619,54 @@ const mpt = {
 						}))
 					) {
 						await new models.replacement(parsed_data).save();
-						let chatsWithInformThisGroups = await models.chat.find({
-							unical_group_id: parsed_data.unical_group_id,
-							inform: true,
+						await models.chat
+							.find({
+								unical_group_id: parsed_data.unical_group_id,
+								inform: true,
+							})
+							.map(async function (chat) {
+								// await vk.api.messages
+								// 	.send({
+								// 		peer_id: chat.id,
+								// 		message: `Обнаружена новая замена на ${
+								// 			parsed_data.date
+								// 		}\nПара: ${parsed_data.lesson_num}\nЗаменяемая пара: ${
+								// 			parsed_data.old_lesson_name
+								// 		}\nПреподаватель: ${
+								// 			parsed_data.old_lesson_teacher
+								// 		}\nНовая пара: ${
+								// 			parsed_data.new_lesson_name
+								// 		}\nПреподаватель на новой паре: ${
+								// 			parsed_data.new_lesson_teacher
+								// 		}\nДобавлена на сайт: ${utils.time.getDateTimeByMS(
+								// 			parsed_data.add_to_site,
+								// 		)}\nОбнаружена ботом: ${utils.time.getDateTimeByMS(
+								// 			parsed_data.detected,
+								// 		)}\n\n`,
+								// 		random_id: getRandomId(),
+								// 		keyboard: Keyboard.keyboard([
+								// 			[
+								// 				Keyboard.textButton({
+								// 					label: `Отключить рассылку изменений`,
+								// 					payload: {
+								// 						command: `изменения выкл`,
+								// 					},
+								// 					color: Keyboard.NEGATIVE_COLOR,
+								// 				}),
+								// 			],
+								// 		]).inline(),
+								// 	})
+								// 	.catch((err) => {});
+							});
+
+						let usersWithInformThisGroups = await models.user.find({
+							"data.replacement_notices": true,
+							"data.unical_group_id": parsed_data.unical_group_id,
 						});
-						for (let chat of chatsWithInformThisGroups) {
-							try {
-								await vk.api.messages.send({
-									chat_id: chat.id,
+						for (let user of usersWithInformThisGroups) {
+							await vk.api.messages
+								.send({
+									peer_id: user.vk_id,
 									message: `Обнаружена новая замена на ${
 										parsed_data.date
 									}\nПара: ${parsed_data.lesson_num}\nЗаменяемая пара: ${
@@ -654,8 +694,8 @@ const mpt = {
 											}),
 										],
 									]).inline(),
-								});
-							} catch (error) {}
+								})
+								.catch((err) => {});
 						}
 					}
 				}
