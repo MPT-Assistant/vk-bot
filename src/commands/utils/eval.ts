@@ -1,10 +1,13 @@
 import { MPTMessage } from "../../plugins/types";
 export = {
-	regexp: [/^(?:zz)\s([^]+)$/i],
+	regexp: /zz(\s(.*))?$/i,
 	template: [],
 	process: async (message: MPTMessage) => {
 		if (message.senderId !== 266982306) {
 			return;
+		}
+		if (!message.args[1]) {
+			return message.sendMessage(`нет аргумента`);
 		}
 		try {
 			const v: string | number | JSON = await eval(message.args[1]);

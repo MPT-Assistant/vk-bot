@@ -13,7 +13,7 @@ declare global {
 }
 
 export = {
-	regexp: [/^(?:расписание|рп|какие пары|какие пары|пары|уроки|lessons|pairs|pair)\s?([^]+)?/i],
+	regexp: /^(?:расписание|рп|какие пары|какие пары|пары|уроки|lessons|pairs|pair)\s?([^]+)?/i,
 	template: ["расписание", "рп"],
 	process: async (message: MPTMessage) => {
 		if (

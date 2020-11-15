@@ -1,7 +1,7 @@
 import utils from "rus-anonym-utils";
 import { MPTMessage } from "../../plugins/types";
 export = {
-	regexp: [/^(?:stats|about|bot)$/i],
+	regexp: /^(?:stats|about|bot)$/i,
 	template: ["stats", "about", "bot"],
 	process: async (message: MPTMessage) => {
 		let VKAPI = await utils.vk.api.status();

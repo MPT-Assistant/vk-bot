@@ -4,7 +4,7 @@ import { google } from "../../plugins/google";
 import models from "../../plugins/models";
 import { gmailUser } from "../../plugins/google/gmail";
 export = {
-	regexp: [/^(?:привязка)$/i],
+	regexp: /^(?:привязка)$/i,
 	template: ["привязка"],
 	process: async (message: MPTMessage) => {
 		if (message.isChat) {

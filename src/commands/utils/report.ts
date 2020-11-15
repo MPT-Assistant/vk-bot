@@ -2,7 +2,7 @@ import { getRandomId } from "vk-io";
 import { vk } from "../../plugins/core";
 import { MPTMessage } from "../../plugins/types";
 export = {
-	regexp: [/^(?:report|репорт|предложение)$/i],
+	regexp: /^(?:report|репорт|предложение)$/i,
 	template: ["report", "репорт", "предложение"],
 	process: async (message: MPTMessage) => {
 		if (message.isChat) {
