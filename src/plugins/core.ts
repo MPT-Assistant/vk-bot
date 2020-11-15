@@ -21,7 +21,6 @@ import models from "./models";
 import utils from "rus-anonym-utils";
 import * as internalUtils from "./utils";
 import { MessagesSendParams } from "vk-io/lib/api/schemas/params";
-import { mode } from "crypto-js";
 const commands: Array<MPTCommand> = [];
 const commandsTemplates: Array<string> = [];
 
@@ -30,6 +29,14 @@ const config: {
 	groupID: number;
 	mongo: string;
 } = require(`../DB/config.json`);
+
+const botStats = {
+	start: new Date(),
+	groupTop: {
+		user: [],
+		chat: [],
+	},
+};
 
 const vk = new VK({
 	token: config.token,
@@ -66,13 +73,9 @@ vk.updates.on("message", async function (message: MPTMessage) {
 	if (message.isGroup || message.isOutbox) {
 		return;
 	}
-	message.user = await internal.regUserInBot(message);
 	if (message.messagePayload && message.messagePayload) {
 		let payload_data = message.messagePayload;
 		message.text = payload_data.command;
-	}
-	if (message.isChat && message.chatId) {
-		message.chat = await internal.regChatInBot(message.chatId);
 	}
 	if (!message.text) return;
 	message.text = message.text
@@ -106,7 +109,12 @@ vk.updates.on("message", async function (message: MPTMessage) {
 		}
 		return;
 	}
+	message.user = await internal.regUserInBot(message);
+	if (message.isChat && message.chatId) {
+		message.chat = await internal.regChatInBot(message.chatId);
+	}
 	if (message.user.ban === true) return;
+
 	message.sendMessage = async (
 		text: string | IMessageContextSendOptions,
 		params?: IMessageContextSendOptions | undefined,
@@ -132,7 +140,9 @@ vk.updates.on("message", async function (message: MPTMessage) {
 			return error;
 		}
 	};
+
 	message.args = message.text.match(command.regexp);
+
 	try {
 		await command.process(message);
 		await message.user.save();
