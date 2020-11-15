@@ -17,7 +17,9 @@ export = {
 							Keyboard.textButton({
 								label: `Установить группу`,
 								payload: {
-									command: `Установить группу`,
+									command: `Установить группу ${
+										message.args[1] ? message.args[1] : ""
+									}`,
 								},
 								color: Keyboard.POSITIVE_COLOR,
 							}),

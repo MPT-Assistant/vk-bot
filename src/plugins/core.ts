@@ -39,22 +39,24 @@ const vk = new VK({
 vk.updates.use(questionManager.middleware);
 
 vk.updates.on("chat_invite_user", async function (message: MessageContext) {
-	message.send(
-		`Всем привет!\nЧтобы бот полноценно работал в беседе, выдайте ему права администратора, либо право на чтение переписки.`,
-		{
-			keyboard: Keyboard.keyboard([
-				[
-					Keyboard.textButton({
-						label: `Зарегистрировать чат`,
-						payload: {
-							command: `regchat`,
-						},
-						color: Keyboard.POSITIVE_COLOR,
-					}),
-				],
-			]).inline(),
-		},
-	);
+	if (message.eventMemberId === -config.groupID) {
+		message.send(
+			`Всем привет!\nЧтобы бот полноценно работал в беседе, выдайте ему права администратора, либо право на чтение переписки.\nА также рекомендуем привязать беседу к своей группе.`,
+			{
+				keyboard: Keyboard.keyboard([
+					[
+						Keyboard.textButton({
+							label: `Привязать группу`,
+							payload: {
+								command: `regchat`,
+							},
+							color: Keyboard.POSITIVE_COLOR,
+						}),
+					],
+				]).inline(),
+			},
+		);
+	}
 });
 
 vk.updates.on("message", async function (message: MPTMessage) {
