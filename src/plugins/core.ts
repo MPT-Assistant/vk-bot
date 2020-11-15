@@ -30,14 +30,6 @@ const config: {
 	mongo: string;
 } = require(`../DB/config.json`);
 
-const botStats = {
-	start: new Date(),
-	groupTop: {
-		user: [],
-		chat: [],
-	},
-};
-
 const vk = new VK({
 	token: config.token,
 	apiMode: "parallel",
