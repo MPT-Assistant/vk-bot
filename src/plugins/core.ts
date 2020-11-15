@@ -19,7 +19,9 @@ import { mpt } from "./mpt";
 
 import models from "./models";
 import utils from "rus-anonym-utils";
+import * as internalUtils from "./utils";
 import { MessagesSendParams } from "vk-io/lib/api/schemas/params";
+import { mode } from "crypto-js";
 const commands: Array<MPTCommand> = [];
 const commandsTemplates: Array<string> = [];
 
@@ -56,6 +58,7 @@ vk.updates.on("chat_invite_user", async function (message: MessageContext) {
 				]).inline(),
 			},
 		);
+		await internalUtils.sendLog(`Приглашён в беседу: ${message.chatId}`);
 	}
 });
 
@@ -202,6 +205,9 @@ const internal = {
 					mailing: true,
 				},
 			});
+			await internalUtils.sendLog(
+				`Зарегистрирован новый пользователь\nUser: @id${message.senderId}\nTotal Users: ${data.id}`,
+			);
 		}
 		return data;
 	},
@@ -214,6 +220,9 @@ const internal = {
 				inform: false,
 				mailing: true,
 			});
+			await internalUtils.sendLog(
+				`Зарегистрирован новый чат\nChat: ${chat_id}\nTotal Chats: ${await models.chat.countDocuments()}`,
+			);
 		}
 		return data;
 	},

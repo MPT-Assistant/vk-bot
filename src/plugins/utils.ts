@@ -1,3 +1,6 @@
+import { getRandomId } from "vk-io";
+import { MessagesSendParams } from "vk-io/lib/api/schemas/params";
+import * as core from "./core";
 import CryptoJS from "crypto-js";
 
 const hash = {
@@ -23,4 +26,13 @@ async function getUpperLetter(str: string) {
 	return temp_array;
 }
 
-export { hash, getUpperLetter };
+async function sendLog(text: string, params?: MessagesSendParams) {
+	return await core.vk.api.messages.send(
+		Object.assign(
+			{ message: text, chat_id: 1, random_id: getRandomId() },
+			params || {},
+		),
+	);
+}
+
+export { hash, getUpperLetter, sendLog };
