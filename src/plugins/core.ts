@@ -74,15 +74,7 @@ vk.updates.on("message", async function (message: MPTMessage) {
 		.replace(/(\[club188434642\|[@a-z_A-ZА-Яа-я0-9]+\])/gi, ``)
 		.replace(/(^\s*)|(\s*)$/g, "");
 
-	let selectedRegExp: RegExp;
-	let command = commands.find((x) =>
-		x.regexp.find((y) => {
-			if (y.test(message.text || "") === true) {
-				selectedRegExp = y;
-				return y;
-			}
-		}),
-	);
+	let command = commands.find((x) => x.regexp.test(message.text || ""));
 	if (!command) {
 		if (!message.isChat) {
 			let possibleCommands = [];
@@ -135,8 +127,7 @@ vk.updates.on("message", async function (message: MPTMessage) {
 			return error;
 		}
 	};
-	//@ts-ignore
-	message.args = message.text.match(selectedRegExp);
+	message.args = message.text.match(command.regexp);
 	try {
 		await command.process(message);
 		await message.user.save();

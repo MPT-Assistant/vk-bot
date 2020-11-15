@@ -2,7 +2,7 @@ import { IQuestionMessageContext } from "vk-io-question";
 import { Document } from "mongoose";
 import { MessageContext, IMessageContextSendOptions } from "vk-io";
 export interface MPTCommand {
-	regexp: RegExp[];
+	regexp: RegExp;
 	process: Function;
 }
 
