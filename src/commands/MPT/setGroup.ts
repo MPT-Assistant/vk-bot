@@ -4,7 +4,7 @@ import models from "../../plugins/models";
 import utils from "rus-anonym-utils";
 
 export = {
-	regexp: /установить группу|уг(\s(.*))?$/i,
+	regexp: /(?:установить группу|уг)(?:\s(.*))?$/i,
 	template: ["установить группу", "уг"],
 	process: async (message: MPTMessage) => {
 		let group_name: any;

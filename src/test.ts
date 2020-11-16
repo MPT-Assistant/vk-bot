@@ -12,10 +12,7 @@ console.time(`Executed in`);
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 	});
-	require(`fs`).writeFileSync(
-		`out.json`,
-		JSON.stringify(await mpt.mpt.parseSchedule()),
-	);
+	await mpt.mpt.updateSchedule();
 	console.timeEnd(`Executed in`);
 	process.exit();
 })();

@@ -178,7 +178,7 @@ const mpt = {
 		let scheduleList = await mpt.parseSchedule();
 		for (let tempFlow of scheduleList) {
 			let specialty = await models.specialty.findOne({
-				id: tempFlow.uid,
+				uid: tempFlow.uid,
 			});
 			if (!specialty) {
 				specialty = new models.specialty(tempFlow);
@@ -199,6 +199,7 @@ const mpt = {
 						specialty_id: tempFlow.uid,
 					});
 				}
+				utilityGroup.save();
 			}
 		}
 		return true;
