@@ -9,16 +9,16 @@ const hash = {
 	},
 };
 
-async function getUpperLetter(str: string) {
+function getUpperLetter(str: string) {
 	let array_with_str = str.split(``);
 	let data = `ЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ`.split(``);
 	let temp_array = [];
 	for (let i in array_with_str) {
 		for (let j in data) {
-			if (array_with_str[i].indexOf(data[j]) != -1) {
+			if (array_with_str[i].indexOf(data[j]) !== -1) {
 				temp_array.push({
 					letter: array_with_str[i],
-					index: i,
+					index: Number(i),
 				});
 			}
 		}

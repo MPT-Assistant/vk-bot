@@ -12,17 +12,10 @@ console.time(`Executed in`);
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 	});
-	(
-		await models.chat.find({
-			inform: true,
-		})
-	).map(async function (chat) {
-		if (chat.unical_group_id === "0") {
-			chat.unical_group_id = "";
-			chat.save();
-			console.log(chat);
-		}
-	});
+	require(`fs`).writeFileSync(
+		`out.json`,
+		JSON.stringify(await mpt.mpt.parseReplacements()),
+	);
 	console.timeEnd(`Executed in`);
 	process.exit();
 })();

@@ -377,9 +377,15 @@ const mpt = {
 		}
 		return true;
 	},
-	parseReplacements: async (): Promise<Array<replacementInterface>> => {
-		let outputData: Array<replacementInterface> = [];
-
+	parseReplacements: async (): Promise<
+		Array<{
+			day: string;
+			groups: Array<{
+				group: any;
+				replacements: any[];
+			}>;
+		}>
+	> => {
 		const $ = parser.load(
 			await tempRequester(`https://mpt.ru/studentu/izmeneniya-v-raspisanii/`),
 		);
@@ -432,31 +438,157 @@ const mpt = {
 
 		let tempArrayReplacementData: Array<{
 			day: string;
-			groups: [];
+			groups: Array<{
+				group: any;
+				replacements: any[];
+			}>;
 		}> = [];
 
 		tempArrayWithReplacement.map(async function (tempElement) {
 			let dateOfReplacement = tempElement.day_data;
-			let temp_time_data: any = utils.time.getDateByMS(
-				Number(dateOfReplacement),
-			);
+			let tempTimeData = utils.time.getDateByMS(Number(dateOfReplacement));
 
-			if (!tempArrayReplacementData.find((x) => x.day === temp_time_data)) {
+			if (!tempArrayReplacementData.find((x) => x.day === tempTimeData)) {
 				tempArrayReplacementData.push({
-					day: temp_time_data,
+					day: tempTimeData,
 					groups: [],
 				});
 			}
 
 			let currentDateReplacementData = tempArrayReplacementData.find(
-				(x) => x.day === temp_time_data,
+				(x) => x.day === tempTimeData,
 			);
 
-			tempElement.data.map(async function (tempReplacement) {});
-			// TODO
+			for (let j in tempElement.data) {
+				let tempArrayWithReplacements = [];
+				for (
+					let k = 2;
+					//@ts-ignore
+					k < tempElement.data[j].childNodes[3].childNodes.length;
+					k += 2
+				) {
+					let lessonName =
+						//@ts-ignore
+						tempElement.data[j].childNodes[3].childNodes[k].childNodes[3]
+							.children[0].data; //заменяемая пара
+					let newLessonName =
+						//@ts-ignore
+						tempElement.data[j].childNodes[3].childNodes[k].childNodes[5]
+							.children[0].data; //на что заменяют
+					let lessonNum =
+						//@ts-ignore
+						tempElement.data[j].childNodes[3].childNodes[k].childNodes[1]
+							.children[0].data; //номер пары
+					let textDateTimeReplace =
+						//@ts-ignore
+						tempElement.data[j].childNodes[3].childNodes[k].childNodes[7]
+							.children[0].data;
+					let addToSite = new Date(
+						textDateTimeReplace.split(` `)[0].split(`.`).reverse().join(`-`) +
+							` ` +
+							textDateTimeReplace.split(` `)[1],
+					); //время обновления
+					let out: {
+						lessonName: string;
+						newLessonName: string;
+						lessonNum: number;
+						detected: Date;
+						addToSite: Date;
+					} = {
+						lessonName: lessonName,
+						newLessonName: newLessonName,
+						lessonNum: Number(lessonNum),
+						detected: new Date(),
+						addToSite: addToSite,
+					};
+					tempArrayWithReplacements.push(out);
+				} // обработка замен у группы
+				let tempChange = {
+					group: tempElement.data[
+						j
+						//@ts-ignore
+					].children[0].next.children[0].next.children[0].data.split(`, `),
+					replacements: tempArrayWithReplacements,
+				};
+				for (let tempGroup of tempChange.group) {
+					//@ts-ignore
+					let tempDayGroupReplacementData = currentDateReplacementData.groups.find(
+						(x) => x.group === tempGroup,
+					);
+					if (!tempDayGroupReplacementData) {
+						//@ts-ignore
+						currentDateReplacementData.groups.push({
+							group: tempGroup,
+							replacements: [],
+						});
+						//@ts-ignore
+						tempDayGroupReplacementData = currentDateReplacementData.groups.find(
+							(x) => x.group === tempGroup,
+						);
+					}
+
+					for (let tempReplacement of tempChange.replacements) {
+						let lessonName = tempReplacement.lessonName.replace(
+							/(^\s*)|(\s*)$/g,
+							"",
+						);
+						let newLessonName = tempReplacement.newLessonName.replace(
+							/(^\s*)|(\s*)$/g,
+							"",
+						);
+						let teacherName = `Отсутствует`;
+						let newTeacherName = `Отсутствует`;
+						if (
+							lessonName !== `ПРАКТИКА` &&
+							lessonName !== `ДЕНЬ САМОПОДГОТОВКИ`
+						) {
+							let arrayWithLessonNameUpperLetter = internalUtils.getUpperLetter(
+								lessonName,
+							);
+							if (arrayWithLessonNameUpperLetter.length > 1) {
+								teacherName = lessonName
+									.substring(Number(arrayWithLessonNameUpperLetter[1].index))
+									.replace(/(^\s*)|(\s*)$/g, "");
+								lessonName = lessonName
+									.substring(0, Number(arrayWithLessonNameUpperLetter[1].index))
+									.replace(/(^\s*)|(\s*)$/g, "");
+							}
+						}
+						if (
+							newLessonName !== `ПРАКТИКА` &&
+							newLessonName !== `ДЕНЬ САМОПОДГОТОВКИ`
+						) {
+							let arrayWithNewLessonNameUpperLetter = internalUtils.getUpperLetter(
+								newLessonName,
+							);
+							if (arrayWithNewLessonNameUpperLetter.length > 1) {
+								newTeacherName = newLessonName
+									.substring(Number(arrayWithNewLessonNameUpperLetter[1].index))
+									.replace(/(^\s*)|(\s*)$/g, "");
+								newLessonName = newLessonName
+									.substring(
+										0,
+										Number(arrayWithNewLessonNameUpperLetter[1].index),
+									)
+									.replace(/(^\s*)|(\s*)$/g, "");
+							}
+						}
+						//@ts-ignore
+						tempDayGroupReplacementData.replacements.push({
+							detected: tempReplacement.detected,
+							add_to_site: tempReplacement.addToSite,
+							lesson_num: tempReplacement.lessonNum,
+							old_lesson_name: lessonName,
+							old_teacher_name: teacherName,
+							new_lesson_name: newLessonName,
+							new_teacher_name: newTeacherName,
+						});
+					}
+				}
+			}
 		});
 
-		return outputData;
+		return tempArrayReplacementData;
 	},
 	Update_all_replacements: async () => {
 		const $ = parser.load(
@@ -605,7 +737,7 @@ const mpt = {
 							lesson_name != `ПРАКТИКА` ||
 							lesson_name != `ДЕНЬ САМОПОДГОТОВКИ`
 						) {
-							temp_array_lesson_name_with_upper_letter = await internalUtils.getUpperLetter(
+							temp_array_lesson_name_with_upper_letter = internalUtils.getUpperLetter(
 								lesson_name,
 							);
 						}
@@ -613,7 +745,7 @@ const mpt = {
 							new_lesson_name != `ПРАКТИКА` ||
 							new_lesson_name != `ДЕНЬ САМОПОДГОТОВКИ`
 						) {
-							temp_array_new_lesson_name_with_upper_letter = await internalUtils.getUpperLetter(
+							temp_array_new_lesson_name_with_upper_letter = internalUtils.getUpperLetter(
 								new_lesson_name,
 							);
 						}
