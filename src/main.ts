@@ -17,7 +17,7 @@ import utils from "rus-anonym-utils";
 	});
 	utils.logger.console(`Successfull connection to database`);
 	utils.logger.console(`Updating data...`);
-	// await mpt.Update_all_shedule();
+	await mpt.updateSchedule();
 	await mpt.Update_all_replacements();
 	utils.logger.console(`Successfull data update`);
 	utils.logger.console(`Loading commands...`);
@@ -31,7 +31,7 @@ import utils from "rus-anonym-utils";
 		isInterval: true,
 		intervalTimer: 5 * 60 * 1000,
 		code: async function () {
-			// await mpt.Update_all_shedule();
+			await mpt.updateSchedule();
 			await mpt.Update_all_replacements();
 		},
 	});

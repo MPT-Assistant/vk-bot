@@ -14,7 +14,7 @@ console.time(`Executed in`);
 	});
 	require(`fs`).writeFileSync(
 		`out.json`,
-		JSON.stringify(await mpt.mpt.parseReplacements()),
+		JSON.stringify(await mpt.mpt.parseSchedule()),
 	);
 	console.timeEnd(`Executed in`);
 	process.exit();
