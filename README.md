@@ -25,7 +25,7 @@ This command should install **canvas**, **cheerio**, **moment**, **moment-precis
 
 ```bash
 # Install dependencies
-$ npm
+$ npm init
 # Or
 $ yarn
 ```
