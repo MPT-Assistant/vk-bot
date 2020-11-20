@@ -10,43 +10,53 @@ export = {
 		if (message.isChat) {
 			return message.sendMessage(`команда доступна только в ЛС бота.`);
 		} else {
-			await message.sendMessage(
-				`для привязки аккаунта Google к боту, получите токен по ссылке: ${
-					(
-						await vk.api.utils.getShortLink({
-							url: await google.getURLtoGetToken(),
-						})
-					).short_url
-				} и отправьте его боту.`,
-			);
-			let token = await message.question(`Введите токен:`);
-			await message.sendMessage(`проверяю токен...`);
-			try {
-				if (token.text) {
-					let userData = await google.getUserDataByTempToken(token.text);
-					let userGoogleAccount: any = await models.userGoogle.findOne({
-						vk_id: message.senderId,
-					});
-					let gmailInstance = new gmailUser(userData);
-					let userEmail = await gmailInstance.getEmailAddress();
-					if (!userGoogleAccount) {
-						userGoogleAccount = new models.userGoogle({
+			let checkUserData = await models.userGoogle.findOne({
+				vk_id: message.senderId,
+			});
+			if (checkUserData) {
+				return await message.sendMessage(
+					`ваш аккаунт Google уже привязан к боту.`,
+				);
+			} else {
+				await message.sendMessage(
+					`для привязки аккаунта Google к боту, получите токен по ссылке: ${
+						(
+							await vk.api.utils.getShortLink({
+								url: await google.getURLtoGetToken(),
+							})
+						).short_url
+					} и отправьте его боту.`,
+				);
+				let token = await message.question(`Введите токен:`);
+				await message.sendMessage(`проверяю токен...`);
+				try {
+					if (token.text) {
+						let userData = await google.getUserDataByTempToken(token.text);
+						let userGoogleAccount = await models.userGoogle.findOne({
 							vk_id: message.senderId,
-							token: userData,
 						});
+						let gmailInstance = new gmailUser(userData);
+						let userEmail = await gmailInstance.getEmailAddress();
+						if (!userGoogleAccount) {
+							userGoogleAccount = new models.userGoogle({
+								vk_id: message.senderId,
+								token: userData,
+							});
+						} else {
+							//@ts-ignore
+							userGoogleAccount.token = userData;
+						}
+						await message.sendMessage(
+							`токен указан верно.\nE-mail: ${userEmail}`,
+						);
+						await userGoogleAccount.save();
+						return;
 					} else {
-						userGoogleAccount.token = userData;
+						return await message.sendMessage(`неверно указан токен.`);
 					}
-					await message.sendMessage(
-						`токен указан верно.\nE-mail: ${userEmail}`,
-					);
-					return;
-					// await userGoogleAccount.save();
-				} else {
+				} catch (error) {
 					return await message.sendMessage(`неверно указан токен.`);
 				}
-			} catch (error) {
-				return await message.sendMessage(`неверно указан токен.`);
 			}
 		}
 	},
