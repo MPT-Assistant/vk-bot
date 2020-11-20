@@ -13,6 +13,7 @@ export interface MPTMessage extends MessageContext, IQuestionMessageContext {
 	): Promise<MessageContext<Record<string, any>>>;
 	user: UserInterface;
 	chat?: ChatInterface;
+	pageBuilder: any;
 }
 
 export interface UserInterface extends Document {

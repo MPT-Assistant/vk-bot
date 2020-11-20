@@ -93,7 +93,6 @@ const courseWork = createSchema({
 const courseScheme = createSchema({
 	id: Type.string(),
 	name: Type.string(),
-	section: Type.string(),
 	descriptionHeading: Type.string(),
 	created: Date,
 	lastUpdate: Date,

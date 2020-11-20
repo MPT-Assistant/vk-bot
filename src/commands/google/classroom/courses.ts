@@ -32,9 +32,10 @@ export = {
 				);
 			}
 			//@ts-ignore
-			let classroomInstance = new classroomUser(checkUserData.token);
+			let classroomInstance = new classroomUser(userGoogleAccount.token);
 			let userCourses = await classroomInstance.courses.list();
-			console.log(userCourses);
+			const pagesBuilder = message.pageBuilder();
+			pagesBuilder.setPages(["1 страница", "2 страница"]).build();
 			return message.sendMessage(
 				`Ваш профиль:
 Account: ${userGoogleAccount.email}`,

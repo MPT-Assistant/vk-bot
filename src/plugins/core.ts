@@ -11,6 +11,7 @@ import {
 import { MPTMessage } from "./types";
 import moment from "moment";
 import scheduler from "simple-scheduler-task";
+import { PagesManager } from "vk-io-pages";
 import fs from "fs";
 moment.locale(`ru`);
 import { QuestionManager } from "vk-io-question";
@@ -37,7 +38,14 @@ const vk = new VK({
 	pollingGroupId: config.groupID,
 });
 
+const pagesManager = new PagesManager({
+	api: vk.api,
+});
+
 vk.updates.use(questionManager.middleware);
+
+vk.updates.on("message_event", pagesManager.middleware);
+vk.updates.on("message_new", pagesManager.middleware);
 
 vk.updates.on("chat_invite_user", async function (message: MessageContext) {
 	if (message.eventMemberId === -config.groupID) {
@@ -254,4 +262,13 @@ async function commandsLoader(path: string) {
 	}
 }
 
-export { commandsLoader, vk, commands, mongoose, scheduler, mpt, config };
+export {
+	commandsLoader,
+	vk,
+	commands,
+	mongoose,
+	scheduler,
+	mpt,
+	config,
+	pagesManager,
+};

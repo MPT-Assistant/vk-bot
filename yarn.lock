@@ -1644,6 +1644,13 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
+vk-io-pages@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/vk-io-pages/-/vk-io-pages-1.2.1.tgz#d4c785588d05b8adb1b1cf38da77322eae921a68"
+  integrity sha512-xGXfgeKrVDu+z7E8/DSL5pU8hKmvbDbewidjhPh7WiRLff2+4vvZdJQ4TB2Bj1rZL4aDT7rQbzLuq1J6agfkzA==
+  dependencies:
+    vk-io "^4.0.4"
+
 vk-io-question@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/vk-io-question/-/vk-io-question-2.0.1.tgz#0fe5ad24509f3414917aa65ecafc320714edf8b8"
@@ -1652,7 +1659,7 @@ vk-io-question@^2.0.1:
     middleware-io "^2.5.0"
     vk-io "^4.0.0-rc.30"
 
-vk-io@^4.0.0-rc.30, vk-io@^4.0.3:
+vk-io@^4.0.0-rc.30, vk-io@^4.0.3, vk-io@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/vk-io/-/vk-io-4.0.4.tgz#1c52269e91d8e37bbe38082dff62216635ebd641"
   integrity sha512-4hPMNLx/IIFllYaOzEaY19WnxD79eCRgTXazR1AP0vD3Z3x2n5dfat6ndPOGbt1al6KJXdLWMFHu58okuWPs/Q==
