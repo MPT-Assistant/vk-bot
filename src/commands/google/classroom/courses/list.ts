@@ -1,8 +1,8 @@
 import { utils } from "rus-anonym-utils";
 import { Keyboard } from "vk-io";
-import { MPTMessage } from "../../../plugins/types";
-import models from "../../../plugins/models";
-import { classroomUser } from "../../../plugins/google/classroom";
+import { MPTMessage } from "../../../../plugins/types";
+import models from "../../../../plugins/models";
+import { classroomUser } from "../../../../plugins/google/classroom";
 
 export = {
 	regexp: /^(?:Мои курсы)$/i,
@@ -51,7 +51,14 @@ export = {
 			} else {
 				forwardData.reply_to = message.id;
 			}
+			const keyboard = pagesBuilder.keyboard.clone();
 			for (let course of userCourses) {
+				keyboard.textButton({
+					label: "Просмотреть курс",
+					payload: {
+						command: `просмотреть курс ${course.id}`,
+					},
+				});
 				pagesArray.push(
 					Object.assign(
 						{
@@ -65,30 +72,13 @@ export = {
 								course.courseState
 							}`,
 							dont_parse_link: 1,
+							keyboard: keyboard,
 						},
 						forwardData,
 					),
 				);
 			}
 			pagesBuilder.setPages(pagesArray);
-			const keyboard = pagesBuilder.keyboard;
-			keyboard
-				.textButton({
-					label: "Кнопка с номером страницы",
-					payload: {
-						builder_id: pagesBuilder.id,
-						builder_page: 2,
-					},
-				})
-				.row()
-				.textButton({
-					label: "Кнопка с действием",
-					payload: {
-						builder_id: pagesBuilder.id,
-						builder_action: "next",
-					},
-				});
-			pagesBuilder.updateKeyboard(keyboard);
 			pagesBuilder.build();
 
 			return;
