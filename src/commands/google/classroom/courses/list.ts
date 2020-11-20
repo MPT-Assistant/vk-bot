@@ -41,7 +41,10 @@ export = {
 			const pagesBuilder = message.pageBuilder();
 			pagesBuilder.setInfinityLoop(false);
 			let pagesArray = [];
-			let forwardData: any = {};
+			let forwardData: {
+				forward?: string;
+				reply_to?: number;
+			} = {};
 			if (message.isChat) {
 				forwardData.forward = JSON.stringify({
 					peer_id: message.peerId,
@@ -74,7 +77,6 @@ export = {
 			}
 			pagesBuilder.setPages(pagesArray);
 			pagesBuilder.build();
-
 			return;
 		}
 	},
