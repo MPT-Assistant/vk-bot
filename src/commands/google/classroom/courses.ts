@@ -1,10 +1,11 @@
 import { Keyboard } from "vk-io";
 import { MPTMessage } from "../../plugins/types";
 import models from "../../plugins/models";
+import { classroomUser } from "../../plugins/google/classroom";
 
 export = {
-	regexp: /^(?:Google|мой аккаунт)$/i,
-	template: ["Google", "Мой аккаунт"],
+	regexp: /^(?:Classroom)$/i,
+	template: ["Classroom"],
 	process: async (message: MPTMessage) => {
 		if (message.isChat) {
 			return message.sendMessage(`команда доступна только в ЛС бота.`);
@@ -37,9 +38,9 @@ Account: ${userGoogleAccount.email}`,
 					keyboard: Keyboard.keyboard([
 						[
 							Keyboard.textButton({
-								label: "Classroom",
+								label: "Мои курсы",
 								payload: {
-									command: `Classroom`,
+									command: `Мои курсы`,
 								},
 								color: Keyboard.POSITIVE_COLOR,
 							}),
