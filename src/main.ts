@@ -16,10 +16,6 @@ import utils from "rus-anonym-utils";
 		useUnifiedTopology: true,
 	});
 	utils.logger.console(`Successfull connection to database`);
-	utils.logger.console(`Updating data...`);
-	await mpt.updateSchedule();
-	await mpt.Update_all_replacements();
-	utils.logger.console(`Successfull data update`);
 	utils.logger.console(`Loading commands...`);
 	await commandsLoader(`./commands`);
 	utils.logger.console(`Successfull loading commands (${commands.length})`);
