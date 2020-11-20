@@ -1,12 +1,11 @@
 import { Keyboard } from "vk-io";
 import { MPTMessage } from "../../plugins/types";
-import { google } from "../../plugins/google";
 import models from "../../plugins/models";
 import { gmailUser } from "../../plugins/google/gmail";
 
 export = {
 	regexp: /^(?:проверить привязку)$/i,
-	template: ["проверить привязку"],
+	template: ["Проверить привязку"],
 	process: async (message: MPTMessage) => {
 		if (message.isChat) {
 			return message.sendMessage(`команда доступна только в ЛС бота.`);

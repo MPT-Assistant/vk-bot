@@ -7,7 +7,7 @@ import models from "../../plugins/models";
 
 export = {
 	regexp: /^(?:замены)\s?([^]+)?/i,
-	template: ["замены"],
+	template: ["Замены"],
 	process: async (message: MPTMessage) => {
 		if (
 			(message.chat &&

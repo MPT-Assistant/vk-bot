@@ -14,7 +14,7 @@ declare global {
 
 export = {
 	regexp: /^(?:расписание|рп|какие пары|какие пары|пары|уроки|lessons|pairs|pair)\s?([^]+)?/i,
-	template: ["расписание", "рп"],
+	template: ["Расписание", "Рп"],
 	process: async (message: MPTMessage) => {
 		if (
 			(message.chat &&

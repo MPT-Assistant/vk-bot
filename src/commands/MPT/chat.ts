@@ -3,7 +3,7 @@ import models from "../../plugins/models";
 import { MPTMessage } from "../../plugins/types";
 export = {
 	regexp: /^(?:чат|chat)$/i,
-	template: ["чат", "chat"],
+	template: ["чат", "Chat"],
 	process: async (message: MPTMessage) => {
 		if (!message.chat) {
 			return message.sendMessage(

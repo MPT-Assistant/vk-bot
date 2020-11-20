@@ -3,7 +3,7 @@ import { vk } from "../../plugins/core";
 import { MPTMessage } from "../../plugins/types";
 export = {
 	regexp: /^(?:report|репорт|предложение)$/i,
-	template: ["report", "репорт", "предложение"],
+	template: ["Report", "Репорт", "Предложение"],
 	process: async (message: MPTMessage) => {
 		if (message.isChat) {
 			return message.sendMessage(`доступно только в ЛС бота`);

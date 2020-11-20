@@ -6,7 +6,7 @@ import models from "../../plugins/models";
 
 export = {
 	regexp: /(?:regchat)(?:\s(.*))?$/i,
-	template: ["regchat"],
+	template: ["Regchat"],
 	process: async (message: MPTMessage) => {
 		if (!message.chat) {
 			return message.sendMessage(

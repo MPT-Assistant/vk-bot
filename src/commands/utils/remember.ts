@@ -11,7 +11,7 @@ registerFont(`./DB/templates/fonts/Roboto-Regular.ttf`, { family: `Roboto` });
 
 export = {
 	regexp: /^(?:помянем)\s?([^]+)?/i,
-	template: ["помянем"],
+	template: ["Помянем"],
 	process: async (message: MPTMessage) => {
 		if (
 			!message.args[1] &&
