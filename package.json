@@ -21,6 +21,7 @@
 		"request-promise": "^4.2.6",
 		"rus-anonym-utils": "^2.0.14",
 		"simple-scheduler-task": "^3.0.12",
+		"ts-mongoose": "^0.0.21",
 		"vk-io": "^4.0.3",
 		"vk-io-question": "^2.0.1"
 	},
@@ -29,7 +30,7 @@
 		"@types/crypto-js": "^4.0.1",
 		"@types/moment": "^2.13.0",
 		"@types/moment-precise-range-plugin": "^0.2.0",
-		"@types/mongoose": "^5.7.36",
+		"@types/mongoose": "^5.10.1",
 		"@types/node": "^14.11.10",
 		"@types/request": "^2.48.5",
 		"@types/request-promise": "^4.1.46"

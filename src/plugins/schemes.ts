@@ -1,5 +1,6 @@
 "use strict";
 import { Schema } from "mongoose";
+import { createSchema, Type } from "ts-mongoose";
 
 const user: Schema = new Schema({
 	id: Number,
@@ -77,7 +78,7 @@ const courseAnnouncement: Schema = new Schema({
 	lastUpdate: Date,
 });
 
-const courseWork: Schema = new Schema({
+const courseWork = createSchema({
 	id: String,
 	title: String,
 	description: String,
@@ -89,41 +90,41 @@ const courseWork: Schema = new Schema({
 	deadline: Date,
 });
 
-const courseScheme: Schema = new Schema({
-	id: String,
-	name: String,
-	section: String,
-	descriptionHeading: String,
+const courseScheme = createSchema({
+	id: Type.string(),
+	name: Type.string(),
+	section: Type.string(),
+	descriptionHeading: Type.string(),
 	created: Date,
 	lastUpdate: Date,
-	link: String,
-	status: String,
-	announcements: [courseAnnouncement],
-	works: [courseWork],
+	link: Type.string(),
+	status: Type.string(),
+	announcements: Type.array().of(courseAnnouncement),
+	works: Type.array().of(courseWork),
 });
 
-const classroomUser: Schema = new Schema({
-	id: Number,
-	courseList: [courseScheme],
-	inform: Boolean,
+const classroomUser = createSchema({
+	id: Type.number(),
+	courseList: Type.array().of(courseScheme),
+	inform: Type.boolean(),
 });
 
-const gmailUser: Schema = new Schema({
-	email: String,
-	inform: Boolean,
+const gmailUser = createSchema({
+	email: Type.string(),
+	inform: Type.boolean(),
 });
 
-const googleScheme: Schema = new Schema({
-	vk_id: Number,
+const googleScheme = createSchema({
+	vk_id: Type.number(),
 	token: {
-		access_token: String,
-		refresh_token: String,
-		scope: String,
-		token_type: String,
-		expiry_date: Number,
+		access_token: Type.string(),
+		refresh_token: Type.string(),
+		scope: Type.string(),
+		token_type: Type.string(),
+		expiry_date: Type.number(),
 	},
-	classroom: classroomUser,
-	gmail: gmailUser,
+	classroom: Type.schema().of(classroomUser),
+	gmail: Type.schema().of(gmailUser),
 });
 
 export = {

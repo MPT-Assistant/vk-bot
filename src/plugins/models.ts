@@ -1,5 +1,6 @@
 "use strict";
 import mongoose from "mongoose";
+import { typedModel } from "ts-mongoose";
 
 import schemes from "./schemes";
 import * as types from "./types";
@@ -21,7 +22,7 @@ const utilityGroup = mongoose.model<types.utilityGroup>(
 	schemes.utilityGroup,
 	`groups`,
 );
-const userGoogle = mongoose.model("userGoogle", schemes.googleScheme, `google`);
+const userGoogle = typedModel("userGoogle", schemes.googleScheme, `google`);
 
 export = {
 	user,
