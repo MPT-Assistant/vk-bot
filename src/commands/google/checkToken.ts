@@ -5,8 +5,8 @@ import models from "../../plugins/models";
 import { gmailUser } from "../../plugins/google/gmail";
 
 export = {
-	regexp: /^(?:привязка)$/i,
-	template: ["привязка"],
+	regexp: /^(?:проверить привязку)$/i,
+	template: ["проверить привязку"],
 	process: async (message: MPTMessage) => {
 		if (message.isChat) {
 			return message.sendMessage(`команда доступна только в ЛС бота.`);
@@ -32,7 +32,18 @@ export = {
 					},
 				);
 			} else {
-				console.log(checkUserData);
+				try {
+					let gmailInstance = new gmailUser(checkUserData.token);
+					let userEmail = await gmailInstance.getEmailAddress();
+					return message.sendMessage(
+						`привязка аккаунта ${userEmail} на данный момент (${new Date().toISOString()}) актуальна.`,
+					);
+				} catch (error) {
+					await checkUserData.deleteOne();
+					return message.sendMessage(
+						`привязка аккаунта  на данный момент (${new Date().toISOString()}) неактульна.`,
+					);
+				}
 			}
 		}
 	},

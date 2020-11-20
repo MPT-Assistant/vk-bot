@@ -37,11 +37,11 @@ export interface ChatInterface extends Document {
 }
 
 export interface GoogleUserData {
-	access_token: string;
-	refresh_token: string;
-	scope: string;
-	token_type: string;
-	expiry_date: number;
+	access_token: Record<"notRequired", string>;
+	refresh_token: Record<"notRequired", string>;
+	scope: Record<"notRequired", string>;
+	token_type: Record<"notRequired", string>;
+	expiry_date: Record<"notRequired", number>;
 }
 
 export interface timetableElement {
