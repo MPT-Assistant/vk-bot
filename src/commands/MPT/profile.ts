@@ -1,3 +1,4 @@
+import { Keyboard } from "vk-io";
 import models from "../../plugins/models";
 import { MPTMessage } from "../../plugins/types";
 export = {
@@ -12,9 +13,29 @@ export = {
 			groupText = `Привязан к группе: ${groupData.name}\nОтделение: ${groupData.specialty}`;
 		}
 
-		return message.sendMessage(
-			`Ваш профиль:
+		if (message.isChat) {
+			return message.sendMessage(
+				`Ваш профиль:
 ${groupText}`,
-		);
+			);
+		} else {
+			return message.sendMessage(
+				`Ваш профиль:
+${groupText}`,
+				{
+					keyboard: Keyboard.keyboard([
+						[
+							Keyboard.textButton({
+								label: `Google`,
+								payload: {
+									command: `Google`,
+								},
+								color: Keyboard.POSITIVE_COLOR,
+							}),
+						],
+					]).inline(),
+				},
+			);
+		}
 	},
 };
