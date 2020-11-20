@@ -53,12 +53,6 @@ export = {
 			}
 			const keyboard = pagesBuilder.keyboard.clone();
 			for (let course of userCourses) {
-				keyboard.textButton({
-					label: "Просмотреть курс",
-					payload: {
-						command: `просмотреть курс ${course.id}`,
-					},
-				});
 				pagesArray.push(
 					Object.assign(
 						{

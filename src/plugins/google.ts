@@ -36,6 +36,8 @@ const google = {
 				"https://mail.google.com/",
 				"https://www.googleapis.com/auth/drive",
 				"https://www.googleapis.com/auth/classroom.courses.readonly",
+				"https://www.googleapis.com/auth/classroom.coursework.me.readonly",
+				"https://www.googleapis.com/auth/classroom.announcements.readonly",
 			],
 		});
 		return authUrl;
