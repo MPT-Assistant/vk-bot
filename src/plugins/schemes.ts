@@ -123,6 +123,7 @@ const googleScheme = createSchema({
 		token_type: Type.string(),
 		expiry_date: Type.number(),
 	},
+	email: Type.string(),
 	classroom: Type.schema().of(classroomUser),
 	gmail: Type.schema().of(gmailUser),
 });

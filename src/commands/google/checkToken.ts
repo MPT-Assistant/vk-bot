@@ -33,6 +33,7 @@ export = {
 				);
 			} else {
 				try {
+					//@ts-ignore
 					let gmailInstance = new gmailUser(checkUserData.token);
 					let userEmail = await gmailInstance.getEmailAddress();
 					return message.sendMessage(

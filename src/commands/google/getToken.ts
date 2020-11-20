@@ -41,6 +41,7 @@ export = {
 							userGoogleAccount = new models.userGoogle({
 								vk_id: message.senderId,
 								token: userData,
+								email: userEmail,
 							});
 						} else {
 							//@ts-ignore
