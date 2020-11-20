@@ -165,7 +165,7 @@ vk.updates.on("message", async function (message: MPTMessage) {
 				is_reply: 1,
 			});
 		} else {
-			forwardData.reply_to = message.id;
+			forwardData.forward_messages = message.id;
 		}
 		return await vk.api.messages.send(
 			Object.assign(

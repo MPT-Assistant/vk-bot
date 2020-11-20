@@ -1,11 +1,11 @@
 import { Keyboard } from "vk-io";
-import { MPTMessage } from "../../plugins/types";
-import models from "../../plugins/models";
-import { classroomUser } from "../../plugins/google/classroom";
+import { MPTMessage } from "../../../plugins/types";
+import models from "../../../plugins/models";
+import { classroomUser } from "../../../plugins/google/classroom";
 
 export = {
-	regexp: /^(?:Classroom)$/i,
-	template: ["Classroom"],
+	regexp: /^(?:Мои курсы)$/i,
+	template: ["Мои курсы"],
 	process: async (message: MPTMessage) => {
 		if (message.isChat) {
 			return message.sendMessage(`команда доступна только в ЛС бота.`);
@@ -31,6 +31,10 @@ export = {
 					},
 				);
 			}
+			//@ts-ignore
+			let classroomInstance = new classroomUser(checkUserData.token);
+			let userCourses = await classroomInstance.courses.list();
+			console.log(userCourses);
 			return message.sendMessage(
 				`Ваш профиль:
 Account: ${userGoogleAccount.email}`,
