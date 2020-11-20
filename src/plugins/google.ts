@@ -35,14 +35,7 @@ const google = {
 			scope: [
 				"https://mail.google.com/",
 				"https://www.googleapis.com/auth/drive",
-				"https://www.googleapis.com/auth/classroom.courses",
-				"https://www.googleapis.com/auth/classroom.rosters",
-				"https://www.googleapis.com/auth/classroom.coursework.me",
-				"https://www.googleapis.com/auth/classroom.coursework.students",
-				"https://www.googleapis.com/auth/classroom.announcements",
-				"https://www.googleapis.com/auth/classroom.guardianlinks.students",
-				"https://www.googleapis.com/auth/classroom.profile.photos",
-				"https://www.googleapis.com/auth/classroom.profile.emails",
+				"https://www.googleapis.com/auth/classroom.courses.readonly",
 			],
 		});
 		return authUrl;
