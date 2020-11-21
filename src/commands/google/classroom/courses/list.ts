@@ -2,7 +2,6 @@ import { utils } from "rus-anonym-utils";
 import { Keyboard } from "vk-io";
 import { MPTMessage } from "../../../../plugins/types";
 import models from "../../../../plugins/models";
-import { classroomUser } from "../../../../plugins/google/classroom";
 
 export = {
 	regexp: /^(?:Мои курсы)$/i,

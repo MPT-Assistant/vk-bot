@@ -1,6 +1,6 @@
 "use strict";
 import mongoose from "mongoose";
-import { typedModel } from "ts-mongoose";
+import { typedModel, ExtractDoc } from "ts-mongoose";
 
 import schemes from "./schemes";
 import * as types from "./types";

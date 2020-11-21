@@ -1,6 +1,8 @@
 import { IQuestionMessageContext } from "vk-io-question";
 import { Document } from "mongoose";
 import { MessageContext, IMessageContextSendOptions } from "vk-io";
+import { ExtractDoc } from "ts-mongoose";
+import schemes from "./schemes";
 export interface MPTCommand {
 	regexp: RegExp;
 	process: Function;
@@ -115,3 +117,5 @@ export interface utilityGroup extends Document {
 	specialty: string;
 	specialty_id: string;
 }
+
+export type userGoogleInterface = ExtractDoc<typeof schemes.googleScheme>;

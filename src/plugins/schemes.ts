@@ -94,8 +94,8 @@ const courseScheme = createSchema({
 	id: Type.string(),
 	name: Type.string(),
 	descriptionHeading: Type.string(),
-	created: Date,
-	lastUpdate: Date,
+	created: Type.date(),
+	lastUpdate: Type.date(),
 	link: Type.string(),
 	status: Type.string(),
 	announcements: Type.array().of(courseAnnouncement),
@@ -103,8 +103,8 @@ const courseScheme = createSchema({
 });
 
 const classroomSection = createSchema({
-	id: Type.number(),
 	courseList: Type.array().of(courseScheme),
+	last_update: Type.date(),
 	inform: Type.boolean(),
 });
 

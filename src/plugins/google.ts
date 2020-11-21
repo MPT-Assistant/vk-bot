@@ -1,6 +1,6 @@
-import { GoogleUserData } from "./types";
-import { google as googleAPI } from "googleapis";
-import { classroomUser } from "./google/classroom";
+import { GoogleUserData, userGoogleInterface } from "./types";
+import models from "./models";
+import { google as googleAPI, classroom_v1 } from "googleapis";
 
 const googleCredentials: {
 	installed: {
@@ -13,6 +13,106 @@ const googleCredentials: {
 		redirect_uris: Array<string>;
 	};
 } = require(`../DB/google.json`);
+
+class googleUser {
+	private userId: number;
+	private getClassroomInstance(userData: GoogleUserData) {
+		return googleAPI.classroom({
+			version: "v1",
+			auth: google.createUser_oAuth2Client(userData),
+		});
+	}
+	//@ts-ignore
+	private classroomAPI: classroom_v1.Classroom = null;
+
+	private getGmailInstance(userData: GoogleUserData) {
+		return googleAPI.gmail({
+			version: "v1",
+			auth: google.createUser_oAuth2Client(userData),
+		});
+	}
+	//@ts-ignore
+	private gmailAPI: gmail_v1.Gmail = null;
+	//@ts-ignore
+	userData: userGoogleInterface | null = undefined;
+
+	constructor(userId: number) {
+		this.userId = userId;
+	}
+
+	async init(): Promise<boolean> {
+		this.userData = await models.userGoogle.findOne({
+			vk_id: this.userId,
+		});
+		if (!this.userData) {
+			return false;
+		} else {
+			//@ts-ignore
+			this.classroomAPI = this.getClassroomInstance(this.userData.token);
+			//@ts-ignore
+			this.gmailAPI = this.getGmailInstance(this.userData.token);
+			return true;
+		}
+	}
+
+	classroom = {
+		api: this.classroomAPI,
+		courses: {
+			list: async (nextToken?: string) => {
+				let coursesList = await this.classroomAPI.courses.list({
+					pageToken: nextToken || "",
+				});
+				let output = coursesList.data.courses || [];
+				if (coursesList.data.nextPageToken) {
+					let nextListData = await this.classroom.courses.list(
+						coursesList.data.nextPageToken,
+					);
+					output = output.concat(nextListData);
+				}
+				return output;
+			},
+		},
+		announcements: {
+			list: async (courseID: string, nextToken?: string) => {
+				let announcementsList = await this.classroomAPI.courses.announcements.list(
+					{
+						courseId: courseID,
+						pageToken: nextToken || "",
+					},
+				);
+				let output = announcementsList.data.announcements || [];
+				if (announcementsList.data.nextPageToken) {
+					let nextListData = await this.classroom.announcements.list(
+						announcementsList.data.nextPageToken,
+					);
+					output = output.concat(nextListData);
+				}
+				return output;
+			},
+			get: async (courseID: string, announcementID: string) => {
+				let announcementData = await this.classroomAPI.courses.announcements.get(
+					{
+						courseId: courseID,
+						id: announcementID,
+					},
+				);
+				return announcementData.data;
+			},
+		},
+	};
+
+	gmail = {
+		api: this.gmailAPI,
+		getEmailAddress: async (): Promise<string> => {
+			let data = await this.gmailAPI.users.getProfile({ userId: `me` });
+			if (data.data.emailAddress) {
+				return data.data.emailAddress;
+			} else {
+				throw new Error(`Unknown error`);
+			}
+		},
+	};
+}
 
 const google = {
 	create_oAuth2Client: () => {
@@ -72,4 +172,4 @@ const google = {
 	},
 };
 
-export { google, classroomUser };
+export { google, googleUser };
