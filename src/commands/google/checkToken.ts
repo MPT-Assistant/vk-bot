@@ -1,7 +1,6 @@
 import { Keyboard } from "vk-io";
 import { MPTMessage } from "../../plugins/types";
 import models from "../../plugins/models";
-import { gmailUser } from "../../plugins/google/gmail";
 
 export = {
 	regexp: /^(?:проверить привязку)$/i,

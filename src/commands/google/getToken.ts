@@ -1,8 +1,8 @@
 import { MPTMessage } from "../../plugins/types";
 import { vk } from "../../plugins/core";
-import { google } from "../../plugins/google";
+import { google, googleUser } from "../../plugins/google";
 import models from "../../plugins/models";
-import { gmailUser } from "../../plugins/google/gmail";
+
 export = {
 	regexp: /^(?:привязка)$/i,
 	template: ["Привязка"],
@@ -35,8 +35,8 @@ export = {
 						let userGoogleAccount = await models.userGoogle.findOne({
 							vk_id: message.senderId,
 						});
-						let gmailInstance = new gmailUser(userData);
-						let userEmail = await gmailInstance.getEmailAddress();
+						let googleInstance = new googleUser(message.senderId);
+						let userEmail = await googleInstance.gmail.getEmailAddress();
 						if (!userGoogleAccount) {
 							userGoogleAccount = new models.userGoogle({
 								vk_id: message.senderId,

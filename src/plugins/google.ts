@@ -55,6 +55,15 @@ class googleUser {
 		}
 	}
 
+	async refreshToken(): Promise<true> {
+		return true;
+	}
+
+	async save(): Promise<true> {
+		await this.userData?.save();
+		return true;
+	}
+
 	classroom = {
 		api: this.classroomAPI,
 		courses: {
@@ -105,11 +114,7 @@ class googleUser {
 		api: this.gmailAPI,
 		getEmailAddress: async (): Promise<string> => {
 			let data = await this.gmailAPI.users.getProfile({ userId: `me` });
-			if (data.data.emailAddress) {
-				return data.data.emailAddress;
-			} else {
-				throw new Error(`Unknown error`);
-			}
+			return data.data.emailAddress;
 		},
 	};
 }
@@ -169,6 +174,11 @@ const google = {
 				expiry_date: userToken.tokens.expiry_date,
 			};
 		}
+	},
+	checkUserToken: async (userData: GoogleUserData) => {
+		return await google
+			.createUser_oAuth2Client(userData)
+			.getTokenInfo(userData.access_token);
 	},
 };
 
