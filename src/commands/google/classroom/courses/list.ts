@@ -34,13 +34,12 @@ export = {
 			}
 			//@ts-ignore
 			let classroomInstance = new classroomUser(userGoogleAccount.token);
+			await message.sendMessage(`получаю список Ваших курсов...`);
 			let userCourses = await classroomInstance.courses.list();
 			if (!userCourses) {
 				return message.sendMessage(`у Вас не найдено курсов.`);
 			}
 			const pagesBuilder = message.pageBuilder();
-			pagesBuilder.setInfinityLoop(false);
-			let pagesArray = [];
 			let forwardData: {
 				forward?: string;
 				reply_to?: number;
@@ -54,9 +53,13 @@ export = {
 			} else {
 				forwardData.reply_to = message.id;
 			}
-			const keyboard = pagesBuilder.keyboard.clone();
 			for (let course of userCourses) {
-				pagesArray.push(
+				const keyboard = pagesBuilder.keyboard.clone();
+				keyboard.urlButton({
+					url: course.alternateLink,
+					label: "Открыть в Classroom",
+				});
+				pagesBuilder.addPages(
 					Object.assign(
 						{
 							message: `Название: ${
@@ -65,17 +68,14 @@ export = {
 								Number(new Date(course.creationTime || "")),
 							)}\nОбновлён: ${utils.time.getDateTimeByMS(
 								Number(new Date(course.updateTime || "")),
-							)}\nСсылка на курс: ${course.alternateLink}\nStatus: ${
-								course.courseState
-							}`,
-							dont_parse_link: 1,
+							)}`,
+							dont_parse_links: 1,
 							keyboard: keyboard,
 						},
 						forwardData,
 					),
 				);
 			}
-			pagesBuilder.setPages(pagesArray);
 			pagesBuilder.build();
 			return;
 		}
