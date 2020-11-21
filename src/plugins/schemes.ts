@@ -102,14 +102,13 @@ const courseScheme = createSchema({
 	works: Type.array().of(courseWork),
 });
 
-const classroomUser = createSchema({
+const classroomSection = createSchema({
 	id: Type.number(),
 	courseList: Type.array().of(courseScheme),
 	inform: Type.boolean(),
 });
 
-const gmailUser = createSchema({
-	email: Type.string(),
+const gmailSection = createSchema({
 	inform: Type.boolean(),
 });
 
@@ -123,8 +122,9 @@ const googleScheme = createSchema({
 		expiry_date: Type.number(),
 	},
 	email: Type.string(),
-	classroom: Type.schema().of(classroomUser),
-	gmail: Type.schema().of(gmailUser),
+	last_update: Type.date(),
+	classroom: Type.schema().of(classroomSection),
+	gmail: Type.schema().of(gmailSection),
 });
 
 export = {

@@ -55,9 +55,34 @@ export = {
 			}
 			for (let course of userCourses) {
 				const keyboard = pagesBuilder.keyboard.clone();
-				keyboard.urlButton({
-					url: course.alternateLink,
-					label: "Открыть в Classroom",
+				keyboard
+					.urlButton({
+						url: course.alternateLink,
+						label: "Открыть в Classroom",
+					})
+					.row()
+					.textButton({
+						label: "Объявления курса",
+						payload: {
+							command: `обьявления ${course.id}`,
+						},
+					})
+					.row()
+					.textButton({
+						label: "Задания",
+						payload: {
+							command: `задания ${course.id}`,
+						},
+					})
+					.row()
+					.textButton({
+						label: "Учителя",
+						payload: {
+							command: `учителя ${course.id}`,
+						},
+					});
+				Keyboard.textButton({
+					label: "",
 				});
 				pagesBuilder.addPages(
 					Object.assign(
