@@ -68,26 +68,43 @@ const utilityGroup: Schema = new Schema({
 	specialty_id: String,
 });
 
-const courseAnnouncement: Schema = new Schema({
-	id: String,
-	text: String,
-	materials: [],
-	status: String,
-	link: String,
-	created: Date,
-	lastUpdate: Date,
+const materialScheme = createSchema({
+	driveFile: Type.object().of({
+		id: Type.string(),
+		title: Type.string(),
+		url: Type.string(),
+	}),
+	youtubeVideo: Type.object().of({
+		id: Type.string(),
+		title: Type.string(),
+		url: Type.string(),
+	}),
+	link: Type.object().of({
+		title: Type.string(),
+		url: Type.string(),
+	}),
+});
+
+const courseAnnouncement = createSchema({
+	id: Type.string(),
+	text: Type.string(),
+	materials: Type.array().of(materialScheme),
+	status: Type.string(),
+	link: Type.string(),
+	created: Type.date(),
+	lastUpdate: Type.date(),
 });
 
 const courseWork = createSchema({
-	id: String,
-	title: String,
-	description: String,
-	materials: [],
-	status: String,
-	link: String,
-	created: Date,
-	lastUpdate: Date,
-	deadline: Date,
+	id: Type.string(),
+	title: Type.string(),
+	description: Type.string(),
+	materials: Type.array().of(materialScheme),
+	status: Type.string(),
+	link: Type.string(),
+	created: Type.date(),
+	lastUpdate: Type.date(),
+	deadline: Type.date(),
 });
 
 const courseScheme = createSchema({
