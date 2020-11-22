@@ -61,6 +61,11 @@ class GoogleUser {
 		}
 	}
 
+	async getTokenInfo() {
+		//@ts-ignore
+		return await google.getTokenInfo(this.userData?.token);
+	}
+
 	async refreshToken(): Promise<true> {
 		//@ts-ignore
 		this.userData?.token.access_token = await google.refreshToken(
@@ -140,11 +145,13 @@ const google = {
 		);
 		return oAuth2Client;
 	},
+
 	createUser_oAuth2Client: (userData: GoogleUserData) => {
 		let oAuth2Client = google.create_oAuth2Client();
 		oAuth2Client.setCredentials(userData);
 		return oAuth2Client;
 	},
+
 	getURLtoGetToken: async () => {
 		const oAuth2Client = google.create_oAuth2Client();
 		const authUrl = oAuth2Client.generateAuthUrl({
@@ -153,11 +160,13 @@ const google = {
 		});
 		return authUrl;
 	},
+
 	refreshToken: async (userData: GoogleUserData) => {
 		const oAuth2Client = google.create_oAuth2Client();
 		oAuth2Client.setCredentials(userData);
 		return (await oAuth2Client.getAccessToken()).token;
 	},
+
 	getUserDataByTempToken: async (
 		accessCode: string,
 	): Promise<GoogleUserData> => {
@@ -181,7 +190,12 @@ const google = {
 			};
 		}
 	},
-	checkUserToken: async (userData: GoogleUserData) => {
+
+	checkToken: async (userData: GoogleUserData) => {
+		let userTokenInfo = await google.getTokenInfo(userData);
+	},
+
+	getTokenInfo: async (userData: GoogleUserData) => {
 		return await google
 			.createUser_oAuth2Client(userData)
 			.getTokenInfo(userData.access_token);

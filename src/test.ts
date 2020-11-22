@@ -18,7 +18,8 @@ console.time(`Executed in`);
 		console.log(`not found`);
 		process.exit();
 	}
-	
+	console.log(await userGoogle.getTokenInfo());
+	await userGoogle.save();
 	console.timeEnd(`Executed in`);
 	process.exit();
 })();
