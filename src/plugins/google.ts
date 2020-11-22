@@ -1,6 +1,7 @@
 import { GoogleUserData, userGoogleInterface } from "./types";
 import models from "./models";
 import { google as googleAPI, classroom_v1 } from "googleapis";
+import { config } from "./core";
 
 const googleCredentials: {
 	installed: {
@@ -14,8 +15,9 @@ const googleCredentials: {
 	};
 } = require(`../DB/google.json`);
 
-class googleUser {
+class GoogleUser {
 	private userId: number;
+	private autoSave: boolean;
 	private getClassroomInstance(userData: GoogleUserData) {
 		return googleAPI.classroom({
 			version: "v1",
@@ -36,7 +38,8 @@ class googleUser {
 	//@ts-ignore
 	userData: userGoogleInterface | null = undefined;
 
-	constructor(userId: number) {
+	constructor(userId: number, autoSave?: boolean) {
+		this.autoSave = autoSave || false;
 		this.userId = userId;
 	}
 
@@ -51,11 +54,20 @@ class googleUser {
 			this.classroomAPI = this.getClassroomInstance(this.userData.token);
 			//@ts-ignore
 			this.gmailAPI = this.getGmailInstance(this.userData.token);
+
+			this.classroom.api = this.classroomAPI;
+			this.gmail.api = this.gmailAPI;
 			return true;
 		}
 	}
 
 	async refreshToken(): Promise<true> {
+		//@ts-ignore
+		this.userData?.token.access_token = await google.refreshToken(
+			//@ts-ignore
+			this.userData?.token,
+		);
+		this.autoSave ? await this.save() : false;
 		return true;
 	}
 
@@ -137,13 +149,7 @@ const google = {
 		const oAuth2Client = google.create_oAuth2Client();
 		const authUrl = oAuth2Client.generateAuthUrl({
 			access_type: "offline",
-			scope: [
-				"https://mail.google.com/",
-				"https://www.googleapis.com/auth/drive",
-				"https://www.googleapis.com/auth/classroom.courses.readonly",
-				"https://www.googleapis.com/auth/classroom.coursework.me.readonly",
-				"https://www.googleapis.com/auth/classroom.announcements.readonly",
-			],
+			scope: config.googleScopes,
 		});
 		return authUrl;
 	},
@@ -182,4 +188,4 @@ const google = {
 	},
 };
 
-export { google, googleUser };
+export { google, GoogleUser };

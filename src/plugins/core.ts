@@ -29,6 +29,7 @@ const config: {
 	token: string;
 	groupID: number;
 	mongo: string;
+	googleScopes: Array<string>;
 } = require(`../DB/config.json`);
 
 const vk = new VK({

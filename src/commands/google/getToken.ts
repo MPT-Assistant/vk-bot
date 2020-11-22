@@ -1,6 +1,6 @@
 import { MPTMessage } from "../../plugins/types";
 import { vk } from "../../plugins/core";
-import { google, googleUser } from "../../plugins/google";
+import { google, GoogleUser } from "../../plugins/google";
 import models from "../../plugins/models";
 
 export = {
@@ -35,7 +35,7 @@ export = {
 						let userGoogleAccount = await models.userGoogle.findOne({
 							vk_id: message.senderId,
 						});
-						let googleInstance = new googleUser(message.senderId);
+						let googleInstance = new GoogleUser(message.senderId);
 						let userEmail = await googleInstance.gmail.getEmailAddress();
 						if (!userGoogleAccount) {
 							userGoogleAccount = new models.userGoogle({
