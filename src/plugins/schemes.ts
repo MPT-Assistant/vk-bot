@@ -2,70 +2,70 @@
 import { Schema } from "mongoose";
 import { createSchema, Type } from "ts-mongoose";
 
-const user: Schema = new Schema({
-	id: Number,
-	vk_id: Number,
-	ban: Boolean,
-	reg_date: Date,
-	nickname: String,
+const user = createSchema({
+	id: Type.number(),
+	vk_id: Type.number(),
+	ban: Type.boolean(),
+	reg_date: Type.date(),
+	nickname: Type.string(),
 	data: {
-		unical_group_id: String,
-		lesson_notices: Boolean,
-		replacement_notices: Boolean,
-		mailing: Boolean,
+		unical_group_id: Type.string(),
+		lesson_notices: Type.boolean(),
+		replacement_notices: Type.boolean(),
+		mailing: Type.boolean(),
 	},
 });
 
-const chat: Schema = new Schema({
-	id: Number,
-	unical_group_id: String,
-	inform: Boolean,
-	mailing: Boolean,
+const chat = createSchema({
+	id: Type.number(),
+	unical_group_id: Type.string(),
+	inform: Type.boolean(),
+	mailing: Type.boolean(),
 });
 
-const lesson: Schema = new Schema({
-	num: Number,
-	name: [String],
-	teacher: [String],
+const lesson = createSchema({
+	num: Type.number(),
+	name: Type.array().of(Type.string()),
+	teacher: Type.array().of(Type.string()),
 });
 
-const replacement: Schema = new Schema({
-	date: String,
-	unical_group_id: String,
-	detected: Date,
-	add_to_site: Date,
-	lesson_num: Number,
-	old_lesson_name: String,
-	old_lesson_teacher: String,
-	new_lesson_name: String,
-	new_lesson_teacher: String,
+const replacement = createSchema({
+	date: Type.string(),
+	unical_group_id: Type.string(),
+	detected: Type.date(),
+	add_to_site: Type.date(),
+	lesson_num: Type.number(),
+	old_lesson_name: Type.string(),
+	old_lesson_teacher: Type.string(),
+	new_lesson_name: Type.string(),
+	new_lesson_teacher: Type.string(),
 });
 
-const day: Schema = new Schema({
-	num: Number,
-	place: String,
-	lessons: [lesson],
+const day = createSchema({
+	num: Type.string(),
+	place: Type.string(),
+	lessons: Type.array().of(lesson),
 });
 
-const group: Schema = new Schema({
-	id: String,
-	uid: String,
-	name: String,
-	weekly_schedule: [day],
+const group = createSchema({
+	id: Type.string(),
+	uid: Type.string(),
+	name: Type.string(),
+	weekly_schedule: Type.array().of(day),
 });
 
-const specialty: Schema = new Schema({
-	uid: String,
-	name: String,
-	groups: [group],
+const specialty = createSchema({
+	uid: Type.string(),
+	name: Type.string(),
+	groups: Type.array().of(group),
 });
 
-const utilityGroup: Schema = new Schema({
-	uid: String,
-	name: String,
-	id: String,
-	specialty: String,
-	specialty_id: String,
+const utilityGroup = createSchema({
+	uid: Type.string(),
+	name: Type.string(),
+	id: Type.string(),
+	specialty: Type.string(),
+	specialty_id: Type.string(),
 });
 
 const materialScheme = createSchema({
