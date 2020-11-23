@@ -13,30 +13,9 @@ export interface MPTMessage extends MessageContext, IQuestionMessageContext {
 		text: string | IMessageContextSendOptions,
 		params?: IMessageContextSendOptions | undefined,
 	): Promise<MessageContext<Record<string, any>>>;
-	user: UserInterface;
-	chat?: ChatInterface;
+	user: userDocInterface;
+	chat?: chatDocInterface;
 	pageBuilder: any;
-}
-
-export interface UserInterface extends Document {
-	id: number;
-	vk_id: number;
-	ban: boolean;
-	reg_date: Date;
-	nickname: string;
-	data: {
-		mailing: boolean;
-		unical_group_id: string;
-		lesson_notices: boolean;
-		replacement_notices: boolean;
-	};
-}
-
-export interface ChatInterface extends Document {
-	id: number;
-	unical_group_id: string;
-	inform: boolean;
-	mailing: boolean;
 }
 
 export interface GoogleUserData {
@@ -119,3 +98,5 @@ export interface utilityGroup extends Document {
 }
 
 export type userGoogleInterface = ExtractDoc<typeof schemes.googleScheme>;
+export type userDocInterface = ExtractDoc<typeof schemes.user>;
+export type chatDocInterface = ExtractDoc<typeof schemes.chat>;

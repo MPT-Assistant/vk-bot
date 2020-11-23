@@ -1,6 +1,5 @@
 "use strict";
-import { Schema } from "mongoose";
-import { createSchema, Type } from "ts-mongoose";
+import { createSchema, Type, typedModel } from "ts-mongoose";
 
 const user = createSchema({
 	id: Type.number(),
