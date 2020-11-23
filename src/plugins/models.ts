@@ -3,21 +3,16 @@ import mongoose from "mongoose";
 import { typedModel, ExtractDoc } from "ts-mongoose";
 
 import schemes from "./schemes";
-import * as types from "./types";
 
-const user = mongoose.model<types.UserInterface>("user", schemes.user, `users`);
-const chat = mongoose.model<types.ChatInterface>("chat", schemes.chat, `chats`);
-const specialty = mongoose.model<types.mongoSpecialtyInterface>(
-	"specialty",
-	schemes.specialty,
-	`specialties`,
-);
-const replacement = mongoose.model<types.mongoReplacementInterface>(
+const user = typedModel("user", schemes.user, `users`);
+const chat = typedModel("chat", schemes.chat, `chats`);
+const specialty = typedModel("specialty", schemes.specialty, `specialties`);
+const replacement = typedModel(
 	"replacement",
 	schemes.replacement,
 	`replacements`,
 );
-const utilityGroup = mongoose.model<types.utilityGroup>(
+const utilityGroup = typedModel(
 	"utility_group",
 	schemes.utilityGroup,
 	`groups`,
