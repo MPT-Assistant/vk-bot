@@ -2,73 +2,73 @@
 import { createSchema, Type, typedModel } from "ts-mongoose";
 
 const user = createSchema({
-	id: Type.number(),
-	vk_id: Type.number(),
-	ban: Type.boolean(),
-	reg_date: Type.date(),
-	nickname: Type.string(),
+	id: Type.number({ required: true }),
+	vk_id: Type.number({ required: true }),
+	ban: Type.boolean({ required: true }),
+	reg_date: Type.date({ required: true }),
+	nickname: Type.string({ required: true }),
 	data: {
-		unical_group_id: Type.string(),
-		lesson_notices: Type.boolean(),
-		replacement_notices: Type.boolean(),
-		mailing: Type.boolean(),
+		unical_group_id: Type.string({ required: true }),
+		lesson_notices: Type.boolean({ required: true }),
+		replacement_notices: Type.boolean({ required: true }),
+		mailing: Type.boolean({ required: true }),
 	},
 });
 
 const chat = createSchema({
-	id: Type.number(),
-	unical_group_id: Type.string(),
-	inform: Type.boolean(),
-	mailing: Type.boolean(),
+	id: Type.number({ required: true }),
+	unical_group_id: Type.string({ required: true }),
+	inform: Type.boolean({ required: true }),
+	mailing: Type.boolean({ required: true }),
 });
 
 const lesson = createSchema({
-	num: Type.number(),
-	name: Type.array().of(Type.string()),
-	teacher: Type.array().of(Type.string()),
+	num: Type.number({ required: true }),
+	name: Type.array({ required: true }).of(Type.string({ required: true })),
+	teacher: Type.array({ required: true }).of(Type.string({ required: true })),
 });
 
 const replacement = createSchema({
-	date: Type.string(),
-	unical_group_id: Type.string(),
-	detected: Type.date(),
-	add_to_site: Type.date(),
-	lesson_num: Type.number(),
-	old_lesson_name: Type.string(),
-	old_lesson_teacher: Type.string(),
-	new_lesson_name: Type.string(),
-	new_lesson_teacher: Type.string(),
+	date: Type.string({ required: true }),
+	unical_group_id: Type.string({ required: true }),
+	detected: Type.date({ required: true }),
+	add_to_site: Type.date({ required: true }),
+	lesson_num: Type.number({ required: true }),
+	old_lesson_name: Type.string({ required: true }),
+	old_lesson_teacher: Type.string({ required: true }),
+	new_lesson_name: Type.string({ required: true }),
+	new_lesson_teacher: Type.string({ required: true }),
 });
 
 const day = createSchema({
-	num: Type.string(),
-	place: Type.string(),
-	lessons: Type.array().of(lesson),
+	num: Type.string({ required: true }),
+	place: Type.string({ required: true }),
+	lessons: Type.array({ required: true }).of(lesson),
 });
 
 const group = createSchema({
-	id: Type.string(),
-	uid: Type.string(),
-	name: Type.string(),
-	weekly_schedule: Type.array().of(day),
+	id: Type.string({ required: true }),
+	uid: Type.string({ required: true }),
+	name: Type.string({ required: true }),
+	weekly_schedule: Type.array({ required: true }).of(day),
 });
 
 const specialty = createSchema({
-	uid: Type.string(),
-	name: Type.string(),
-	groups: Type.array().of(group),
+	uid: Type.string({ required: true }),
+	name: Type.string({ required: true }),
+	groups: Type.array({ required: true }).of(group),
 });
 
 const utilityGroup = createSchema({
-	uid: Type.string(),
-	name: Type.string(),
-	id: Type.string(),
-	specialty: Type.string(),
-	specialty_id: Type.string(),
+	uid: Type.string({ required: true }),
+	name: Type.string({ required: true }),
+	id: Type.string({ required: true }),
+	specialty: Type.string({ required: true }),
+	specialty_id: Type.string({ required: true }),
 });
 
 const materialScheme = createSchema({
-	driveFile: Type.object().of({
+	driveFile: Type.object({ required: true }).of({
 		id: Type.string(),
 		title: Type.string(),
 		url: Type.string(),

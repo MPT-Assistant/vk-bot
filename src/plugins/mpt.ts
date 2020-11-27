@@ -183,6 +183,7 @@ const mpt = {
 			if (!specialty) {
 				specialty = new models.specialty(tempFlow);
 			} else {
+				//@ts-ignore
 				specialty.groups = tempFlow.groups;
 			}
 			await specialty.save();
