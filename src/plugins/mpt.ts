@@ -209,8 +209,16 @@ const mpt = {
 		Array<{
 			day: string;
 			groups: Array<{
-				group: any;
-				replacements: any[];
+				group: string;
+				replacements: Array<{
+					detected: string;
+					add_to_site: string;
+					lesson_num: number;
+					old_lesson_name: string;
+					old_teacher_name: string;
+					new_lesson_name: string;
+					new_teacher_name: string;
+				}>;
 			}>;
 		}>
 	> => {

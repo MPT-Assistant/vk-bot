@@ -9,17 +9,13 @@ import { google, GoogleUser } from "./plugins/google";
 console.log(`Start at ${new Date()}`);
 console.time(`Executed in`);
 (async function () {
-	await mongoose.connect("mongodb://194.32.248.158:27017/mpt_bot", {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	});
-	let userGoogle = new GoogleUser(266982306);
-	if (!(await userGoogle.init())) {
-		console.log(`not found`);
-		process.exit();
-	}
-	console.log(await userGoogle.getTokenInfo());
-	await userGoogle.save();
+	// await mongoose.connect("mongodb://194.32.248.158:27017/mpt_bot", {
+	// 	useNewUrlParser: true,
+	// 	useUnifiedTopology: true,
+	// });
+	let data = await mpt.mpt.parseReplacements();
+	console.log(data);
+	fs.writeFileSync(`./out.json`, JSON.stringify(data, null, "\t"));
 	console.timeEnd(`Executed in`);
 	process.exit();
 })();
