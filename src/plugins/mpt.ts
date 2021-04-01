@@ -15,6 +15,16 @@ import * as internalUtils from "./utils";
 
 const TIMETABLE = require(`../DB/timetable.json`);
 
+const fixNonDecodeString = (input: string): string => {
+	try {
+		return decodeURI(
+			input.replace("_2C ", ", ").replace("_2F", "/").replace(/_/gi, "%"),
+		);
+	} catch (error) {
+		return input;
+	}
+};
+
 const mpt = {
 	parseSchedule: async (): Promise<Array<specialtyInterface>> => {
 		const $ = parser.load(
@@ -41,9 +51,9 @@ const mpt = {
 			let tempFlowInstance = outputData.find((x) => x.uid === tempFlowNameHash);
 			for (let i = 1; i < tempFlow.children[3].children.length; i += 2) {
 				//@ts-ignore
-				let tempFlowGroupNames = tempFlow.children[3].children[
-					i
-				].children[1].children[0].data
+				let tempFlowGroupNames = fixNonDecodeString(
+					tempFlow.children[3].children[i].children[1].children[0].data,
+				)
 					.replace(/(^\s*)|(\s*)$/g, "")
 					.split(`, `);
 				for (let tempGroupName of tempFlowGroupNames) {
