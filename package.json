@@ -10,6 +10,13 @@
 		"build": "tsc",
 		"lint": "eslint ./src --ext .ts"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"@mpt-assistant/api-wrapper": "^1.1.0",
+		"mongoose": "^5.12.3",
+		"rus-anonym-utils": "^2.2.4",
+		"simple-scheduler-task": "^3.2.1",
+		"ts-mongoose": "^0.0.24",
+		"vk-io": "^4.1.4"
+	},
 	"devDependencies": {}
 }
