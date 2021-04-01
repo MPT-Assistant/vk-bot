@@ -17,6 +17,10 @@ class Command {
 		console.log("load");
 		InternalUtils.commands.push(this);
 	}
+
+	public check(input: string): boolean {
+		return this.regexp.test(input);
+	}
 }
 
 export default Command;
