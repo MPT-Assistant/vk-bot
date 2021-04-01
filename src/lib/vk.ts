@@ -76,7 +76,9 @@ vk.updates.on("message", async function (context) {
 
 	context.user = await regUser(context.senderId);
 
-	
+	if (context.isChat) {
+		context.chat;
+	}
 });
 
 async function regUser(id: number) {
@@ -95,7 +97,7 @@ async function regUser(id: number) {
 			inform: false,
 			reg_date: new Date(),
 		});
-		await InternalUtils.logger.sendLog(
+		InternalUtils.logger.sendLog(
 			`Зарегистрирован новый пользователь\nUser: @id${id}`,
 		);
 	}
