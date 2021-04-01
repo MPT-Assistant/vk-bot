@@ -27,7 +27,7 @@ export default class MPT {
 	};
 
 	public async getLastDump(): Promise<MPT_Data> {
-		const data = await utils.API_DB.dumpModel.findOne({});
+		const data = await utils.API_DB.models.dump.findOne({});
 		if (data) {
 			this.data = data.data;
 			return this.data;
