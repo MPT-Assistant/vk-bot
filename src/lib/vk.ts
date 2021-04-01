@@ -81,29 +81,6 @@ vk.updates.on("message", async function (context) {
 	}
 });
 
-async function regUser(id: number) {
-	let data = await InternalUtils.Bot_DB.models.user.findOne({
-		id: id,
-	});
-	if (!data) {
-		const [user] = await vk.api.users.get({
-			user_ids: id.toString(),
-		});
-		data = new InternalUtils.Bot_DB.models.user({
-			id: id,
-			nickname: user.first_name,
-			ban: false,
-			group: "",
-			inform: false,
-			reg_date: new Date(),
-		});
-		InternalUtils.logger.sendLog(
-			`Зарегистрирован новый пользователь\nUser: @id${id}`,
-		);
-	}
-	return data;
-}
-
 vk.updates.startPolling().then(() => console.log("Polling started"));
 
 export default vk;
