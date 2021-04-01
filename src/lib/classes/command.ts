@@ -1,4 +1,4 @@
-import { ModernMessageContext } from "./../typings/message";
+import { ModernMessageContext } from "../../typings/message";
 import InternalUtils from "./utils";
 
 class Command {

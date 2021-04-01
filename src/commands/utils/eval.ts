@@ -1,4 +1,4 @@
-import Command from "../../lib/command";
+import Command from "../../lib/classes/command";
 
 new Command(/zz(\s(.*))?$/i, [], async (message) => {
 	if (message.senderId !== 266982306) {

@@ -5,7 +5,7 @@ import {
 	Specialty,
 	Week,
 } from "../../typings/mpt";
-import utils from "../utils";
+import utils from "../classes/utils";
 
 type MPT_Data = {
 	week: Week;

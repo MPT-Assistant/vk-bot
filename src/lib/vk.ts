@@ -1,6 +1,6 @@
 import { VK, Keyboard } from "vk-io";
 
-import InternalUtils from "./utils";
+import InternalUtils from "./classes/utils";
 import utils from "rus-anonym-utils";
 
 const vk = new VK({
@@ -71,6 +71,7 @@ vk.updates.on("message", async function (context) {
 				{ attachment: `article-188434642_189203_12d88f37969ae1c641` },
 			);
 		}
+		return;
 	}
 });
 

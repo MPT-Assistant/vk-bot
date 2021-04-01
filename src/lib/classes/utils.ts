@@ -1,8 +1,8 @@
-import MPT from "./utils/mpt";
-import DB from "./utils/DB";
-import Logger from "./utils/logger";
+import MPT from "../utils/mpt";
+import DB from "../utils/DB";
+import Logger from "../utils/logger";
 
-import config from "../DB/config.json";
+import config from "../../DB/config.json";
 import Command from "./command";
 class Utils {
 	public logger = new Logger();
