@@ -1,6 +1,5 @@
 import InternalUtils from "../classes/utils";
 import { ChatSchema } from "../DB/schemes";
-import vk from "../../vk";
 import { ExtractDoc } from "ts-mongoose";
 
 export default class Chat {
@@ -12,23 +11,17 @@ export default class Chat {
 	}
 
 	public async init() {
-		let data = await InternalUtils.Bot_DB.models.user.findOne({
+		let data = await InternalUtils.Bot_DB.models.chat.findOne({
 			id: this.id,
 		});
 		if (!data) {
-			const [user] = await vk.api.users.get({
-				user_ids: this.id.toString(),
-			});
-			data = new InternalUtils.Bot_DB.models.user({
+			data = new InternalUtils.Bot_DB.models.chat({
 				id: this.id,
-				nickname: user.first_name,
-				ban: false,
 				group: "",
 				inform: false,
-				reg_date: new Date(),
 			});
 			InternalUtils.logger.sendLog(
-				`Зарегистрирован новый пользователь\nUser: @id${this.id}`,
+				`Зарегистрирован новый чат\nChat: #${this.id}`,
 			);
 		}
 		this.data = data;
@@ -39,7 +32,7 @@ export default class Chat {
 		if (this.data) {
 			await this.data.save();
 		} else {
-			throw new Error("User not init");
+			throw new Error("Chat not init");
 		}
 	}
 }
