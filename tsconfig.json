@@ -1,12 +1,12 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "outDir": "./out/",
-    "strict": true,
-    "alwaysStrict": true,
-    "rootDir": "./src/",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  }
+	"compilerOptions": {
+		"target": "es5",
+		"outDir": "./out/",
+		"strict": true,
+		"alwaysStrict": true,
+		"rootDir": "./src/",
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true
+	}
 }
