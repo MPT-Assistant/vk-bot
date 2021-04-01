@@ -32,7 +32,7 @@ export default class User {
 			);
 		}
 		this.data = data;
-		return data;
+		return this;
 	}
 
 	public async save() {

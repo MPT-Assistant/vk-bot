@@ -2,6 +2,7 @@ import { VK, Keyboard } from "vk-io";
 
 import InternalUtils from "./utils/classes/utils";
 import utils from "rus-anonym-utils";
+import User from "./utils/classes/user";
 
 const vk = new VK({
 	token: InternalUtils.config.vk.group.token,
@@ -74,7 +75,7 @@ vk.updates.on("message", async function (context) {
 		return;
 	}
 
-	context.user = await regUser(context.senderId);
+	context.user = await new User(context.senderId).init();
 
 	if (context.isChat) {
 		context.chat;
