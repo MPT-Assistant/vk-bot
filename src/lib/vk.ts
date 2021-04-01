@@ -1,8 +1,10 @@
+import { ModernMessageContext } from "./../typings/message";
 import { VK, Keyboard } from "vk-io";
 
 import InternalUtils from "./utils/classes/utils";
 import utils from "rus-anonym-utils";
 import User from "./utils/classes/user";
+import Chat from "./utils/classes/chat";
 
 const vk = new VK({
 	token: InternalUtils.config.vk.group.token,
@@ -31,7 +33,7 @@ vk.updates.on("chat_invite_user", async function messageHandler(context) {
 	}
 });
 
-vk.updates.on("message", async function (context) {
+vk.updates.on("message", async function (context: ModernMessageContext) {
 	if (context.messagePayload) {
 		context.text = context.messagePayload.command;
 	}
@@ -76,9 +78,50 @@ vk.updates.on("message", async function (context) {
 	}
 
 	context.user = await new User(context.senderId).init();
+	if (context.user.data?.ban === true) {
+		return;
+	}
 
 	if (context.isChat) {
-		context.chat;
+		context.chat = await new Chat(context.chatId as number).init();
+	}
+
+	context.sendMessage = async (text, params?) => {
+		try {
+			let paramsForSend = Object.assign(
+				{
+					disable_mentions: true,
+					forward: JSON.stringify({
+						peer_id: context.peerId,
+						conversation_message_ids: context.conversationMessageId,
+						is_reply: 1,
+					}),
+				},
+				params,
+			);
+			return await context.send(
+				`@id${context.user.id} (${context.user.data?.nickname}), ${text}`,
+				paramsForSend,
+			);
+		} catch (error) {
+			return error;
+		}
+	};
+
+	context.args = context.text.match(command.regexp) as RegExpMatchArray;
+
+	try {
+		await command.process(context);
+		await context.user.save();
+		if (context.chat) {
+			context.chat.save();
+		}
+		return;
+	} catch (err) {
+		await context.sendMessage(`ошиб очка.\n`);
+		await context.send({
+			sticker_id: utils.array.random([18464, 16588, 18466, 18484, 14088]),
+		});
 	}
 });
 
