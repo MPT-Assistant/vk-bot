@@ -48,7 +48,7 @@ const UserSchema = createSchema({
 	ban: Type.boolean({ required: true }),
 	group: Type.string({ required: true }),
 	inform: Type.boolean({ required: true }),
-	reg_data: Type.date({ required: true }),
+	reg_date: Type.date({ required: true }),
 });
 
 const ChatSchema = createSchema({

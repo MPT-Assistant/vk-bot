@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 import { typedModel } from "ts-mongoose";
 import * as schemes from "../DB/schemes";
 
+const Str = mongoose.Schema.Types.String as any;
+Str.checkRequired((v: string) => v != null);
+
 class DB {
 	public connection: mongoose.Connection;
 

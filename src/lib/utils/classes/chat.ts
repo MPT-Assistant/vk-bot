@@ -25,6 +25,7 @@ export default class Chat {
 			);
 		}
 		this.data = data;
+		await data.save();
 		return this;
 	}
 

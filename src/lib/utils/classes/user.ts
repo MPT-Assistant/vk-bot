@@ -27,6 +27,7 @@ export default class User {
 				inform: false,
 				reg_date: new Date(),
 			});
+			await data.save()
 			InternalUtils.logger.sendLog(
 				`Зарегистрирован новый пользователь\nUser: @id${this.id}`,
 			);

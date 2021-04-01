@@ -118,6 +118,7 @@ vk.updates.on("message", async function (context: ModernMessageContext) {
 		}
 		return;
 	} catch (err) {
+		console.log(err);
 		await context.sendMessage(`ошиб очка.\n`);
 		await context.send({
 			sticker_id: utils.array.random([18464, 16588, 18466, 18484, 14088]),
