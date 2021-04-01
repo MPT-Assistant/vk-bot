@@ -14,8 +14,10 @@ class Command {
 		this.regexp = regexp;
 		this.templates = templates;
 		this.process = process;
-		console.log("load");
 		InternalUtils.commands.push(this);
+		for (const template of templates) {
+			InternalUtils.commandsTemplates.push(template);
+		}
 	}
 
 	public check(input: string): boolean {
