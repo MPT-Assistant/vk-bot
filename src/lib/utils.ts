@@ -2,7 +2,7 @@ import MPT from "./utils/mpt";
 import DB from "./utils/DB";
 
 import config from "../DB/config.json";
-
+import Command from "./command";
 class Utils {
 	public mpt = new MPT();
 	public DB: DB = new DB({
@@ -11,6 +11,8 @@ class Utils {
 		password: config.mongo.password,
 		database: "API",
 	});
+	public config = config;
+	public commands: Command[] = [];
 }
 
 export default new Utils();
