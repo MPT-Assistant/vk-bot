@@ -46,6 +46,7 @@ export class API_DB extends DB {
 			undefined,
 			this.connection,
 		),
+
 		specialty: typedModel(
 			"specialty",
 			schemes.SpecialtySchema,
@@ -54,6 +55,7 @@ export class API_DB extends DB {
 			undefined,
 			this.connection,
 		),
+
 		replacement: typedModel(
 			"replacement",
 			schemes.ReplacementSchema,
@@ -62,6 +64,7 @@ export class API_DB extends DB {
 			undefined,
 			this.connection,
 		),
+
 		dump: typedModel(
 			"dump",
 			schemes.DumpSchema,
@@ -88,6 +91,15 @@ export class Bot_DB extends DB {
 			"user",
 			schemes.UserSchema,
 			"users",
+			undefined,
+			undefined,
+			this.connection,
+		),
+
+		chat: typedModel(
+			"chat",
+			schemes.ChatSchema,
+			"chats",
 			undefined,
 			undefined,
 			this.connection,
