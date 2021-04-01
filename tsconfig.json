@@ -1,12 +1,15 @@
 {
 	"compilerOptions": {
-		"target": "es5",
-		"outDir": "./out/",
+		"lib": ["ESNext", "DOM"],
+		"target": "ES2019",
+		"module": "ESNext",
+		"outDir": "./dist/",
+		"moduleResolution": "Node",
+		"declaration": true,
 		"strict": true,
-		"alwaysStrict": true,
-		"rootDir": "./src/",
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true
-	}
+	},
+	"include": ["./src"]
 }

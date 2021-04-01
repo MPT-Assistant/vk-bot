@@ -1,39 +1,15 @@
 {
-	"name": "mpt_assistant",
+	"name": "mpt-assistant-vk-bot",
 	"version": "1.0.0",
-	"main": "./out/main.js",
+	"main": "./dist/main.js",
 	"repository": "https://github.com/RusAnonym/MPT-Assistant",
 	"author": "rus_anonym <alexandrsemin2033@gmail.com>",
 	"license": "MIT",
 	"scripts": {
-		"test": "yarn build && cd out && node test.js",
-		"start": "yarn build && cd out && node main.js",
-		"build": "tsc"
+		"start": "npm run build && cd dist && node main.js",
+		"build": "tsc",
+		"lint": "eslint ./src --ext .ts"
 	},
-	"dependencies": {
-		"canvas": "^2.6.1",
-		"cheerio": "^1.0.0-rc.3",
-		"crypto-js": "^4.0.0",
-		"googleapis": "^61.0.0",
-		"moment-precise-range-plugin": "^1.3.0",
-		"mongoose": "^5.10.9",
-		"request": "^2.88.2",
-		"request-promise": "^4.2.6",
-		"rus-anonym-utils": "^2.0.14",
-		"simple-scheduler-task": "^3.0.12",
-		"ts-mongoose": "^0.0.21",
-		"vk-io": "^4.0.3",
-		"vk-io-pages": "^1.2.1",
-		"vk-io-question": "^2.0.1"
-	},
-	"devDependencies": {
-		"@types/cheerio": "^0.22.22",
-		"@types/crypto-js": "^4.0.1",
-		"@types/moment": "^2.13.0",
-		"@types/moment-precise-range-plugin": "^0.2.0",
-		"@types/mongoose": "^5.10.1",
-		"@types/node": "^14.11.10",
-		"@types/request": "^2.48.5",
-		"@types/request-promise": "^4.1.46"
-	}
+	"dependencies": {},
+	"devDependencies": {}
 }
