@@ -51,6 +51,12 @@ const UserSchema = createSchema({
 	reg_data: Type.date({ required: true }),
 });
 
+const ChatSchema = createSchema({
+	id: Type.number({ required: true, unique: true }),
+	group: Type.string({ required: true }),
+	inform: Type.boolean({ required: true }),
+});
+
 export {
 	DaySchema,
 	GroupSchema,
@@ -58,4 +64,5 @@ export {
 	ReplacementSchema,
 	DumpSchema,
 	UserSchema,
+	ChatSchema,
 };
