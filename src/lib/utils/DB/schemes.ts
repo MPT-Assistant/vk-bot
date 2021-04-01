@@ -42,10 +42,20 @@ const DumpSchema = createSchema({
 	data: Type.mixed({ required: true }),
 });
 
+const UserSchema = createSchema({
+	id: Type.number({ required: true, unique: true }),
+	nickname: Type.string({ required: true }),
+	ban: Type.boolean({ required: true }),
+	group: Type.string({ required: true }),
+	inform: Type.boolean({ required: true }),
+	reg_data: Type.date({ required: true }),
+});
+
 export {
 	DaySchema,
 	GroupSchema,
 	SpecialtySchema,
 	ReplacementSchema,
 	DumpSchema,
+	UserSchema,
 };

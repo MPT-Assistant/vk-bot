@@ -4,8 +4,8 @@ import {
 	Replacement,
 	Specialty,
 	Week,
-} from "../../typings/mpt";
-import utils from "../classes/utils";
+} from "../../../typings/mpt";
+import utils from "./utils";
 
 type MPT_Data = {
 	week: Week;
@@ -27,7 +27,7 @@ export default class MPT {
 	};
 
 	public async getLastDump(): Promise<MPT_Data> {
-		const data = await utils.DB.models.dumpModel.findOne({});
+		const data = await utils.API_DB.dumpModel.findOne({});
 		if (data) {
 			this.data = data.data;
 			return this.data;

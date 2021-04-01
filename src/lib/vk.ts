@@ -1,6 +1,6 @@
 import { VK, Keyboard } from "vk-io";
 
-import InternalUtils from "./classes/utils";
+import InternalUtils from "./utils/classes/utils";
 import utils from "rus-anonym-utils";
 
 const vk = new VK({

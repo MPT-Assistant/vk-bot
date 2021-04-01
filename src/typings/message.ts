@@ -1,5 +1,5 @@
 import { MessageContext, IMessageContextSendOptions } from "vk-io";
-import User from "../lib/classes/user";
+import User from "../lib/utils/classes/user";
 
 export interface ModernMessageContext extends MessageContext {
 	sendMessage(
