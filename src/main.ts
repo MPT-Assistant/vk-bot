@@ -33,4 +33,6 @@ import utils from "rus-anonym-utils";
 	});
 	utils.logger.console(`Tasks are planned`);
 	utils.logger.console(`Script start`);
+	await mpt.updateSchedule();
+	await mpt.Update_all_replacements();
 })();
