@@ -15,6 +15,7 @@ class Utils {
 	});
 	public config = config;
 	public commands: Command[] = [];
+	public commandsTemplates: string[] = [];
 }
 
 export default new Utils();
