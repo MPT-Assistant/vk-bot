@@ -28,29 +28,6 @@ interface ParsedGroup {
 	days: Day[];
 }
 
-interface ParsedSpecialty {
-	name: string;
-	groups: ParsedGroup[];
-}
-
-interface ParsedReplacement {
-	num: number;
-	old: {
-		name: string;
-		teacher: string;
-	};
-	new: {
-		name: string;
-		teacher: string;
-	};
-	updated: number;
-}
-
-interface ReplacementGroup {
-	group: string;
-	replacements: ParsedReplacement[];
-}
-
 type Replacement = {
 	date: Date;
 	group: string;
@@ -74,4 +51,26 @@ interface MPT_Specialty {
 	groups: Array<string>;
 }
 
-export { Specialty, Week, Replacement, MPT_Group, MPT_Specialty };
+interface TimetableElement {
+	num: number;
+	type: "lesson" | "recess";
+	start: {
+		hour: number;
+		minute: number;
+	};
+	end: {
+		hour: number;
+		minute: number;
+	};
+}
+
+type TimetableType = TimetableElement[];
+
+export {
+	Specialty,
+	Week,
+	Replacement,
+	MPT_Group,
+	MPT_Specialty,
+	TimetableType,
+};
