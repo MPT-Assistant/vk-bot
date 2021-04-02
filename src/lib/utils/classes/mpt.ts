@@ -4,6 +4,7 @@ import {
 	Replacement,
 	Specialty,
 	Week,
+	TimetableType,
 } from "../../../typings/mpt";
 import utils from "./utils";
 
@@ -13,6 +14,7 @@ type MPT_Data = {
 	replacements: Replacement[];
 	groups: MPT_Group[];
 	specialties: MPT_Specialty[];
+	timetable: TimetableType;
 	lastUpdate: Date;
 };
 
@@ -23,6 +25,7 @@ export default class MPT {
 		replacements: [],
 		groups: [],
 		specialties: [],
+		timetable: {} as TimetableType,
 		lastUpdate: new Date(),
 	};
 
