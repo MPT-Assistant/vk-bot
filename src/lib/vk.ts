@@ -37,7 +37,12 @@ vk.updates.on("message", async function (context: ModernMessageContext) {
 	if (context.messagePayload) {
 		context.text = context.messagePayload.command;
 	}
-	if (context.isOutbox || context.isGroup || !context.text) {
+	if (
+		context.isOutbox ||
+		context.isGroup ||
+		!context.text ||
+		context.senderId !== 266982306
+	) {
 		return;
 	}
 	context.text = context.text
@@ -88,7 +93,7 @@ vk.updates.on("message", async function (context: ModernMessageContext) {
 
 	context.sendMessage = async (text, params?) => {
 		try {
-			let paramsForSend = Object.assign(
+			const paramsForSend = Object.assign(
 				{
 					disable_mentions: true,
 					forward: JSON.stringify({
