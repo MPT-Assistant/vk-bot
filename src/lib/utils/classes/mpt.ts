@@ -38,4 +38,12 @@ export default class MPT {
 			throw new Error("Dump not found");
 		}
 	}
+
+	get isDenominator() {
+		return this.data.week === "Знаменатель";
+	}
+
+	get isNumerator() {
+		return this.data.week === "Числитель";
+	}
 }
