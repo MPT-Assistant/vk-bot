@@ -67,6 +67,8 @@ interface TimetableElement {
 type TimetableType = TimetableElement[];
 
 export {
+	Day,
+	Lesson,
 	Specialty,
 	Week,
 	Replacement,
