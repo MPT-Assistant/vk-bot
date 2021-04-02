@@ -126,6 +126,4 @@ vk.updates.on("message", async function (context: ModernMessageContext) {
 	}
 });
 
-vk.updates.startPolling().then(() => console.log("Polling started"));
-
 export default vk;
