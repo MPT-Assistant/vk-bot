@@ -51,11 +51,6 @@ interface ReplacementGroup {
 	replacements: ParsedReplacement[];
 }
 
-interface ReplacementDay {
-	date: number;
-	groups: ReplacementGroup[];
-}
-
 type Replacement = {
 	date: Date;
 	group: string;
