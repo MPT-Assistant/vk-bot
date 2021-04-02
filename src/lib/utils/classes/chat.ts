@@ -4,7 +4,7 @@ import { ExtractDoc } from "ts-mongoose";
 
 export default class Chat {
 	public id: number;
-	public data: ExtractDoc<typeof ChatSchema> | undefined;
+	public data!: ExtractDoc<typeof ChatSchema>;
 
 	constructor(id: number) {
 		this.id = id;

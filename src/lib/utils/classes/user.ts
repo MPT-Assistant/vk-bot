@@ -5,7 +5,7 @@ import { ExtractDoc } from "ts-mongoose";
 
 export default class User {
 	public id: number;
-	public data: ExtractDoc<typeof UserSchema> | undefined;
+	public data!: ExtractDoc<typeof UserSchema>;
 
 	constructor(id: number) {
 		this.id = id;
@@ -27,7 +27,7 @@ export default class User {
 				inform: false,
 				reg_date: new Date(),
 			});
-			await data.save()
+			await data.save();
 			InternalUtils.logger.sendLog(
 				`Зарегистрирован новый пользователь\nUser: @id${this.id}`,
 			);
