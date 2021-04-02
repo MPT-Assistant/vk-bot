@@ -12,6 +12,7 @@
 	},
 	"dependencies": {
 		"@mpt-assistant/api-wrapper": "^1.1.0",
+		"moment": "^2.29.1",
 		"mongoose": "^5.12.3",
 		"rus-anonym-utils": "^2.2.4",
 		"simple-scheduler-task": "^3.2.1",
