@@ -1,5 +1,5 @@
 import { ModernMessageContext } from "./../typings/message";
-import { VK, Keyboard, IMessageContextSendOptions } from "vk-io";
+import { VK, Keyboard } from "vk-io";
 
 import InternalUtils from "./utils/classes/utils";
 import utils from "rus-anonym-utils";
@@ -39,12 +39,7 @@ vk.updates.on(
 		if (context.messagePayload) {
 			context.text = context.messagePayload.command;
 		}
-		if (
-			context.isOutbox ||
-			context.isGroup ||
-			!context.text ||
-			context.senderId !== 266982306
-		) {
+		if (context.isOutbox || context.isGroup || !context.text) {
 			return;
 		}
 		context.text = context.text
