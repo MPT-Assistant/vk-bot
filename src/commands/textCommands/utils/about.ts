@@ -8,7 +8,7 @@ new Command(
 	["Stats", "About", "Bot"],
 	async (message) => {
 		const API = await utils.vk.api.status();
-		let output = `Bot work already ${process.uptime()} sec\n`;
+		let output = `Bot work already ${process.uptime()} sec\n\n`;
 		output += `Users: ${await InternalUtils.Bot_DB.models.user.countDocuments()}\n`;
 		output += `Chats: ${await InternalUtils.Bot_DB.models.chat.countDocuments()}\n`;
 		output += `Replacements: ${await InternalUtils.API_DB.models.replacement.countDocuments()}\n`;

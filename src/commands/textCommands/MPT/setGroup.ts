@@ -38,42 +38,29 @@ new Command(
 				}
 				return 0;
 			});
-			let text = `\nВозможно вы имели в виду какую то из этих групп:`;
-			let keyboard_data = Keyboard.keyboard([
-				[
-					Keyboard.textButton({
-						label: diff[0].group,
-						payload: {
-							command: `установить группу ${diff[0].group}`,
-						},
-						color: Keyboard.POSITIVE_COLOR,
-					}),
-				],
-				[
-					Keyboard.textButton({
-						label: diff[1].group,
-						payload: {
-							command: `установить группу ${diff[1].group}`,
-						},
-						color: Keyboard.SECONDARY_COLOR,
-					}),
-				],
-				[
-					Keyboard.textButton({
-						label: diff[2].group,
-						payload: {
-							command: `установить группу ${diff[2].group}`,
-						},
-						color: Keyboard.NEGATIVE_COLOR,
-					}),
-				],
-			]).inline();
+			let responseText = `\nВозможно вы имели в виду какую то из этих групп:`;
+			const responseKeyboard = Keyboard.builder().inline();
+			const buttonColors = [
+				Keyboard.POSITIVE_COLOR,
+				Keyboard.SECONDARY_COLOR,
+				Keyboard.NEGATIVE_COLOR,
+			];
 			for (let i = 0; i < 3; i++) {
-				text += `\n${i + 1}. ${diff[i].group}`;
+				responseKeyboard.callbackButton({
+					label: diff[0].group,
+					color: buttonColors[0],
+					payload: {
+						type: "setGroup",
+						group: diff[0].group,
+					},
+				});
+				responseKeyboard.row();
+
+				responseText += `\n${i + 1}. ${diff[i].group}`;
 			}
 			return await message.sendMessage(
-				`группы ${message.args[1]} не найдено, попробуйте ещё раз.${text}`,
-				{ keyboard: keyboard_data },
+				`группы ${message.args[1]} не найдено, попробуйте ещё раз.${responseText}`,
+				{ keyboard: responseKeyboard },
 			);
 		} else {
 			message.user.data.group = selectedGroup.name;
