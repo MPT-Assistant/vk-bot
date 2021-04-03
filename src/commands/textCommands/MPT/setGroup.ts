@@ -47,11 +47,11 @@ new TextCommand(
 			];
 			for (let i = 0; i < 3; i++) {
 				responseKeyboard.callbackButton({
-					label: diff[0].group,
-					color: buttonColors[0],
+					label: diff[i].group,
+					color: buttonColors[i],
 					payload: {
 						type: "setGroup",
-						group: diff[0].group,
+						group: diff[i].group,
 					},
 				});
 				responseKeyboard.row();
