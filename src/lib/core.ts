@@ -19,6 +19,6 @@ function connectDB_Handler() {
 		InternalUtils.mpt.getLastDump();
 		vk.updates
 			.startPolling()
-			.then(() => console.log("Polling started at ", new Date()));
+			.then(() => console.log("Polling started at", new Date()));
 	}
 }

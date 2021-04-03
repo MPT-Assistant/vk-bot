@@ -2,7 +2,6 @@ import {
 	MessageContext,
 	IMessageContextSendOptions,
 	MessageEventContext,
-	ContextDefaultState,
 } from "vk-io";
 import Chat from "../lib/utils/classes/chat";
 import User from "../lib/utils/classes/user";
@@ -13,6 +12,11 @@ export interface ModernMessageContext extends MessageContext {
 		params?: IMessageContextSendOptions | undefined,
 	): Promise<MessageContext<Record<string, any>>>;
 	args: RegExpMatchArray;
+	user: User;
+	chat?: Chat;
+}
+
+export interface ModernEventContext extends MessageEventContext {
 	user: User;
 	chat?: Chat;
 }

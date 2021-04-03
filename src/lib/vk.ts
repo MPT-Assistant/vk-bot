@@ -134,4 +134,8 @@ vk.updates.on(
 	},
 );
 
+vk.updates.on("message_event", async function MessageEventHandler(event) {
+	console.log(event);
+});
+
 export default vk;
