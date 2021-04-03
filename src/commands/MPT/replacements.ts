@@ -1,292 +1,227 @@
-import { utilityGroup } from "./../../plugins/types";
-import utils from "rus-anonym-utils";
-import { MPTMessage } from "../../plugins/types";
 import { Keyboard } from "vk-io";
+import moment from "moment";
+import utils from "rus-anonym-utils";
 
-import models from "../../plugins/models";
+moment.locale("ru");
 
-export = {
-	regexp: /^(?:замены)\s?([^]+)?/i,
-	template: ["Замены"],
-	process: async (message: MPTMessage) => {
+import Command from "../../lib/utils/classes/command";
+import InternalUtils from "../../lib/utils/classes/utils";
+
+const DayTemplates: RegExp[] = [
+	/воскресенье|вс/,
+	/понедельник|пн/,
+	/вторник|вт/,
+	/среда|ср/,
+	/четверг|чт/,
+	/пятница|пт/,
+	/суббота|сб/,
+];
+
+const generateKeyboard = () => {
+	const responseKeyboard = Keyboard.builder();
+	responseKeyboard.textButton({
+		label: "ПН",
+		payload: {
+			command: `Замены понедельник`,
+		},
+		color: Keyboard.SECONDARY_COLOR,
+	});
+	responseKeyboard.textButton({
+		label: "ВТ",
+		payload: {
+			command: `Замены вторник`,
+		},
+		color: Keyboard.SECONDARY_COLOR,
+	});
+	responseKeyboard.textButton({
+		label: "СР",
+		payload: {
+			command: `Замены Среда`,
+		},
+		color: Keyboard.SECONDARY_COLOR,
+	});
+	responseKeyboard.row();
+	responseKeyboard.textButton({
+		label: "ЧТ",
+		payload: {
+			command: `Замены четверг`,
+		},
+		color: Keyboard.SECONDARY_COLOR,
+	});
+	responseKeyboard.textButton({
+		label: "ПТ",
+		payload: {
+			command: `Замены пятница`,
+		},
+		color: Keyboard.SECONDARY_COLOR,
+	});
+	responseKeyboard.textButton({
+		label: "СБ",
+		payload: {
+			command: `Замены суббота`,
+		},
+		color: Keyboard.SECONDARY_COLOR,
+	});
+	responseKeyboard.row();
+	responseKeyboard.textButton({
+		label: "Вчера",
+		payload: {
+			command: `Замены вчера`,
+		},
+		color: Keyboard.NEGATIVE_COLOR,
+	});
+	responseKeyboard.textButton({
+		label: "Завтра",
+		payload: {
+			command: `Замены завтра`,
+		},
+		color: Keyboard.POSITIVE_COLOR,
+	});
+	responseKeyboard.inline();
+	return responseKeyboard;
+};
+
+new Command(
+	/^(?:замены на|замены)(?:\s(.+))?/i,
+	["Замены"],
+	async function LessonsCommand(message) {
 		if (
 			(message.chat &&
-				message.chat.unical_group_id === "" &&
-				message.user.data.unical_group_id === "") ||
-			(message.user.data.unical_group_id === "" && !message.isChat)
+				message.chat.data.group === "" &&
+				message.user.data.group === "") ||
+			(message.user.data.group === "" && !message.isChat)
 		) {
 			return await message.sendMessage(
 				`Вы не установили свою группу. Для установки своей группы введите команду: "Установить группу [Название группы]", либо же для установки стандартной группы для чата: "regchat [Название группы].`,
 			);
 		}
-		let group_data: utilityGroup | null;
-		if (message.user.data.unical_group_id === "" && message.chat) {
-			group_data = await models.utilityGroup.findOne({
-				uid: message.chat.unical_group_id,
-			});
+
+		let userGroup: string | undefined;
+		let selectedDate: moment.Moment | undefined;
+
+		if (message.user.data.group === "" && message.isChat) {
+			userGroup = message.chat?.data.group;
 		} else {
-			group_data = await models.utilityGroup.findOne({
-				uid: message.user.data.unical_group_id,
-			});
+			userGroup = message.user.data.group;
 		}
-		if (!group_data) {
-			return message.sendMessage(`Group error`);
+
+		const groupData = InternalUtils.mpt.data.groups.find(
+			(x) => x.name === userGroup,
+		);
+
+		if (!groupData) {
+			throw new Error("Group not found");
 		}
-		let selected_date;
-		let array_with_days: any = [
-			{
-				template: `понедельник`,
-				day: 1,
-			},
-			{
-				template: `пн`,
-				day: 1,
-			},
-			{
-				template: `вторник`,
-				day: 2,
-			},
-			,
-			{
-				template: `вт`,
-				day: 2,
-			},
-			,
-			{
-				template: `среда`,
-				day: 3,
-			},
-			,
-			{
-				template: `ср`,
-				day: 3,
-			},
-			,
-			{
-				template: `четверг`,
-				day: 4,
-			},
-			,
-			{
-				template: `чт`,
-				day: 4,
-			},
-			,
-			{
-				template: `пятница`,
-				day: 5,
-			},
-			,
-			{
-				template: `пт`,
-				day: 5,
-			},
-			,
-			{
-				template: `суббота`,
-				day: 6,
-			},
-			,
-			{
-				template: `сб`,
-				day: 6,
-			},
-			,
-			{
-				template: `воскресенье`,
-				day: 0,
-			},
-			,
-			{
-				template: `вс`,
-				day: 0,
-			},
-		];
-		if (
-			!message.args[1] ||
-			/(?:^сегодня|с)$/gi.test(message.args[1]) === true
-		) {
-			selected_date = new Date().getTime();
-		} else if (/(?:^завтра|^з)$/gi.test(message.args[1]) === true) {
-			selected_date = new Date().getTime() + 1 * 24 * 60 * 60 * 1000;
-		} else if (/(?:^послезавтра|^пз)$/gi.test(message.args[1]) === true) {
-			selected_date = new Date().getTime() + 2 * 24 * 60 * 60 * 1000;
-		} else if (/(?:^вчера|^в)$/gi.test(message.args[1]) === true) {
-			selected_date = new Date().getTime() - 1 * 24 * 60 * 60 * 1000;
-		} else if (/(?:^позавчера|^поз)$/gi.test(message.args[1]) === true) {
-			selected_date = new Date().getTime() - 2 * 24 * 60 * 60 * 1000;
-		} else if (
-			/([0-9]+)?(.)?([0-9]+)?(.)?([0-9]+)/.test(message.args[1]) === true
-		) {
-			let data = message.args[1].split(`.`);
-			if (!data[1]) {
-				data[1] = utils.time.currentDate().split(`.`)[1];
-			}
-			if (!data[2]) {
-				data[2] = utils.time.currentDate().split(`.`)[2];
-			}
-			data[0] = Number(data[0]);
-			data[1] = Number(data[1]);
-			data[2] = Number(data[2]);
-			if (data[0] < 10) {
-				data[0] = `0${data[0]}`;
-			}
-			if (data[1] < 10) {
-				data[1] = `0${data[1]}`;
-			}
-			try {
-				let temp_date = new Date(`${data[2]}-${data[1]}-${data[0]}T15:00:00`);
-				selected_date = temp_date.getTime();
-			} catch (error) {
-				return await message.sendMessage(`неверная дата.`);
-			}
-		} else {
-			for (let i in array_with_days) {
-				let Regular_Expression = new RegExp(array_with_days[i].template, `gi`);
-				if (Regular_Expression.test(message.args[1]) === true) {
-					let date = new Date(),
-						targetDay = array_with_days[i].day,
-						targetDate = new Date(),
-						delta = targetDay - date.getDay();
-					if (delta >= 0) {
-						targetDate.setDate(date.getDate() + delta);
-					} else {
-						targetDate.setDate(date.getDate() + 7 + delta);
+
+		// https://vk.com/sticker/1-1932-512
+		switch (true) {
+			case !message.args[1] || /(?:^сегодня|с)$/gi.test(message.args[1]):
+				selectedDate = moment();
+				break;
+			case /(?:^завтра|^з)$/gi.test(message.args[1]):
+				selectedDate = moment().add(1, "day");
+				break;
+			case /(?:^послезавтра|^пз)$/gi.test(message.args[1]):
+				selectedDate = moment().add(2, "day");
+				break;
+			case /(?:^вчера|^в)$/gi.test(message.args[1]):
+				selectedDate = moment().subtract(1, "day");
+				break;
+			case /(?:^позавчера|^поз)$/gi.test(message.args[1]):
+				selectedDate = moment().subtract(2, "day");
+				break;
+			case /([\d]+)?(.)?([\d]+)?(.)?([\d]+)/.test(message.args[1]):
+				const splittedMessageArgument = message.args[1].split(".");
+				const currentSplittedDate = moment().format("DD.MM.YYYY");
+				splittedMessageArgument[0] =
+					splittedMessageArgument[0] || currentSplittedDate[0];
+				splittedMessageArgument[1] =
+					splittedMessageArgument[1] || currentSplittedDate[1];
+				splittedMessageArgument[2] =
+					splittedMessageArgument[2] || currentSplittedDate[2];
+				selectedDate = moment(splittedMessageArgument.reverse().join("-"));
+				break;
+			default:
+				for (let i in DayTemplates) {
+					let Regular_Expression = new RegExp(DayTemplates[i], `gi`);
+					if (Regular_Expression.test(message.args[1]) === true) {
+						const currentDate = new Date();
+						const targetDay = Number(i);
+						const targetDate = new Date();
+						const delta = targetDay - currentDate.getDay();
+						if (delta >= 0) {
+							targetDate.setDate(currentDate.getDate() + delta);
+						} else {
+							targetDate.setDate(currentDate.getDate() + 7 + delta);
+						}
+						selectedDate = moment(targetDate);
 					}
-					selected_date = Number(targetDate);
 				}
-			}
+				break;
 		}
 
-		if (!selected_date) {
-			return await message.sendMessage(`неверная дата.`);
+		const responseKeyboard = generateKeyboard();
+
+		if (!selectedDate || !selectedDate.isValid()) {
+			return await message.sendMessage(`неверная дата.`, {
+				keyboard: responseKeyboard,
+			});
 		}
 
-		let replacement_checker = await models.replacement.exists({
-			date: utils.time.getDateByMS(Number(selected_date)),
-			unical_group_id: group_data.uid,
-		});
-
-		let keyboard_data = [
-			[
-				Keyboard.textButton({
-					label: "ПН",
-					payload: {
-						command: `Замены понедельник`,
-					},
-					color: Keyboard.SECONDARY_COLOR,
-				}),
-				Keyboard.textButton({
-					label: "ВТ",
-					payload: {
-						command: `Замены вторник`,
-					},
-					color: Keyboard.SECONDARY_COLOR,
-				}),
-				Keyboard.textButton({
-					label: "СР",
-					payload: {
-						command: `Замены Среда`,
-					},
-					color: Keyboard.SECONDARY_COLOR,
-				}),
-			],
-			[
-				Keyboard.textButton({
-					label: "ЧТ",
-					payload: {
-						command: `Замены четверг`,
-					},
-					color: Keyboard.SECONDARY_COLOR,
-				}),
-				Keyboard.textButton({
-					label: "ПТ",
-					payload: {
-						command: `Замены пятница`,
-					},
-					color: Keyboard.SECONDARY_COLOR,
-				}),
-				Keyboard.textButton({
-					label: "СБ",
-					payload: {
-						command: `Замены суббота`,
-					},
-					color: Keyboard.SECONDARY_COLOR,
-				}),
-			],
-			[
-				Keyboard.textButton({
-					label: "Вчера",
-					payload: {
-						command: `Замены вчера`,
-					},
-					color: Keyboard.NEGATIVE_COLOR,
-				}),
-				Keyboard.textButton({
-					label: "Сегодня",
-					payload: {
-						command: `Замены`,
-					},
-					color: Keyboard.SECONDARY_COLOR,
-				}),
-				Keyboard.textButton({
-					label: "Завтра",
-					payload: {
-						command: `Замены завтра`,
-					},
-					color: Keyboard.POSITIVE_COLOR,
-				}),
-			],
-		];
-
-		if (new Date(selected_date).getDay() === 0) {
+		if (selectedDate.day() === 0) {
 			return await message.sendMessage(
-				`${utils.time.getDateByMS(selected_date)} воскресенье.`,
-				{ keyboard: Keyboard.keyboard(keyboard_data).inline() },
+				`${selectedDate.format("DD.MM.YYYY")} воскресенье.`,
+				{ keyboard: responseKeyboard },
 			);
 		}
 
-		if (replacement_checker === false) {
-			return message.sendMessage(
-				`на ${utils.time.getDateByMS(selected_date)} нет замен.`,
-				{ keyboard: Keyboard.keyboard(keyboard_data).inline() },
+		const selectDayReplacements = InternalUtils.mpt.data.replacements.filter(
+			(replacement) =>
+				replacement.group.toLowerCase() === groupData.name.toLowerCase() &&
+				moment(replacement.date).format("DD.MM.YYYY") ===
+					selectedDate?.format("DD.MM.YYYY"),
+		);
+
+		if (selectDayReplacements.length === 0) {
+			return await message.sendMessage(
+				`на выбранный день (${selectedDate.format(
+					"DD.MM.YYYY",
+				)}) замен для группы ${groupData.name} не найдено.`,
+				{ keyboard: responseKeyboard },
+			);
+		} else {
+			let responseReplacementsText = "";
+			for (let i = 0; i < selectDayReplacements.length; i++) {
+				const replacement = selectDayReplacements[i];
+				responseReplacementsText += `Замена #${Number(i) + 1}:
+Пара: ${replacement.lessonNum}
+Заменяемая пара: ${replacement.oldLessonName}
+Преподаватель: ${replacement.oldLessonTeacher}
+Новая пара: ${replacement.newLessonName}
+Преподаватель на новой паре: ${replacement.newLessonTeacher}
+Добавлена на сайт: ${moment(replacement.addToSite).format(
+					"HH:mm:ss | DD.MM.YYYY",
+				)}
+Обнаружена ботом: ${moment(replacement.detected).format(
+					"HH:mm:ss | DD.MM.YYYY",
+				)}\n\n`;
+			}
+			return await message.sendMessage(
+				`на выбранный день ${selectedDate.format("DD.MM.YYYY")} для группы ${
+					groupData.name
+				} ${utils.string.declOfNum(selectDayReplacements.length, [
+					"найдена",
+					"найдено",
+					"найдено",
+				])} ${
+					selectDayReplacements.length
+				} ${utils.string.declOfNum(selectDayReplacements.length, [
+					"замена",
+					"замены",
+					"замен",
+				])}:\n\n${responseReplacementsText}`,
+				{ keyboard: responseKeyboard },
 			);
 		}
-
-		let replacement_on_this_day_data: any = await models.replacement.find({
-			date: utils.time.getDateByMS(Number(selected_date)),
-			unical_group_id: group_data.uid,
-		});
-
-		let replacements_string = `для Вашей группы ${
-			group_data.name
-		} на ${utils.time.getDateByMS(selected_date)} найдено ${
-			replacement_on_this_day_data.length
-		} ${await utils.string.declOfNum(replacement_on_this_day_data.length, [
-			`замена`,
-			`замены`,
-			`замен`,
-		])}.\n\n`;
-
-		for (let i in replacement_on_this_day_data) {
-			replacements_string += `Замена #${Number(i) + 1}\nПара: ${
-				replacement_on_this_day_data[i].lesson_num
-			}\nЗаменяемая пара: ${
-				replacement_on_this_day_data[i].old_lesson_name
-			}\nПреподаватель: ${
-				replacement_on_this_day_data[i].old_lesson_teacher
-			}\nНовая пара: ${
-				replacement_on_this_day_data[i].new_lesson_name
-			}\nПреподаватель на новой паре: ${
-				replacement_on_this_day_data[i].new_lesson_teacher
-			}\nДобавлена на сайт: ${utils.time.getDateTimeByMS(
-				replacement_on_this_day_data[i].add_to_site,
-			)}\nОбнаружена ботом: ${utils.time.getDateTimeByMS(
-				replacement_on_this_day_data[i].detected,
-			)}\n\n`;
-		}
-		return message.sendMessage(replacements_string, {
-			keyboard: Keyboard.keyboard(keyboard_data).inline(),
-		});
 	},
-};
+);

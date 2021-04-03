@@ -1,12 +1,15 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "outDir": "./out/",
-    "strict": true,
-    "alwaysStrict": true,
-    "rootDir": "./src/",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  }
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "CommonJS",
+		"outDir": "./dist/",
+		"strict": true,
+		"alwaysStrict": true,
+		"rootDir": "./src/",
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true
+	},
+	"include": ["./src"]
 }

@@ -1,58 +1,35 @@
 import { Keyboard } from "vk-io";
-import { MPTMessage } from "../../plugins/types";
 import utils from "rus-anonym-utils";
 
-import models from "../../plugins/models";
+import Command from "../../lib/utils/classes/command";
+import InternalUtils from "../../lib/utils/classes/utils";
 
-export = {
-	regexp: /(?:regchat)(?:\s(.*))?$/i,
-	template: ["Regchat"],
-	process: async (message: MPTMessage) => {
-		if (!message.chat) {
-			return message.sendMessage(
-				`доступно только в беседах.\nВозможно Вы хотели установить свою группу, для этого можно воспользоваться командой: "установить группу".`,
-				{
-					keyboard: Keyboard.keyboard([
-						[
-							Keyboard.textButton({
-								label: `Установить группу`,
-								payload: {
-									command: `Установить группу ${
-										message.args[1] ? message.args[1] : ""
-									}`,
-								},
-								color: Keyboard.POSITIVE_COLOR,
-							}),
-						],
-					]).inline(),
-				},
-			);
+new Command(
+	/(?:regchat|привязать)(?:\s(.*))?$/i,
+	[],
+	async function SetGroupConversationCommand(message) {
+		if (message.isDM || !message.chat) {
+			return await message.sendMessage("команда доступна только в беседах.");
 		}
-		let group_name: any;
+
 		if (!message.args[1]) {
-			let answer = await message.question(`Введите Вашу группу:`);
-			if (!answer.text) {
-				return await message.sendMessage(`неверное название группы.`);
-			}
-			group_name = answer.text;
-		} else {
-			group_name = message.args[1];
+			return await message.sendMessage("укажите название группы");
 		}
-		let all_groups: any = await models.utilityGroup.find(
-			{},
-			{ name: 1, uid: 1, specialty: 1 },
+		const selectedGroup = InternalUtils.mpt.data.groups.find(
+			(group) => group.name.toLowerCase() === message.args[1].toLowerCase(),
 		);
-		let group_data: any = all_groups.find(
-			(x: any) => x.name.toLowerCase() === group_name.toLowerCase(),
-		);
-		if (!group_data) {
-			let diff = [];
-			for (let i in all_groups) {
+
+		if (!selectedGroup) {
+			let diff: { group: string; diff: number }[] = [];
+			for (let i in InternalUtils.mpt.data.groups) {
 				diff.push({
-					group_name: all_groups[i].name,
-					diff: await utils.string.levenshtein(
-						group_name.toLowerCase(),
-						all_groups[i].name.toLowerCase(),
+					group: InternalUtils.mpt.data.groups[i].name,
+					diff: utils.string.levenshtein(
+						message.args[1],
+						InternalUtils.mpt.data.groups[i].name,
+						{
+							replaceCase: 0,
+						},
 					),
 				});
 			}
@@ -66,46 +43,47 @@ export = {
 				return 0;
 			});
 			let text = `\nВозможно вы имели в виду какую то из этих групп:`;
-			let keyboard_data = await Keyboard.keyboard([
+			let keyboard_data = Keyboard.keyboard([
 				[
 					Keyboard.textButton({
-						label: diff[0].group_name,
+						label: diff[0].group,
 						payload: {
-							command: `regchat ${diff[0].group_name}`,
+							command: `regchat ${diff[0].group}`,
 						},
 						color: Keyboard.POSITIVE_COLOR,
 					}),
 				],
 				[
 					Keyboard.textButton({
-						label: diff[1].group_name,
+						label: diff[1].group,
 						payload: {
-							command: `regchat ${diff[1].group_name}`,
+							command: `regchat ${diff[1].group}`,
 						},
 						color: Keyboard.SECONDARY_COLOR,
 					}),
 				],
 				[
 					Keyboard.textButton({
-						label: diff[2].group_name,
+						label: diff[2].group,
 						payload: {
-							command: `regchat ${diff[2].group_name}`,
+							command: `regchat ${diff[2].group}`,
 						},
 						color: Keyboard.NEGATIVE_COLOR,
 					}),
 				],
 			]).inline();
 			for (let i = 0; i < 3; i++) {
-				text += `\n${i + 1}. ${diff[i].group_name}`;
+				text += `\n${i + 1}. ${diff[i].group}`;
 			}
 			return await message.sendMessage(
-				`группы ${group_name} не найдено, попробуйте ещё раз.${text}`,
+				`группы ${message.args[1]} не найдено, попробуйте ещё раз.${text}`,
 				{ keyboard: keyboard_data },
 			);
+		} else {
+			message.chat.data.group = selectedGroup.name;
+			return await message.sendMessage(
+				`Вы установили для беседы группу по умолчанию ${selectedGroup.name}.\n(${selectedGroup.specialty})`,
+			);
 		}
-		message.chat.unical_group_id = group_data.uid;
-		return await message.sendMessage(
-			`Вы привязали беседу к группе ${group_data.name}.\n(${group_data.specialty})`,
-		);
 	},
-};
+);
