@@ -17,6 +17,8 @@ function connectDB_Handler() {
 		InternalUtils.Bot_DB.connection.readyState === 1
 	) {
 		InternalUtils.mpt.getLastDump();
-		vk.updates.startPolling().then(() => console.log("Polling started"));
+		vk.updates
+			.startPolling()
+			.then(() => console.log("Polling started at ", new Date()));
 	}
 }
