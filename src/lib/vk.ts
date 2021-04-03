@@ -1,4 +1,4 @@
-import { ModernMessageContext } from "./../typings/message";
+import { ModernEventContext, ModernMessageContext } from "./../typings/message";
 import { VK, Keyboard } from "vk-io";
 
 import InternalUtils from "./utils/classes/utils";
@@ -134,8 +134,43 @@ vk.updates.on(
 	},
 );
 
-vk.updates.on("message_event", async function MessageEventHandler(event) {
-	console.log(event);
-});
+vk.updates.on(
+	"message_event",
+	async function MessageEventHandler(event: ModernEventContext) {
+		if (!event.eventPayload || !event.eventPayload.type) {
+			return;
+		} else {
+			const command = InternalUtils.eventCommand.find(
+				(x) => x.event === event.eventPayload.type,
+			);
+
+			if (!command) {
+				return;
+			} else {
+				event.user = await new User(event.userId).init();
+				if (event.user.data.ban === true) {
+					return;
+				}
+				if (event.peerId > 2e9) {
+					event.chat = await new Chat(event.peerId - 2e9).init();
+				}
+				try {
+					await command.process(event);
+					await event.user.save();
+					if (event.chat) {
+						event.chat.save();
+					}
+					return;
+				} catch (err) {
+					console.log(err);
+					return await event.answer({
+						type: "show_snackbar",
+						text: "Ошиб очка",
+					});
+				}
+			}
+		}
+	},
+);
 
 export default vk;

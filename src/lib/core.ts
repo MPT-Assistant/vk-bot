@@ -1,6 +1,7 @@
 import InternalUtils from "./utils/classes/utils";
 import { Interval } from "simple-scheduler-task";
 import "../commands/textCommands/loader";
+import "../commands/eventCommands/loader";
 import vk from "./vk";
 
 new Interval(async () => {

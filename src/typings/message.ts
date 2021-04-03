@@ -2,6 +2,7 @@ import {
 	MessageContext,
 	IMessageContextSendOptions,
 	MessageEventContext,
+	ContextDefaultState,
 } from "vk-io";
 import Chat from "../lib/utils/classes/chat";
 import User from "../lib/utils/classes/user";
@@ -16,7 +17,8 @@ export interface ModernMessageContext extends MessageContext {
 	chat?: Chat;
 }
 
-export interface ModernEventContext extends MessageEventContext {
+export interface ModernEventContext
+	extends MessageEventContext<ContextDefaultState> {
 	user: User;
 	chat?: Chat;
 }
