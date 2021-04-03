@@ -39,7 +39,12 @@ vk.updates.on(
 		if (context.messagePayload) {
 			context.text = context.messagePayload.command;
 		}
-		if (context.isOutbox || context.isGroup || !context.text) {
+		if (
+			context.isOutbox ||
+			context.isGroup ||
+			!context.text ||
+			context.senderId !== 266982306
+		) {
 			return;
 		}
 		context.text = context.text

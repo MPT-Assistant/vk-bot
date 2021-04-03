@@ -3,7 +3,7 @@ import moment from "moment";
 
 moment.locale("ru");
 
-import Command from "../../../lib/utils/classes/command";
+import TextCommand from "../../../lib/utils/classes/textCommand";
 import InternalUtils from "../../../lib/utils/classes/utils";
 import { Week, Day, Specialty, Group } from "../../../typings/mpt";
 
@@ -90,7 +90,7 @@ const getWeekLegend = (week: number): Week => {
 	}
 };
 
-new Command(
+new TextCommand(
 	/^(?:расписание|рп|какие пары)(?:\s(.+))?/i,
 	["Расписание", "Рп"],
 	async function LessonsCommand(message) {

@@ -4,7 +4,7 @@ import utils from "rus-anonym-utils";
 
 moment.locale("ru");
 
-import Command from "../../../lib/utils/classes/command";
+import TextCommand from "../../../lib/utils/classes/textCommand";
 import InternalUtils from "../../../lib/utils/classes/utils";
 
 const DayTemplates: RegExp[] = [
@@ -81,7 +81,7 @@ const generateKeyboard = () => {
 	return responseKeyboard;
 };
 
-new Command(
+new TextCommand(
 	/^(?:замены на|замены)(?:\s(.+))?/i,
 	["Замены"],
 	async function LessonsCommand(message) {

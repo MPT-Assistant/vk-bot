@@ -1,10 +1,10 @@
 import { Keyboard } from "vk-io";
 import utils from "rus-anonym-utils";
 
-import Command from "../../../lib/utils/classes/command";
+import TextCommand from "../../../lib/utils/classes/textCommand";
 import InternalUtils from "../../../lib/utils/classes/utils";
 
-new Command(
+new TextCommand(
 	/(?:установить группу|уг)(?:\s(.*))?$/i,
 	["Установить группу", "Уг"],
 	async function SetGroupCommand(message) {

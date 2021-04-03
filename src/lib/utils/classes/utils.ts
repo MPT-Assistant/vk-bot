@@ -3,7 +3,7 @@ import * as DB from "./DB";
 import Logger from "../logger";
 
 import config from "../../../DB/config.json";
-import Command from "./command";
+import TextCommand from "./textCommand";
 class Utils {
 	public logger = new Logger();
 	public mpt = new MPT();
@@ -20,7 +20,7 @@ class Utils {
 		database: "vk",
 	});
 	public config = config;
-	public commands: Command[] = [];
+	public commands: TextCommand[] = [];
 	public commandsTemplates: string[] = [];
 }
 

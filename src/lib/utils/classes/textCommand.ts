@@ -1,7 +1,7 @@
 import { ModernMessageContext } from "../../../typings/message";
 import InternalUtils from "./utils";
 
-class Command {
+class TextCommand {
 	public regexp: RegExp;
 	public templates: string[];
 	public process: (message: ModernMessageContext) => Promise<any>;
@@ -25,4 +25,4 @@ class Command {
 	}
 }
 
-export default Command;
+export default TextCommand;

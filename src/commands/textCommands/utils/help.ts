@@ -1,6 +1,6 @@
-import Command from "../../../lib/utils/classes/command";
+import TextCommand from "../../../lib/utils/classes/textCommand";
 
-new Command(
+new TextCommand(
 	/^(?:помощь|help|start|команды)$/i,
 	["Помощь", "Команды"],
 	async (message) => {
