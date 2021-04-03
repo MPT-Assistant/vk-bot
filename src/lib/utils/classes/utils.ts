@@ -20,8 +20,8 @@ class Utils {
 		database: "vk",
 	});
 	public config = config;
-	public commands: TextCommand[] = [];
-	public commandsTemplates: string[] = [];
+	public textCommand: TextCommand[] = [];
+	public textCommandsTemplates: string[] = [];
 }
 
 export default new Utils();

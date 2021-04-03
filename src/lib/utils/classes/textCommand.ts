@@ -14,9 +14,9 @@ class TextCommand {
 		this.regexp = regexp;
 		this.templates = templates;
 		this.process = process;
-		InternalUtils.commands.push(this);
+		InternalUtils.textCommand.push(this);
 		for (const template of templates) {
-			InternalUtils.commandsTemplates.push(template);
+			InternalUtils.textCommandsTemplates.push(template);
 		}
 	}
 

@@ -51,14 +51,14 @@ vk.updates.on(
 			.replace(/(\[club188434642\|[@a-z_A-ZА-Яа-я0-9]+\])/gi, ``)
 			.replace(/(^\s*)|(\s*)$/g, "");
 
-		const command = InternalUtils.commands.find((command) =>
+		const command = InternalUtils.textCommand.find((command) =>
 			command.check(context.text as string),
 		);
 
 		if (!command) {
 			if (context.isDM) {
 				let possibleCommands = [];
-				for (let tempTemplate of InternalUtils.commandsTemplates) {
+				for (let tempTemplate of InternalUtils.textCommandsTemplates) {
 					possibleCommands.push({
 						template: tempTemplate,
 						diff: utils.string.levenshtein(context.text, tempTemplate, {
