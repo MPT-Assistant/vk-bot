@@ -1,4 +1,9 @@
-import { MessageContext, IMessageContextSendOptions } from "vk-io";
+import {
+	MessageContext,
+	IMessageContextSendOptions,
+	MessageEventContext,
+	ContextDefaultState,
+} from "vk-io";
 import Chat from "../lib/utils/classes/chat";
 import User from "../lib/utils/classes/user";
 

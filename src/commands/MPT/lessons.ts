@@ -304,13 +304,13 @@ new Command(
 			}
 		});
 
-		let lessonsString = "";
+		let responseLessonsText = "";
 
 		for (const lesson of responseLessons) {
 			const lessonDateData = parsedTimetable.find(
 				(x) => x.num === lesson.num && x.type === "lesson",
 			);
-			lessonsString += `${
+			responseLessonsText += `${
 				lessonDateData
 					? lessonDateData.start.format("HH:mm:ss") +
 					  " - " +
@@ -329,7 +329,7 @@ new Command(
 Место: ${selectDaySchedule.place}
 Неделя: ${selectedDateWeekLegend}
 
-${lessonsString}
+${responseLessonsText}
 
 ${
 	selectDayReplacements.length > 0
