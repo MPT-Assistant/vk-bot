@@ -10,8 +10,6 @@ import {
 	Day,
 	Specialty,
 	Group,
-	ParsedTimetableType,
-	ParsedTimetableElement,
 } from "../../typings/mpt";
 
 const DayTemplates: RegExp[] = [
