@@ -5,12 +5,7 @@ moment.locale("ru");
 
 import Command from "../../lib/utils/classes/command";
 import InternalUtils from "../../lib/utils/classes/utils";
-import {
-	Week,
-	Day,
-	Specialty,
-	Group,
-} from "../../typings/mpt";
+import { Week, Day, Specialty, Group } from "../../typings/mpt";
 
 const DayTemplates: RegExp[] = [
 	/воскресенье|вс/,
@@ -223,7 +218,7 @@ new Command(
 
 		const selectedDayNum = selectedDate.day();
 		const selectedDateString = selectedDate.format("DD.MM.YYYY");
-		const selectedDateWeekLegend = getWeekLegend(moment().week());
+		const selectedDateWeekLegend = getWeekLegend(selectedDate.week());
 
 		const selectDaySchedule = selectGroup.days.find(
 			(day) => day.num === selectedDayNum,
