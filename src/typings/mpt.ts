@@ -1,3 +1,4 @@
+import { Moment, PreciseRangeValueObject } from "moment";
 type Week = "Знаменатель" | "Числитель" | "Не определено";
 
 interface Lesson {
@@ -66,13 +67,28 @@ interface TimetableElement {
 
 type TimetableType = TimetableElement[];
 
+interface ParsedTimetableElement {
+	status: "await" | "process" | "finished";
+	num: number;
+	type: "lesson" | "recess";
+	start: Moment;
+	end: Moment;
+	diffStart: PreciseRangeValueObject;
+	diffEnd: PreciseRangeValueObject;
+}
+
+type ParsedTimetableType = ParsedTimetableElement[];
+
 export {
+	ParsedTimetableElement,
 	Day,
 	Lesson,
+	Group,
 	Specialty,
 	Week,
 	Replacement,
 	MPT_Group,
 	MPT_Specialty,
 	TimetableType,
+	ParsedTimetableType,
 };

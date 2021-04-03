@@ -5,7 +5,14 @@ moment.locale("ru");
 
 import Command from "../../lib/utils/classes/command";
 import InternalUtils from "../../lib/utils/classes/utils";
-import { Week, Day, Lesson } from "../../typings/mpt";
+import {
+	Week,
+	Day,
+	Specialty,
+	Group,
+	ParsedTimetableType,
+	ParsedTimetableElement,
+} from "../../typings/mpt";
 
 const DayTemplates: RegExp[] = [
 	/воскресенье|вс/,
@@ -91,7 +98,7 @@ const getWeekLegend = (week: number): Week => {
 };
 
 new Command(
-	/^(?:расписание|рп|какие пары|какие пары|пары|уроки|lessons|pairs|pair)\s?([^]+)?/i,
+	/^(?:расписание|рп|какие пары)(?:\s(.+))?/i,
 	["Расписание", "Рп"],
 	async function LessonsCommand(message) {
 		if (
@@ -177,21 +184,52 @@ new Command(
 			});
 		}
 
-		const selectedDayNum = selectedDate.day();
-		const selectedDateString = selectedDate.format("DD.MM.YYYY");
-		const selectedDateWeekLegend = getWeekLegend(moment().week());
-
-		if (selectedDayNum === 0) {
+		if (selectedDate.day() === 0) {
 			return await message.sendMessage(
 				`${selectedDate.format("DD.MM.YYYY")} воскресенье.`,
 				{ keyboard: responseKeyboard },
 			);
 		}
 
-		const selectDaySchedule = InternalUtils.mpt.data.schedule
-			.find((specialty) => specialty.name === groupData.specialty)
-			?.groups.find((group) => group.name === groupData.name)
-			?.days.find((day) => day.num === selectedDayNum) as Day;
+		const parsedTimetable = InternalUtils.mpt.parseTimetable(selectedDate);
+
+		const selectSpecialty = InternalUtils.mpt.data.schedule.find(
+			(specialty) => specialty.name === groupData.specialty,
+		) as Specialty;
+
+		const selectGroup = selectSpecialty?.groups.find(
+			(group) => group.name === groupData.name,
+		) as Group;
+
+		if (!message.args[1]) {
+			const selectedDayNum = selectedDate.day();
+			const selectDaySchedule = selectGroup.days.find(
+				(day) => day.num === selectedDayNum,
+			) as Day;
+
+			const lastLessonNum =
+				selectDaySchedule.lessons[selectDaySchedule.lessons.length - 1].num;
+
+			if (
+				parsedTimetable.find(
+					(x) => x.num === lastLessonNum && x.type === "lesson",
+				)?.status === "finished"
+			) {
+				if (selectedDayNum + 1 === 7) {
+					selectedDate.add(2, "day");
+				} else {
+					selectedDate.add(1, "day");
+				}
+			}
+		}
+
+		const selectedDayNum = selectedDate.day();
+		const selectedDateString = selectedDate.format("DD.MM.YYYY");
+		const selectedDateWeekLegend = getWeekLegend(moment().week());
+
+		const selectDaySchedule = selectGroup.days.find(
+			(day) => day.num === selectedDayNum,
+		) as Day;
 
 		const selectDayReplacements = InternalUtils.mpt.data.replacements.filter(
 			(replacement) =>
@@ -276,13 +314,25 @@ new Command(
 		let lessonsString = "";
 
 		for (const lesson of responseLessons) {
-			lessonsString += `${lesson.num}. ${lesson.name} (${lesson.teacher})\n`;
+			const lessonDateData = parsedTimetable.find(
+				(x) => x.num === lesson.num && x.type === "lesson",
+			);
+			lessonsString += `${
+				lessonDateData
+					? lessonDateData.start.format("HH:mm:ss") +
+					  " - " +
+					  lessonDateData.end.format("HH:mm:ss")
+					: ""
+			}\n${lesson.num}. ${lesson.name} (${lesson.teacher})\n\n`;
 		}
+
+		const selectedDayName = selectedDate.format("dddd").split("");
+		selectedDayName[0] = selectedDayName[0].toUpperCase();
 
 		return await message.sendMessage(
 			`расписание на ${selectedDateString}:
 Группа: ${groupData.name}
-День: ${selectedDate.format("dddd")}
+День: ${selectedDayName.join("")}
 Место: ${selectDaySchedule.place}
 Неделя: ${selectedDateWeekLegend}
 
