@@ -1,8 +1,8 @@
 import { Keyboard } from "vk-io";
 import utils from "rus-anonym-utils";
 
-import Command from "../../lib/utils/classes/command";
-import InternalUtils from "../../lib/utils/classes/utils";
+import Command from "../../../lib/utils/classes/command";
+import InternalUtils from "../../../lib/utils/classes/utils";
 
 new Command(
 	/(?:regchat|привязать)(?:\s(.*))?$/i,

@@ -4,8 +4,8 @@ import utils from "rus-anonym-utils";
 
 moment.locale("ru");
 
-import Command from "../../lib/utils/classes/command";
-import InternalUtils from "../../lib/utils/classes/utils";
+import Command from "../../../lib/utils/classes/command";
+import InternalUtils from "../../../lib/utils/classes/utils";
 
 const DayTemplates: RegExp[] = [
 	/воскресенье|вс/,

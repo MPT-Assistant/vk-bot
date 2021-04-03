@@ -3,9 +3,9 @@ import moment from "moment";
 
 moment.locale("ru");
 
-import Command from "../../lib/utils/classes/command";
-import InternalUtils from "../../lib/utils/classes/utils";
-import { Week, Day, Specialty, Group } from "../../typings/mpt";
+import Command from "../../../lib/utils/classes/command";
+import InternalUtils from "../../../lib/utils/classes/utils";
+import { Week, Day, Specialty, Group } from "../../../typings/mpt";
 
 const DayTemplates: RegExp[] = [
 	/воскресенье|вс/,

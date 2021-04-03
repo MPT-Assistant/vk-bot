@@ -1,4 +1,4 @@
-import Command from "../../lib/utils/classes/command";
+import Command from "../../../lib/utils/classes/command";
 
 new Command(/ник(\s(.*))?$/i, ["Ник"], async (message) => {
 	if (message.args[1].length > 25) {

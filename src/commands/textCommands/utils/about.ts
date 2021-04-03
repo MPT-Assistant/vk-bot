@@ -1,7 +1,7 @@
 import utils from "rus-anonym-utils";
 
-import InternalUtils from "../../lib/utils/classes/utils";
-import Command from "../../lib/utils/classes/command";
+import InternalUtils from "../../../lib/utils/classes/utils";
+import Command from "../../../lib/utils/classes/command";
 
 new Command(
 	/^(?:Stats|About|Bot)$/i,
