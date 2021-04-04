@@ -9,6 +9,8 @@ import {
 	Week,
 	TimetableType,
 	ParsedTimetableType,
+	Day,
+	Group,
 } from "../../../typings/mpt";
 import utils from "./utils";
 
@@ -87,4 +89,119 @@ export default class MPT {
 			};
 		});
 	}
+
+	public parseLessons(group: string, selectedDate = moment()) {
+		const groupData = this.data.groups.find(
+			(x) => x.name === group,
+		) as MPT_Group;
+
+		const selectSpecialty = this.data.schedule.find(
+			(specialty) => specialty.name === groupData.specialty,
+		) as Specialty;
+
+		const selectGroup = selectSpecialty.groups.find(
+			(group) => group.name === groupData.name,
+		) as Group;
+
+		const selectedDayNum = selectedDate.day();
+		const selectedDateWeekLegend = this.getWeekLegend(selectedDate);
+
+		const selectDaySchedule = selectGroup.days.find(
+			(day) => day.num === selectedDayNum,
+		) as Day;
+
+		const responseLessons: {
+			num: number;
+			name: string;
+			teacher: string;
+		}[] = [];
+
+		for (const lesson of selectDaySchedule.lessons) {
+			if (lesson.name.length === 1) {
+				responseLessons.push({
+					num: lesson.num,
+					name: lesson.name[0],
+					teacher: lesson.teacher[0],
+				});
+			} else {
+				if (
+					lesson.name[0] !== `-` &&
+					selectedDateWeekLegend === "Знаменатель"
+				) {
+					responseLessons.push({
+						num: lesson.num,
+						name: lesson.name[0],
+						teacher: lesson.teacher[0],
+					});
+				} else if (
+					lesson.name[0] !== `-` &&
+					selectedDateWeekLegend === "Числитель"
+				) {
+					responseLessons.push({
+						num: lesson.num,
+						name: lesson.name[1] as string,
+						teacher: lesson.teacher[1] as string,
+					});
+				}
+			}
+		}
+
+		return responseLessons;
+	}
+
+	public parseReplacements(group: string, selectedDate = moment()) {
+		return this.data.replacements.filter(
+			(replacement) =>
+				replacement.group.toLowerCase() === group.toLowerCase() &&
+				moment(replacement.date).format("DD.MM.YYYY") ===
+					selectedDate.format("DD.MM.YYYY"),
+		);
+	}
+
+	public parseSchedule(group: string, selectedDate = moment()) {
+		const lessons = this.parseLessons(group, selectedDate);
+		const replacements = this.parseReplacements(group, selectedDate);
+
+		if (replacements.length === 0) {
+			return lessons;
+		} else {
+			for (const replacement of replacements) {
+				const currentLesson = lessons.find(
+					(lesson) => lesson.num === replacement.lessonNum,
+				);
+
+				if (!currentLesson) {
+					lessons.push({
+						num: replacement.lessonNum,
+						name: replacement.newLessonName,
+						teacher: replacement.newLessonTeacher,
+					});
+				} else {
+					currentLesson.name = replacement.newLessonName;
+					currentLesson.teacher = replacement.newLessonTeacher;
+				}
+			}
+
+			lessons.sort((firstLesson, secondLesson) => {
+				if (firstLesson.num > secondLesson.num) {
+					return 1;
+				} else if (firstLesson.num < secondLesson.num) {
+					return -1;
+				} else {
+					return 0;
+				}
+			});
+
+			return lessons;
+		}
+	}
+
+	public getWeekLegend = (selectedDate = moment()): Week => {
+		const currentWeek = moment().week();
+		if ((currentWeek & 2) === (selectedDate.week() & 2)) {
+			return this.data.week;
+		} else {
+			return this.isNumerator ? "Числитель" : "Знаменатель";
+		}
+	};
 }

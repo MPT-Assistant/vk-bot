@@ -114,7 +114,7 @@ const generateKeyboard = () => {
 new TextCommand(
 	/^(?:замены на|замены)(?:\s(.+))?/i,
 	["Замены"],
-	async function LessonsCommand(message) {
+	async function ReplacementsCommand(message) {
 		if (
 			(message.chat &&
 				message.chat.data.group === "" &&
