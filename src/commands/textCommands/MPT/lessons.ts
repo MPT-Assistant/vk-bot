@@ -99,7 +99,9 @@ new TextCommand(
 		}
 
 		const responseKeyboard = InternalUtils.mpt.generateKeyboard(
-			"callback",
+			message.clientInfo.button_actions.includes("callback")
+				? "callback"
+				: "text",
 			"lessons",
 		);
 
