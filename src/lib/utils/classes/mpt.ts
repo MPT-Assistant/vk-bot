@@ -1,3 +1,4 @@
+import { Keyboard, KeyboardBuilder } from "vk-io";
 import moment from "moment";
 import "moment-precise-range-plugin";
 
@@ -91,17 +92,16 @@ export default class MPT {
 	}
 
 	public parseLessons(
-		group: string,
+		groupData: MPT_Group,
 		selectedDate = moment(),
 	): {
-		num: number;
-		name: string;
-		teacher: string;
-	}[] {
-		const groupData = this.data.groups.find(
-			(x) => x.name === group,
-		) as MPT_Group;
-
+		place: string;
+		lessons: {
+			num: number;
+			name: string;
+			teacher: string;
+		}[];
+	} {
 		const selectSpecialty = this.data.schedule.find(
 			(specialty) => specialty.name === groupData.specialty,
 		) as Specialty;
@@ -118,14 +118,20 @@ export default class MPT {
 		) as Day;
 
 		const responseLessons: {
-			num: number;
-			name: string;
-			teacher: string;
-		}[] = [];
+			place: string;
+			lessons: {
+				num: number;
+				name: string;
+				teacher: string;
+			}[];
+		} = {
+			place: selectDaySchedule.place,
+			lessons: [],
+		};
 
 		for (const lesson of selectDaySchedule.lessons) {
 			if (lesson.name.length === 1) {
-				responseLessons.push({
+				responseLessons.lessons.push({
 					num: lesson.num,
 					name: lesson.name[0],
 					teacher: lesson.teacher[0],
@@ -135,7 +141,7 @@ export default class MPT {
 					lesson.name[0] !== `-` &&
 					selectedDateWeekLegend === "Знаменатель"
 				) {
-					responseLessons.push({
+					responseLessons.lessons.push({
 						num: lesson.num,
 						name: lesson.name[0],
 						teacher: lesson.teacher[0],
@@ -144,7 +150,7 @@ export default class MPT {
 					lesson.name[0] !== `-` &&
 					selectedDateWeekLegend === "Числитель"
 				) {
-					responseLessons.push({
+					responseLessons.lessons.push({
 						num: lesson.num,
 						name: lesson.name[1] as string,
 						teacher: lesson.teacher[1] as string,
@@ -157,34 +163,44 @@ export default class MPT {
 	}
 
 	public parseReplacements(
-		group: string,
+		groupData: MPT_Group,
 		selectedDate = moment(),
 	): Replacement[] {
 		return this.data.replacements.filter(
 			(replacement) =>
-				replacement.group.toLowerCase() === group.toLowerCase() &&
+				replacement.group.toLowerCase() === groupData.name.toLowerCase() &&
 				moment(replacement.date).format("DD.MM.YYYY") ===
 					selectedDate.format("DD.MM.YYYY"),
 		);
 	}
 
 	public parseSchedule(
-		group: string,
+		groupData: MPT_Group,
 		selectedDate = moment(),
-	): { num: number; name: string; teacher: string }[] {
-		const lessons = this.parseLessons(group, selectedDate);
-		const replacements = this.parseReplacements(group, selectedDate);
+	): {
+		replacementsCount: number;
+		week: Week;
+		place: string;
+		lessons: { num: number; name: string; teacher: string }[];
+	} {
+		const lessonsData = this.parseLessons(groupData, selectedDate);
+		const replacements = this.parseReplacements(groupData, selectedDate);
 
 		if (replacements.length === 0) {
-			return lessons;
+			return {
+				replacementsCount: 0,
+				place: lessonsData.place,
+				week: this.getWeekLegend(selectedDate),
+				lessons: lessonsData.lessons,
+			};
 		} else {
 			for (const replacement of replacements) {
-				const currentLesson = lessons.find(
+				const currentLesson = lessonsData.lessons.find(
 					(lesson) => lesson.num === replacement.lessonNum,
 				);
 
 				if (!currentLesson) {
-					lessons.push({
+					lessonsData.lessons.push({
 						num: replacement.lessonNum,
 						name: replacement.newLessonName,
 						teacher: replacement.newLessonTeacher,
@@ -195,7 +211,7 @@ export default class MPT {
 				}
 			}
 
-			lessons.sort((firstLesson, secondLesson) => {
+			lessonsData.lessons.sort((firstLesson, secondLesson) => {
 				if (firstLesson.num > secondLesson.num) {
 					return 1;
 				} else if (firstLesson.num < secondLesson.num) {
@@ -205,16 +221,195 @@ export default class MPT {
 				}
 			});
 
-			return lessons;
+			return {
+				replacementsCount: replacements.length,
+				place: lessonsData.place,
+				week: this.getWeekLegend(selectedDate),
+				lessons: lessonsData.lessons,
+			};
 		}
 	}
 
-	public getWeekLegend = (selectedDate = moment()): Week => {
+	public getWeekLegend(selectedDate = moment()): Week {
 		const currentWeek = moment().week();
 		if ((currentWeek & 2) === (selectedDate.week() & 2)) {
 			return this.data.week;
 		} else {
 			return this.isNumerator ? "Числитель" : "Знаменатель";
 		}
-	};
+	}
+
+	public generateKeyboard(
+		type: "text" | "callback",
+		command: "replacements" | "lessons",
+	): KeyboardBuilder {
+		const DayTemplates: RegExp[] = [
+			/воскресенье|вс/,
+			/понедельник|пн/,
+			/вторник|вт/,
+			/среда|ср/,
+			/четверг|чт/,
+			/пятница|пт/,
+			/суббота|сб/,
+		];
+
+		const getNextSelectDay = (
+			day:
+				| "понедельник"
+				| "вторник"
+				| "среда"
+				| "четверг"
+				| "пятница"
+				| "суббота"
+				| "воскресенье",
+		) => {
+			const selectedDay = DayTemplates.findIndex((x) => x.test(day));
+			const currentDate = new Date();
+			const targetDay = Number(selectedDay);
+			const targetDate = new Date();
+			const delta = targetDay - currentDate.getDay();
+			if (delta >= 0) {
+				targetDate.setDate(currentDate.getDate() + delta);
+			} else {
+				targetDate.setDate(currentDate.getDate() + 7 + delta);
+			}
+			return moment(targetDate).format("DD.MM.YYYY");
+		};
+
+		const builder = Keyboard.builder().inline();
+
+		if (type === "text") {
+			const textCommand = command
+				.replace("replacements", "замены")
+				.replace("lessons", "рп");
+
+			builder.textButton({
+				label: "ПН",
+				color: "secondary",
+				payload: {
+					command: textCommand + " " + getNextSelectDay("понедельник"),
+				},
+			});
+			builder.textButton({
+				label: "ВТ",
+				color: "secondary",
+				payload: {
+					command: textCommand + " " + getNextSelectDay("вторник"),
+				},
+			});
+			builder.textButton({
+				label: "СР",
+				color: "secondary",
+				payload: {
+					command: textCommand + " " + getNextSelectDay("среда"),
+				},
+			});
+			builder.row();
+			builder.textButton({
+				label: "ЧТ",
+				color: "secondary",
+				payload: {
+					command: textCommand + " " + getNextSelectDay("четверг"),
+				},
+			});
+			builder.textButton({
+				label: "ПТ",
+				color: "secondary",
+				payload: {
+					command: textCommand + " " + getNextSelectDay("пятница"),
+				},
+			});
+			builder.textButton({
+				label: "СБ",
+				color: "secondary",
+				payload: {
+					command: textCommand + " " + getNextSelectDay("суббота"),
+				},
+			});
+			builder.row();
+			builder.textButton({
+				label: "Вчера",
+				color: "negative",
+				payload: {
+					command: textCommand + " вчера",
+				},
+			});
+			builder.textButton({
+				label: "Завтра",
+				color: "positive",
+				payload: {
+					command: textCommand + " завтра",
+				},
+			});
+		} else {
+			builder.callbackButton({
+				label: "ПН",
+				payload: {
+					type: command,
+					date: getNextSelectDay("понедельник"),
+				},
+				color: Keyboard.SECONDARY_COLOR,
+			});
+			builder.callbackButton({
+				label: "ВТ",
+				payload: {
+					type: command,
+					date: getNextSelectDay("вторник"),
+				},
+				color: Keyboard.SECONDARY_COLOR,
+			});
+			builder.callbackButton({
+				label: "СР",
+				payload: {
+					type: command,
+					date: getNextSelectDay("среда"),
+				},
+				color: Keyboard.SECONDARY_COLOR,
+			});
+			builder.row();
+			builder.callbackButton({
+				label: "ЧТ",
+				payload: {
+					type: command,
+					date: getNextSelectDay("четверг"),
+				},
+				color: Keyboard.SECONDARY_COLOR,
+			});
+			builder.callbackButton({
+				label: "ПТ",
+				payload: {
+					type: command,
+					date: getNextSelectDay("пятница"),
+				},
+				color: Keyboard.SECONDARY_COLOR,
+			});
+			builder.callbackButton({
+				label: "СБ",
+				payload: {
+					type: command,
+					date: getNextSelectDay("суббота"),
+				},
+				color: Keyboard.SECONDARY_COLOR,
+			});
+			builder.row();
+			builder.callbackButton({
+				label: "Вчера",
+				payload: {
+					type: command,
+					date: moment().subtract(1, "day").format("DD.MM.YYYY"),
+				},
+				color: Keyboard.NEGATIVE_COLOR,
+			});
+			builder.callbackButton({
+				label: "Завтра",
+				payload: {
+					type: command,
+					date: moment().add(1, "day").format("DD.MM.YYYY"),
+				},
+				color: Keyboard.POSITIVE_COLOR,
+			});
+		}
+
+		return builder;
+	}
 }
