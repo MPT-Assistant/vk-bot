@@ -285,10 +285,11 @@ new TextCommand(
 			}
 
 			responseKeyboard.row();
-			responseKeyboard.textButton({
+			responseKeyboard.callbackButton({
 				label: "Замены",
 				payload: {
-					command: `замены на ${selectedDateString}`,
+					type: "replacements",
+					date: selectedDate.format("DD.MM.YYYY"),
 				},
 				color: Keyboard.PRIMARY_COLOR,
 			});
