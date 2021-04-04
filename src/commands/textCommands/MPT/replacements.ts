@@ -112,7 +112,7 @@ const generateKeyboard = () => {
 };
 
 new TextCommand(
-	/^(?:замены на|замены)(?:\s(.+))?/i,
+	/^(?:замены на|замены)(?:\s(.+))?$/i,
 	["Замены"],
 	async function ReplacementsCommand(message) {
 		if (

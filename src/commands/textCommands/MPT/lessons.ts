@@ -1,11 +1,12 @@
 import { Keyboard } from "vk-io";
 import moment from "moment";
+import utils from "rus-anonym-utils";
 
 moment.locale("ru");
 
 import TextCommand from "../../../lib/utils/classes/textCommand";
 import InternalUtils from "../../../lib/utils/classes/utils";
-import { Week, Day, Specialty, Group } from "../../../typings/mpt";
+import { Day, Specialty, Group } from "../../../typings/mpt";
 
 const DayTemplates: RegExp[] = [
 	/воскресенье|вс/,
@@ -112,17 +113,8 @@ const generateKeyboard = () => {
 	return responseKeyboard;
 };
 
-const getWeekLegend = (week: number): Week => {
-	const currentWeek = moment().week();
-	if ((currentWeek & 2) === (week & 2)) {
-		return InternalUtils.mpt.data.week;
-	} else {
-		return InternalUtils.mpt.isNumerator ? "Числитель" : "Знаменатель";
-	}
-};
-
 new TextCommand(
-	/^(?:расписание|рп|какие пары)(?:\s(.+))?/i,
+	/^(?:расписание|рп|какие пары)(?:\s(.+))?$/i,
 	["Расписание", "Рп"],
 	async function LessonsCommand(message) {
 		if (
@@ -222,7 +214,7 @@ new TextCommand(
 			(specialty) => specialty.name === groupData.specialty,
 		) as Specialty;
 
-		const selectGroup = selectSpecialty?.groups.find(
+		const selectGroup = selectSpecialty.groups.find(
 			(group) => group.name === groupData.name,
 		) as Group;
 
@@ -248,74 +240,12 @@ new TextCommand(
 			}
 		}
 
-		const selectedDayNum = selectedDate.day();
-		const selectedDateString = selectedDate.format("DD.MM.YYYY");
-		const selectedDateWeekLegend = getWeekLegend(selectedDate.week());
-
-		const selectDaySchedule = selectGroup.days.find(
-			(day) => day.num === selectedDayNum,
-		) as Day;
-
-		const selectDayReplacements = InternalUtils.mpt.data.replacements.filter(
-			(replacement) =>
-				moment(replacement.date).format("DD.MM.YYYY") === selectedDateString &&
-				replacement.group.toLowerCase() === groupData.name.toLowerCase(),
+		const parsedSchedule = InternalUtils.mpt.parseSchedule(
+			groupData,
+			selectedDate,
 		);
 
-		const responseLessons: {
-			num: number;
-			name: string;
-			teacher: string;
-		}[] = [];
-
-		for (const lesson of selectDaySchedule.lessons) {
-			if (lesson.name.length === 1) {
-				responseLessons.push({
-					num: lesson.num,
-					name: lesson.name[0],
-					teacher: lesson.teacher[0],
-				});
-			} else {
-				if (
-					lesson.name[0] !== `-` &&
-					selectedDateWeekLegend === "Знаменатель"
-				) {
-					responseLessons.push({
-						num: lesson.num,
-						name: lesson.name[0],
-						teacher: lesson.teacher[0],
-					});
-				} else if (
-					lesson.name[0] !== `-` &&
-					selectedDateWeekLegend === "Числитель"
-				) {
-					responseLessons.push({
-						num: lesson.num,
-						name: lesson.name[1] as string,
-						teacher: lesson.teacher[1] as string,
-					});
-				}
-			}
-		}
-
-		if (selectDayReplacements.length > 0) {
-			for (const replacement of selectDayReplacements) {
-				const currentLesson = responseLessons.find(
-					(lesson) => lesson.num === replacement.lessonNum,
-				);
-
-				if (!currentLesson) {
-					responseLessons.push({
-						num: replacement.lessonNum,
-						name: replacement.newLessonName,
-						teacher: replacement.newLessonTeacher,
-					});
-				} else {
-					currentLesson.name = replacement.newLessonName;
-					currentLesson.teacher = replacement.newLessonTeacher;
-				}
-			}
-
+		if (parsedSchedule.replacementsCount !== 0) {
 			responseKeyboard.row();
 			responseKeyboard.callbackButton({
 				label: "Замены",
@@ -327,19 +257,9 @@ new TextCommand(
 			});
 		}
 
-		responseLessons.sort((firstLesson, secondLesson) => {
-			if (firstLesson.num > secondLesson.num) {
-				return 1;
-			} else if (firstLesson.num < secondLesson.num) {
-				return -1;
-			} else {
-				return 0;
-			}
-		});
-
 		let responseLessonsText = "";
 
-		for (const lesson of responseLessons) {
+		for (const lesson of parsedSchedule.lessons) {
 			const lessonDateData = parsedTimetable.find(
 				(x) => x.num === lesson.num && x.type === "lesson",
 			);
@@ -356,17 +276,20 @@ new TextCommand(
 		selectedDayName[0] = selectedDayName[0].toUpperCase();
 
 		return await message.sendMessage(
-			`расписание на ${selectedDateString}:
+			`расписание на ${selectedDate.format("DD.MM.YYYY")}:
 Группа: ${groupData.name}
 День: ${selectedDayName.join("")}
-Место: ${selectDaySchedule.place}
-Неделя: ${selectedDateWeekLegend}
+Место: ${parsedSchedule.place}
+Неделя: ${parsedSchedule.week}
 
 ${responseLessonsText}
 
 ${
-	selectDayReplacements.length > 0
-		? `\nВнимание:\nНа выбранный день есть замена.\nПросмотреть текущие замены можно командой "замены".`
+	parsedSchedule.replacementsCount > 0
+		? `\nВнимание:\nНа выбранный день есть ${utils.string.declOfNum(
+				parsedSchedule.replacementsCount,
+				["замена", "замены", "замены"],
+		  )}.\nПросмотреть текущие замены можно командой "замены".`
 		: ""
 }`,
 			{ keyboard: responseKeyboard },
