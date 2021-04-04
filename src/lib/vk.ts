@@ -52,8 +52,8 @@ vk.updates.on(
 
 		if (!command) {
 			if (context.isDM) {
-				let possibleCommands = [];
-				for (let tempTemplate of InternalUtils.textCommandsTemplates) {
+				const possibleCommands = [];
+				for (const tempTemplate of InternalUtils.textCommandsTemplates) {
 					possibleCommands.push({
 						template: tempTemplate,
 						diff: utils.string.levenshtein(context.text, tempTemplate, {

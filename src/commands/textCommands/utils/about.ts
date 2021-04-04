@@ -16,7 +16,7 @@ new TextCommand(
 		output += `Groups: ${await InternalUtils.API_DB.models.group.countDocuments()}\n\n`;
 
 		output += `VK API Status:\n`;
-		for (let i in API) {
+		for (const i in API) {
 			output += `${Number(i) + 1}. ${API[i].section} [${
 				API[i].performance
 			}ms] - ${API[i].uptime}%\n`;

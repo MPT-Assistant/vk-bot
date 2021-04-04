@@ -1,6 +1,5 @@
 import { Keyboard } from "vk-io";
 import moment from "moment";
-import utils from "rus-anonym-utils";
 
 import EventCommand from "../../../lib/utils/classes/eventCommand";
 import InternalUtils from "../../../lib/utils/classes/utils";

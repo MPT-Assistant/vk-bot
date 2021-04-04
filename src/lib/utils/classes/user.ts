@@ -11,7 +11,7 @@ export default class User {
 		this.id = id;
 	}
 
-	public async init() {
+	public async init(): Promise<User> {
 		let data = await InternalUtils.Bot_DB.models.user.findOne({
 			id: this.id,
 		});
@@ -36,7 +36,7 @@ export default class User {
 		return this;
 	}
 
-	public async save() {
+	public async save(): Promise<void> {
 		if (this.data) {
 			await this.data.save();
 		} else {

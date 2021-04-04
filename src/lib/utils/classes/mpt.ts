@@ -45,11 +45,11 @@ export default class MPT {
 		}
 	}
 
-	get isDenominator() {
+	get isDenominator(): boolean {
 		return this.data.week === "Знаменатель";
 	}
 
-	get isNumerator() {
+	get isNumerator(): boolean {
 		return this.data.week === "Числитель";
 	}
 
@@ -90,7 +90,14 @@ export default class MPT {
 		});
 	}
 
-	public parseLessons(group: string, selectedDate = moment()) {
+	public parseLessons(
+		group: string,
+		selectedDate = moment(),
+	): {
+		num: number;
+		name: string;
+		teacher: string;
+	}[] {
 		const groupData = this.data.groups.find(
 			(x) => x.name === group,
 		) as MPT_Group;
@@ -149,7 +156,10 @@ export default class MPT {
 		return responseLessons;
 	}
 
-	public parseReplacements(group: string, selectedDate = moment()) {
+	public parseReplacements(
+		group: string,
+		selectedDate = moment(),
+	): Replacement[] {
 		return this.data.replacements.filter(
 			(replacement) =>
 				replacement.group.toLowerCase() === group.toLowerCase() &&
@@ -158,7 +168,10 @@ export default class MPT {
 		);
 	}
 
-	public parseSchedule(group: string, selectedDate = moment()) {
+	public parseSchedule(
+		group: string,
+		selectedDate = moment(),
+	): { num: number; name: string; teacher: string }[] {
 		const lessons = this.parseLessons(group, selectedDate);
 		const replacements = this.parseReplacements(group, selectedDate);
 

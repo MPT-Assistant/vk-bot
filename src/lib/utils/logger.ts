@@ -4,7 +4,10 @@ import config from "../../DB/config.json";
 
 class Logger {
 	private vk = new VK({ token: config.vk.logger.token });
-	public sendLog(text: string, params: MessagesSendParams = {}) {
+	public sendLog(
+		text: string,
+		params: MessagesSendParams = {},
+	): Promise<number> {
 		return this.vk.api.messages.send(
 			Object.assign(
 				{ message: text, chat_id: 1, random_id: getRandomId() },

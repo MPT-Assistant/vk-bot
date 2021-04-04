@@ -160,7 +160,7 @@ new TextCommand(
 			case /(?:^позавчера|^поз)$/gi.test(message.args[1]):
 				selectedDate = moment().subtract(2, "day");
 				break;
-			case /([\d]+)?(.)?([\d]+)?(.)?([\d]+)/.test(message.args[1]):
+			case /([\d]+)?(.)?([\d]+)?(.)?([\d]+)/.test(message.args[1]): {
 				const splittedMessageArgument = message.args[1].split(".");
 				const currentSplittedDate = moment().format("DD.MM.YYYY");
 				splittedMessageArgument[0] =
@@ -171,9 +171,10 @@ new TextCommand(
 					splittedMessageArgument[2] || currentSplittedDate[2];
 				selectedDate = moment(splittedMessageArgument.reverse().join("-"));
 				break;
+			}
 			default:
-				for (let i in DayTemplates) {
-					let Regular_Expression = new RegExp(DayTemplates[i], `gi`);
+				for (const i in DayTemplates) {
+					const Regular_Expression = new RegExp(DayTemplates[i], `gi`);
 					if (Regular_Expression.test(message.args[1]) === true) {
 						const currentDate = new Date();
 						const targetDay = Number(i);

@@ -4,12 +4,12 @@ import InternalUtils from "./utils";
 class TextCommand {
 	public regexp: RegExp;
 	public templates: string[];
-	public process: (message: ModernMessageContext) => Promise<any>;
+	public process: (message: ModernMessageContext) => Promise<unknown>;
 
 	constructor(
 		regexp: RegExp,
 		templates: string[],
-		process: (message: ModernMessageContext) => Promise<any>,
+		process: (message: ModernMessageContext) => Promise<unknown>,
 	) {
 		this.regexp = regexp;
 		this.templates = templates;
