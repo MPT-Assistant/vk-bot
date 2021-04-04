@@ -20,8 +20,8 @@ new TextCommand(
 		);
 
 		if (!selectedGroup) {
-			let diff: { group: string; diff: number }[] = [];
-			for (let i in InternalUtils.mpt.data.groups) {
+			const diff: { group: string; diff: number }[] = [];
+			for (const i in InternalUtils.mpt.data.groups) {
 				diff.push({
 					group: InternalUtils.mpt.data.groups[i].name,
 					diff: utils.string.levenshtein(

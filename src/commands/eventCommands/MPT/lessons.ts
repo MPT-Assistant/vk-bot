@@ -1,116 +1,10 @@
 import { Keyboard } from "vk-io";
 import moment from "moment";
-import utils from "rus-anonym-utils";
 
 import EventCommand from "../../../lib/utils/classes/eventCommand";
 import InternalUtils from "../../../lib/utils/classes/utils";
 import vk from "../../../lib/vk";
 import { Day, Group, Specialty, Week } from "../../../typings/mpt";
-
-const DayTemplates: RegExp[] = [
-	/воскресенье|вс/,
-	/понедельник|пн/,
-	/вторник|вт/,
-	/среда|ср/,
-	/четверг|чт/,
-	/пятница|пт/,
-	/суббота|сб/,
-];
-
-const getNextSelectDay = (
-	day:
-		| "понедельник"
-		| "вторник"
-		| "среда"
-		| "четверг"
-		| "пятница"
-		| "суббота"
-		| "воскресенье",
-) => {
-	const selectedDay = DayTemplates.findIndex((x) => x.test(day));
-	const currentDate = new Date();
-	const targetDay = Number(selectedDay);
-	const targetDate = new Date();
-	const delta = targetDay - currentDate.getDay();
-	if (delta >= 0) {
-		targetDate.setDate(currentDate.getDate() + delta);
-	} else {
-		targetDate.setDate(currentDate.getDate() + 7 + delta);
-	}
-	return moment(targetDate);
-};
-
-const generateKeyboard = () => {
-	const responseKeyboard = Keyboard.builder();
-	responseKeyboard.callbackButton({
-		label: "ПН",
-		payload: {
-			type: "lessons",
-			date: getNextSelectDay("понедельник").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "ВТ",
-		payload: {
-			type: "lessons",
-			date: getNextSelectDay("вторник").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "СР",
-		payload: {
-			type: "lessons",
-			date: getNextSelectDay("среда").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.row();
-	responseKeyboard.callbackButton({
-		label: "ЧТ",
-		payload: {
-			type: "lessons",
-			date: getNextSelectDay("четверг").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "ПТ",
-		payload: {
-			type: "lessons",
-			date: getNextSelectDay("пятница").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "СБ",
-		payload: {
-			type: "lessons",
-			date: getNextSelectDay("суббота").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.row();
-	responseKeyboard.callbackButton({
-		label: "Вчера",
-		payload: {
-			type: "lessons",
-			date: moment().subtract(1, "day").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.NEGATIVE_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "Завтра",
-		payload: {
-			type: "lessons",
-			date: moment().add(1, "day").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.POSITIVE_COLOR,
-	});
-	responseKeyboard.inline();
-	return responseKeyboard;
-};
 
 const getWeekLegend = (week: number): Week => {
 	const currentWeek = moment().week();
@@ -159,7 +53,10 @@ new EventCommand("lessons", async function SetGroupEventCommand(event) {
 		throw new Error("Group not found");
 	}
 
-	const responseKeyboard = generateKeyboard();
+	const responseKeyboard = InternalUtils.mpt.generateKeyboard(
+		"callback",
+		"lessons",
+	);
 
 	if (selectedDate.day() === 0) {
 		return await event.answer({

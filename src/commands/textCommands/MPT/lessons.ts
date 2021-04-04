@@ -1,11 +1,12 @@
 import { Keyboard } from "vk-io";
 import moment from "moment";
+import utils from "rus-anonym-utils";
 
 moment.locale("ru");
 
 import TextCommand from "../../../lib/utils/classes/textCommand";
 import InternalUtils from "../../../lib/utils/classes/utils";
-import { Week, Day, Specialty, Group } from "../../../typings/mpt";
+import { Day, Specialty, Group } from "../../../typings/mpt";
 
 const DayTemplates: RegExp[] = [
 	/воскресенье|вс/,
@@ -17,112 +18,8 @@ const DayTemplates: RegExp[] = [
 	/суббота|сб/,
 ];
 
-const getNextSelectDay = (
-	day:
-		| "понедельник"
-		| "вторник"
-		| "среда"
-		| "четверг"
-		| "пятница"
-		| "суббота"
-		| "воскресенье",
-) => {
-	const selectedDay = DayTemplates.findIndex((x) => x.test(day));
-	const currentDate = new Date();
-	const targetDay = Number(selectedDay);
-	const targetDate = new Date();
-	const delta = targetDay - currentDate.getDay();
-	if (delta >= 0) {
-		targetDate.setDate(currentDate.getDate() + delta);
-	} else {
-		targetDate.setDate(currentDate.getDate() + 7 + delta);
-	}
-	return moment(targetDate);
-};
-
-const generateKeyboard = () => {
-	const responseKeyboard = Keyboard.builder();
-	responseKeyboard.callbackButton({
-		label: "ПН",
-		payload: {
-			type: "lessons",
-			date: getNextSelectDay("понедельник").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "ВТ",
-		payload: {
-			type: "lessons",
-			date: getNextSelectDay("вторник").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "СР",
-		payload: {
-			type: "lessons",
-			date: getNextSelectDay("среда").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.row();
-	responseKeyboard.callbackButton({
-		label: "ЧТ",
-		payload: {
-			type: "lessons",
-			date: getNextSelectDay("четверг").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "ПТ",
-		payload: {
-			type: "lessons",
-			date: getNextSelectDay("пятница").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "СБ",
-		payload: {
-			type: "lessons",
-			date: getNextSelectDay("суббота").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.row();
-	responseKeyboard.callbackButton({
-		label: "Вчера",
-		payload: {
-			type: "lessons",
-			date: moment().subtract(1, "day").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.NEGATIVE_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "Завтра",
-		payload: {
-			type: "lessons",
-			date: moment().add(1, "day").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.POSITIVE_COLOR,
-	});
-	responseKeyboard.inline();
-	return responseKeyboard;
-};
-
-const getWeekLegend = (week: number): Week => {
-	const currentWeek = moment().week();
-	if ((currentWeek & 2) === (week & 2)) {
-		return InternalUtils.mpt.data.week;
-	} else {
-		return InternalUtils.mpt.isNumerator ? "Числитель" : "Знаменатель";
-	}
-};
-
 new TextCommand(
-	/^(?:расписание|рп|какие пары)(?:\s(.+))?/i,
+	/^(?:расписание|рп|какие пары)(?:\s(.+))?$/i,
 	["Расписание", "Рп"],
 	async function LessonsCommand(message) {
 		if (
@@ -170,7 +67,7 @@ new TextCommand(
 			case /(?:^позавчера|^поз)$/gi.test(message.args[1]):
 				selectedDate = moment().subtract(2, "day");
 				break;
-			case /([\d]+)?(.)?([\d]+)?(.)?([\d]+)/.test(message.args[1]):
+			case /([\d]+)?(.)?([\d]+)?(.)?([\d]+)/.test(message.args[1]): {
 				const splittedMessageArgument = message.args[1].split(".");
 				const currentSplittedDate = moment().format("DD.MM.YYYY");
 				splittedMessageArgument[0] =
@@ -181,9 +78,10 @@ new TextCommand(
 					splittedMessageArgument[2] || currentSplittedDate[2];
 				selectedDate = moment(splittedMessageArgument.reverse().join("-"));
 				break;
+			}
 			default:
-				for (let i in DayTemplates) {
-					let Regular_Expression = new RegExp(DayTemplates[i], `gi`);
+				for (const i in DayTemplates) {
+					const Regular_Expression = new RegExp(DayTemplates[i], `gi`);
 					if (Regular_Expression.test(message.args[1]) === true) {
 						const currentDate = new Date();
 						const targetDay = Number(i);
@@ -200,7 +98,12 @@ new TextCommand(
 				break;
 		}
 
-		const responseKeyboard = generateKeyboard();
+		const responseKeyboard = InternalUtils.mpt.generateKeyboard(
+			message.clientInfo.button_actions.includes("callback")
+				? "callback"
+				: "text",
+			"lessons",
+		);
 
 		if (!selectedDate || !selectedDate.isValid()) {
 			return await message.sendMessage(`неверная дата.`, {
@@ -221,7 +124,7 @@ new TextCommand(
 			(specialty) => specialty.name === groupData.specialty,
 		) as Specialty;
 
-		const selectGroup = selectSpecialty?.groups.find(
+		const selectGroup = selectSpecialty.groups.find(
 			(group) => group.name === groupData.name,
 		) as Group;
 
@@ -247,74 +150,12 @@ new TextCommand(
 			}
 		}
 
-		const selectedDayNum = selectedDate.day();
-		const selectedDateString = selectedDate.format("DD.MM.YYYY");
-		const selectedDateWeekLegend = getWeekLegend(selectedDate.week());
-
-		const selectDaySchedule = selectGroup.days.find(
-			(day) => day.num === selectedDayNum,
-		) as Day;
-
-		const selectDayReplacements = InternalUtils.mpt.data.replacements.filter(
-			(replacement) =>
-				moment(replacement.date).format("DD.MM.YYYY") === selectedDateString &&
-				replacement.group.toLowerCase() === groupData.name.toLowerCase(),
+		const parsedSchedule = InternalUtils.mpt.parseSchedule(
+			groupData,
+			selectedDate,
 		);
 
-		const responseLessons: {
-			num: number;
-			name: string;
-			teacher: string;
-		}[] = [];
-
-		for (const lesson of selectDaySchedule.lessons) {
-			if (lesson.name.length === 1) {
-				responseLessons.push({
-					num: lesson.num,
-					name: lesson.name[0],
-					teacher: lesson.teacher[0],
-				});
-			} else {
-				if (
-					lesson.name[0] !== `-` &&
-					selectedDateWeekLegend === "Знаменатель"
-				) {
-					responseLessons.push({
-						num: lesson.num,
-						name: lesson.name[0],
-						teacher: lesson.teacher[0],
-					});
-				} else if (
-					lesson.name[0] !== `-` &&
-					selectedDateWeekLegend === "Числитель"
-				) {
-					responseLessons.push({
-						num: lesson.num,
-						name: lesson.name[1] as string,
-						teacher: lesson.teacher[1] as string,
-					});
-				}
-			}
-		}
-
-		if (selectDayReplacements.length > 0) {
-			for (const replacement of selectDayReplacements) {
-				const currentLesson = responseLessons.find(
-					(lesson) => lesson.num === replacement.lessonNum,
-				);
-
-				if (!currentLesson) {
-					responseLessons.push({
-						num: replacement.lessonNum,
-						name: replacement.newLessonName,
-						teacher: replacement.newLessonTeacher,
-					});
-				} else {
-					currentLesson.name = replacement.newLessonName;
-					currentLesson.teacher = replacement.newLessonTeacher;
-				}
-			}
-
+		if (parsedSchedule.replacementsCount !== 0) {
 			responseKeyboard.row();
 			responseKeyboard.callbackButton({
 				label: "Замены",
@@ -326,19 +167,9 @@ new TextCommand(
 			});
 		}
 
-		responseLessons.sort((firstLesson, secondLesson) => {
-			if (firstLesson.num > secondLesson.num) {
-				return 1;
-			} else if (firstLesson.num < secondLesson.num) {
-				return -1;
-			} else {
-				return 0;
-			}
-		});
-
 		let responseLessonsText = "";
 
-		for (const lesson of responseLessons) {
+		for (const lesson of parsedSchedule.lessons) {
 			const lessonDateData = parsedTimetable.find(
 				(x) => x.num === lesson.num && x.type === "lesson",
 			);
@@ -355,17 +186,20 @@ new TextCommand(
 		selectedDayName[0] = selectedDayName[0].toUpperCase();
 
 		return await message.sendMessage(
-			`расписание на ${selectedDateString}:
+			`расписание на ${selectedDate.format("DD.MM.YYYY")}:
 Группа: ${groupData.name}
 День: ${selectedDayName.join("")}
-Место: ${selectDaySchedule.place}
-Неделя: ${selectedDateWeekLegend}
+Место: ${parsedSchedule.place}
+Неделя: ${parsedSchedule.week}
 
 ${responseLessonsText}
 
 ${
-	selectDayReplacements.length > 0
-		? `\nВнимание:\nНа выбранный день есть замена.\nПросмотреть текущие замены можно командой "замены".`
+	parsedSchedule.replacementsCount > 0
+		? `\nВнимание:\nНа выбранный день есть ${utils.string.declOfNum(
+				parsedSchedule.replacementsCount,
+				["замена", "замены", "замены"],
+		  )}.\nПросмотреть текущие замены можно командой "замены".`
 		: ""
 }`,
 			{ keyboard: responseKeyboard },

@@ -11,7 +11,7 @@ export interface ModernMessageContext extends MessageContext {
 	sendMessage(
 		text: string | IMessageContextSendOptions,
 		params?: IMessageContextSendOptions | undefined,
-	): Promise<MessageContext<Record<string, any>>>;
+	): Promise<MessageContext<Record<string, unknown>>>;
 	args: RegExpMatchArray;
 	user: User;
 	chat?: Chat;

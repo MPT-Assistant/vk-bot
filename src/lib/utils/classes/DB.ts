@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { typedModel } from "ts-mongoose";
 import * as schemes from "../DB/schemes";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Str = mongoose.Schema.Types.String as any;
 Str.checkRequired((v: string) => v != null);
 

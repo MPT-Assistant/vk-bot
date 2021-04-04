@@ -24,11 +24,6 @@ interface Specialty {
 	groups: Group[];
 }
 
-interface ParsedGroup {
-	name: string;
-	days: Day[];
-}
-
 type Replacement = {
 	date: Date;
 	group: string;

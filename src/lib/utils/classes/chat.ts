@@ -10,7 +10,7 @@ export default class Chat {
 		this.id = id;
 	}
 
-	public async init() {
+	public async init(): Promise<Chat> {
 		let data = await InternalUtils.Bot_DB.models.chat.findOne({
 			id: this.id,
 		});
@@ -29,7 +29,7 @@ export default class Chat {
 		return this;
 	}
 
-	public async save() {
+	public async save(): Promise<void> {
 		if (this.data) {
 			await this.data.save();
 		} else {

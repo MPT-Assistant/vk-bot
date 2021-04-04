@@ -1,4 +1,3 @@
-import { Keyboard } from "vk-io";
 import moment from "moment";
 import utils from "rus-anonym-utils";
 
@@ -17,104 +16,10 @@ const DayTemplates: RegExp[] = [
 	/суббота|сб/,
 ];
 
-const getNextSelectDay = (
-	day:
-		| "понедельник"
-		| "вторник"
-		| "среда"
-		| "четверг"
-		| "пятница"
-		| "суббота"
-		| "воскресенье",
-) => {
-	const selectedDay = DayTemplates.findIndex((x) => x.test(day));
-	const currentDate = new Date();
-	const targetDay = Number(selectedDay);
-	const targetDate = new Date();
-	const delta = targetDay - currentDate.getDay();
-	if (delta >= 0) {
-		targetDate.setDate(currentDate.getDate() + delta);
-	} else {
-		targetDate.setDate(currentDate.getDate() + 7 + delta);
-	}
-	return moment(targetDate);
-};
-
-const generateKeyboard = () => {
-	const responseKeyboard = Keyboard.builder().inline();
-	responseKeyboard.callbackButton({
-		label: "ПН",
-		payload: {
-			type: "replacements",
-			date: getNextSelectDay("понедельник").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "ВТ",
-		payload: {
-			type: "replacements",
-			date: getNextSelectDay("вторник").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "СР",
-		payload: {
-			type: "replacements",
-			date: getNextSelectDay("среда").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.row();
-	responseKeyboard.callbackButton({
-		label: "ЧТ",
-		payload: {
-			type: "replacements",
-			date: getNextSelectDay("четверг").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "ПТ",
-		payload: {
-			type: "replacements",
-			date: getNextSelectDay("пятница").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "СБ",
-		payload: {
-			type: "replacements",
-			date: getNextSelectDay("суббота").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.row();
-	responseKeyboard.callbackButton({
-		label: "Вчера",
-		payload: {
-			type: "replacements",
-			date: moment().subtract(1, "day").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.NEGATIVE_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "Завтра",
-		payload: {
-			type: "replacements",
-			date: moment().add(1, "day").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.POSITIVE_COLOR,
-	});
-	return responseKeyboard;
-};
-
 new TextCommand(
-	/^(?:замены на|замены)(?:\s(.+))?/i,
+	/^(?:замены на|замены)(?:\s(.+))?$/i,
 	["Замены"],
-	async function LessonsCommand(message) {
+	async function ReplacementsCommand(message) {
 		if (
 			(message.chat &&
 				message.chat.data.group === "" &&
@@ -160,7 +65,7 @@ new TextCommand(
 			case /(?:^позавчера|^поз)$/gi.test(message.args[1]):
 				selectedDate = moment().subtract(2, "day");
 				break;
-			case /([\d]+)?(.)?([\d]+)?(.)?([\d]+)/.test(message.args[1]):
+			case /([\d]+)?(.)?([\d]+)?(.)?([\d]+)/.test(message.args[1]): {
 				const splittedMessageArgument = message.args[1].split(".");
 				const currentSplittedDate = moment().format("DD.MM.YYYY");
 				splittedMessageArgument[0] =
@@ -171,9 +76,10 @@ new TextCommand(
 					splittedMessageArgument[2] || currentSplittedDate[2];
 				selectedDate = moment(splittedMessageArgument.reverse().join("-"));
 				break;
+			}
 			default:
-				for (let i in DayTemplates) {
-					let Regular_Expression = new RegExp(DayTemplates[i], `gi`);
+				for (const i in DayTemplates) {
+					const Regular_Expression = new RegExp(DayTemplates[i], `gi`);
 					if (Regular_Expression.test(message.args[1]) === true) {
 						const currentDate = new Date();
 						const targetDay = Number(i);
@@ -190,7 +96,12 @@ new TextCommand(
 				break;
 		}
 
-		const responseKeyboard = generateKeyboard();
+		const responseKeyboard = InternalUtils.mpt.generateKeyboard(
+			message.clientInfo.button_actions.includes("callback")
+				? "callback"
+				: "text",
+			"replacements",
+		);
 
 		if (!selectedDate || !selectedDate.isValid()) {
 			return await message.sendMessage(`неверная дата.`, {
