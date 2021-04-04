@@ -1,4 +1,3 @@
-import { Keyboard } from "vk-io";
 import moment from "moment";
 import utils from "rus-anonym-utils";
 
@@ -16,100 +15,6 @@ const DayTemplates: RegExp[] = [
 	/пятница|пт/,
 	/суббота|сб/,
 ];
-
-const getNextSelectDay = (
-	day:
-		| "понедельник"
-		| "вторник"
-		| "среда"
-		| "четверг"
-		| "пятница"
-		| "суббота"
-		| "воскресенье",
-) => {
-	const selectedDay = DayTemplates.findIndex((x) => x.test(day));
-	const currentDate = new Date();
-	const targetDay = Number(selectedDay);
-	const targetDate = new Date();
-	const delta = targetDay - currentDate.getDay();
-	if (delta >= 0) {
-		targetDate.setDate(currentDate.getDate() + delta);
-	} else {
-		targetDate.setDate(currentDate.getDate() + 7 + delta);
-	}
-	return moment(targetDate);
-};
-
-const generateKeyboard = () => {
-	const responseKeyboard = Keyboard.builder().inline();
-	responseKeyboard.callbackButton({
-		label: "ПН",
-		payload: {
-			type: "replacements",
-			date: getNextSelectDay("понедельник").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "ВТ",
-		payload: {
-			type: "replacements",
-			date: getNextSelectDay("вторник").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "СР",
-		payload: {
-			type: "replacements",
-			date: getNextSelectDay("среда").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.row();
-	responseKeyboard.callbackButton({
-		label: "ЧТ",
-		payload: {
-			type: "replacements",
-			date: getNextSelectDay("четверг").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "ПТ",
-		payload: {
-			type: "replacements",
-			date: getNextSelectDay("пятница").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "СБ",
-		payload: {
-			type: "replacements",
-			date: getNextSelectDay("суббота").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.SECONDARY_COLOR,
-	});
-	responseKeyboard.row();
-	responseKeyboard.callbackButton({
-		label: "Вчера",
-		payload: {
-			type: "replacements",
-			date: moment().subtract(1, "day").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.NEGATIVE_COLOR,
-	});
-	responseKeyboard.callbackButton({
-		label: "Завтра",
-		payload: {
-			type: "replacements",
-			date: moment().add(1, "day").format("DD.MM.YYYY"),
-		},
-		color: Keyboard.POSITIVE_COLOR,
-	});
-	return responseKeyboard;
-};
 
 new TextCommand(
 	/^(?:замены на|замены)(?:\s(.+))?$/i,
@@ -191,7 +96,10 @@ new TextCommand(
 				break;
 		}
 
-		const responseKeyboard = generateKeyboard();
+		const responseKeyboard = InternalUtils.mpt.generateKeyboard(
+			"callback",
+			"replacements",
+		);
 
 		if (!selectedDate || !selectedDate.isValid()) {
 			return await message.sendMessage(`неверная дата.`, {
