@@ -3,9 +3,9 @@ import moment from "moment";
 
 moment.locale("ru");
 
-import Command from "../../lib/utils/classes/command";
-import InternalUtils from "../../lib/utils/classes/utils";
-import { Week, Day, Specialty, Group } from "../../typings/mpt";
+import TextCommand from "../../../lib/utils/classes/textCommand";
+import InternalUtils from "../../../lib/utils/classes/utils";
+import { Week, Day, Specialty, Group } from "../../../typings/mpt";
 
 const DayTemplates: RegExp[] = [
 	/воскресенье|вс/,
@@ -17,63 +17,94 @@ const DayTemplates: RegExp[] = [
 	/суббота|сб/,
 ];
 
+const getNextSelectDay = (
+	day:
+		| "понедельник"
+		| "вторник"
+		| "среда"
+		| "четверг"
+		| "пятница"
+		| "суббота"
+		| "воскресенье",
+) => {
+	const selectedDay = DayTemplates.findIndex((x) => x.test(day));
+	const currentDate = new Date();
+	const targetDay = Number(selectedDay);
+	const targetDate = new Date();
+	const delta = targetDay - currentDate.getDay();
+	if (delta >= 0) {
+		targetDate.setDate(currentDate.getDate() + delta);
+	} else {
+		targetDate.setDate(currentDate.getDate() + 7 + delta);
+	}
+	return moment(targetDate);
+};
+
 const generateKeyboard = () => {
 	const responseKeyboard = Keyboard.builder();
-	responseKeyboard.textButton({
+	responseKeyboard.callbackButton({
 		label: "ПН",
 		payload: {
-			command: `Рп понедельник`,
+			type: "lessons",
+			date: getNextSelectDay("понедельник").format("DD.MM.YYYY"),
 		},
 		color: Keyboard.SECONDARY_COLOR,
 	});
-	responseKeyboard.textButton({
+	responseKeyboard.callbackButton({
 		label: "ВТ",
 		payload: {
-			command: `Рп вторник`,
+			type: "lessons",
+			date: getNextSelectDay("вторник").format("DD.MM.YYYY"),
 		},
 		color: Keyboard.SECONDARY_COLOR,
 	});
-	responseKeyboard.textButton({
+	responseKeyboard.callbackButton({
 		label: "СР",
 		payload: {
-			command: `Рп Среда`,
+			type: "lessons",
+			date: getNextSelectDay("среда").format("DD.MM.YYYY"),
 		},
 		color: Keyboard.SECONDARY_COLOR,
 	});
 	responseKeyboard.row();
-	responseKeyboard.textButton({
+	responseKeyboard.callbackButton({
 		label: "ЧТ",
 		payload: {
-			command: `Рп четверг`,
+			type: "lessons",
+			date: getNextSelectDay("четверг").format("DD.MM.YYYY"),
 		},
 		color: Keyboard.SECONDARY_COLOR,
 	});
-	responseKeyboard.textButton({
+	responseKeyboard.callbackButton({
 		label: "ПТ",
 		payload: {
-			command: `Рп пятница`,
+			type: "lessons",
+			date: getNextSelectDay("пятница").format("DD.MM.YYYY"),
 		},
 		color: Keyboard.SECONDARY_COLOR,
 	});
-	responseKeyboard.textButton({
+	responseKeyboard.callbackButton({
 		label: "СБ",
 		payload: {
-			command: `Рп суббота`,
+			type: "lessons",
+			date: getNextSelectDay("суббота").format("DD.MM.YYYY"),
 		},
 		color: Keyboard.SECONDARY_COLOR,
 	});
 	responseKeyboard.row();
-	responseKeyboard.textButton({
+	responseKeyboard.callbackButton({
 		label: "Вчера",
 		payload: {
-			command: `Рп вчера`,
+			type: "lessons",
+			date: moment().subtract(1, "day").format("DD.MM.YYYY"),
 		},
 		color: Keyboard.NEGATIVE_COLOR,
 	});
-	responseKeyboard.textButton({
+	responseKeyboard.callbackButton({
 		label: "Завтра",
 		payload: {
-			command: `Рп завтра`,
+			type: "lessons",
+			date: moment().add(1, "day").format("DD.MM.YYYY"),
 		},
 		color: Keyboard.POSITIVE_COLOR,
 	});
@@ -90,7 +121,7 @@ const getWeekLegend = (week: number): Week => {
 	}
 };
 
-new Command(
+new TextCommand(
 	/^(?:расписание|рп|какие пары)(?:\s(.+))?/i,
 	["Расписание", "Рп"],
 	async function LessonsCommand(message) {
@@ -285,10 +316,11 @@ new Command(
 			}
 
 			responseKeyboard.row();
-			responseKeyboard.textButton({
+			responseKeyboard.callbackButton({
 				label: "Замены",
 				payload: {
-					command: `замены на ${selectedDateString}`,
+					type: "replacements",
+					date: selectedDate.format("DD.MM.YYYY"),
 				},
 				color: Keyboard.PRIMARY_COLOR,
 			});

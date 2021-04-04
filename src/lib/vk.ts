@@ -1,5 +1,5 @@
-import { ModernMessageContext } from "./../typings/message";
-import { VK, Keyboard, IMessageContextSendOptions } from "vk-io";
+import { ModernEventContext, ModernMessageContext } from "./../typings/message";
+import { VK, Keyboard } from "vk-io";
 
 import InternalUtils from "./utils/classes/utils";
 import utils from "rus-anonym-utils";
@@ -39,26 +39,21 @@ vk.updates.on(
 		if (context.messagePayload) {
 			context.text = context.messagePayload.command;
 		}
-		if (
-			context.isOutbox ||
-			context.isGroup ||
-			!context.text ||
-			context.senderId !== 266982306
-		) {
+		if (context.isOutbox || context.isGroup || !context.text) {
 			return;
 		}
 		context.text = context.text
 			.replace(/(\[club188434642\|[@a-z_A-ZА-Яа-я0-9]+\])/gi, ``)
 			.replace(/(^\s*)|(\s*)$/g, "");
 
-		const command = InternalUtils.commands.find((command) =>
+		const command = InternalUtils.textCommand.find((command) =>
 			command.check(context.text as string),
 		);
 
 		if (!command) {
 			if (context.isDM) {
 				let possibleCommands = [];
-				for (let tempTemplate of InternalUtils.commandsTemplates) {
+				for (let tempTemplate of InternalUtils.textCommandsTemplates) {
 					possibleCommands.push({
 						template: tempTemplate,
 						diff: utils.string.levenshtein(context.text, tempTemplate, {
@@ -130,6 +125,45 @@ vk.updates.on(
 			await context.send({
 				sticker_id: utils.array.random([18464, 16588, 18466, 18484, 14088]),
 			});
+		}
+	},
+);
+
+vk.updates.on(
+	"message_event",
+	async function MessageEventHandler(event: ModernEventContext) {
+		if (!event.eventPayload || !event.eventPayload.type) {
+			return;
+		} else {
+			const command = InternalUtils.eventCommand.find(
+				(x) => x.event === event.eventPayload.type,
+			);
+
+			if (!command) {
+				return;
+			} else {
+				event.user = await new User(event.userId).init();
+				if (event.user.data.ban === true) {
+					return;
+				}
+				if (event.peerId > 2e9) {
+					event.chat = await new Chat(event.peerId - 2e9).init();
+				}
+				try {
+					await command.process(event);
+					await event.user.save();
+					if (event.chat) {
+						event.chat.save();
+					}
+					return;
+				} catch (err) {
+					console.log(err);
+					return await event.answer({
+						type: "show_snackbar",
+						text: "Ошиб очка",
+					});
+				}
+			}
 		}
 	},
 );

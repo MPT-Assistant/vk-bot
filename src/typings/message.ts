@@ -16,3 +16,9 @@ export interface ModernMessageContext extends MessageContext {
 	user: User;
 	chat?: Chat;
 }
+
+export interface ModernEventContext
+	extends MessageEventContext<ContextDefaultState> {
+	user: User;
+	chat?: Chat;
+}

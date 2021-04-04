@@ -1,6 +1,7 @@
 import InternalUtils from "./utils/classes/utils";
 import { Interval } from "simple-scheduler-task";
-import "../commands/loader";
+import "../commands/textCommands/loader";
+import "../commands/eventCommands/loader";
 import vk from "./vk";
 
 new Interval(async () => {
@@ -17,6 +18,8 @@ function connectDB_Handler() {
 		InternalUtils.Bot_DB.connection.readyState === 1
 	) {
 		InternalUtils.mpt.getLastDump();
-		vk.updates.startPolling().then(() => console.log("Polling started"));
+		vk.updates
+			.startPolling()
+			.then(() => console.log("Polling started at", new Date()));
 	}
 }

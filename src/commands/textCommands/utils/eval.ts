@@ -1,6 +1,6 @@
-import Command from "../../lib/utils/classes/command";
+import TextCommand from "../../../lib/utils/classes/textCommand";
 
-new Command(/zz(\s(.*))?$/i, [], async (message) => {
+new TextCommand(/zz(\s(.*))?$/i, [], async (message) => {
 	if (message.senderId !== 266982306) {
 		return;
 	}
