@@ -137,10 +137,7 @@ export default class MPT {
 					teacher: lesson.teacher[0],
 				});
 			} else {
-				if (
-					lesson.name[0] !== `-` &&
-					selectedDateWeekLegend === "Знаменатель"
-				) {
+				if (lesson.name[0] !== `-` && selectedDateWeekLegend === "Числитель") {
 					responseLessons.lessons.push({
 						num: lesson.num,
 						name: lesson.name[0],
@@ -148,7 +145,7 @@ export default class MPT {
 					});
 				} else if (
 					lesson.name[0] !== `-` &&
-					selectedDateWeekLegend === "Числитель"
+					selectedDateWeekLegend === "Знаменатель"
 				) {
 					responseLessons.lessons.push({
 						num: lesson.num,
