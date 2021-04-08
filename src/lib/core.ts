@@ -34,10 +34,10 @@ new Interval(async () => {
 Новая пара: ${replacement.newLessonName}
 Преподаватель на новой паре: ${replacement.newLessonTeacher}
 Добавлена на сайт: ${moment(replacement.addToSite).format(
-					"HH:mm:ss | DD:MM:SS",
+					"HH:mm:ss | DD.MM.YYYY",
 				)}
 Обнаружена ботом: ${moment(replacement.detected).format(
-					"HH:mm:ss | DD:MM:SS",
+					"HH:mm:ss | DD.MM.YYYY",
 				)}`,
 				keyboard: Keyboard.builder()
 					.inline()
