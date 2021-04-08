@@ -18,7 +18,8 @@ export default class Chat {
 			data = new InternalUtils.Bot_DB.models.chat({
 				id: this.id,
 				group: "",
-				inform: false,
+				reported_replacements: [],
+				inform: true,
 			});
 			InternalUtils.logger.sendLog(
 				`Зарегистрирован новый чат\nChat: #${this.id}`,

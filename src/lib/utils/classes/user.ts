@@ -24,7 +24,8 @@ export default class User {
 				nickname: user.first_name,
 				ban: false,
 				group: "",
-				inform: false,
+				inform: true,
+				reported_replacements: [],
 				reg_date: new Date(),
 			});
 			await data.save();
