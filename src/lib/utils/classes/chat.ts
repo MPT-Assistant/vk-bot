@@ -19,7 +19,7 @@ export default class Chat {
 				id: this.id,
 				group: "",
 				reported_replacements: [],
-				inform: false,
+				inform: true,
 			});
 			InternalUtils.logger.sendLog(
 				`Зарегистрирован новый чат\nChat: #${this.id}`,
