@@ -93,7 +93,7 @@ export default class MPT {
 
 	public parseLessons(
 		groupData: MPT_Group,
-		selectedDate = moment(),
+		selectedDate: moment.Moment,
 	): {
 		place: string;
 		lessons: {
@@ -161,19 +161,19 @@ export default class MPT {
 
 	public parseReplacements(
 		groupData: MPT_Group,
-		selectedDate = moment(),
+		selectedDate: moment.Moment,
 	): Replacement[] {
+		const formattedDate = selectedDate.format("DD.MM.YYYY");
 		return this.data.replacements.filter(
 			(replacement) =>
 				replacement.group.toLowerCase() === groupData.name.toLowerCase() &&
-				moment(replacement.date).format("DD.MM.YYYY") ===
-					selectedDate.format("DD.MM.YYYY"),
+				moment(replacement.date).format("DD.MM.YYYY") === formattedDate,
 		);
 	}
 
 	public parseSchedule(
 		groupData: MPT_Group,
-		selectedDate = moment(),
+		selectedDate: moment.Moment,
 	): {
 		replacementsCount: number;
 		week: Week;
@@ -227,12 +227,12 @@ export default class MPT {
 		}
 	}
 
-	public getWeekLegend(selectedDate = moment()): Week {
+	public getWeekLegend(selectedDate: moment.Moment): Week {
 		const currentWeek = moment().week();
-		if ((currentWeek & 2) === (selectedDate.week() & 2)) {
+		if (currentWeek % 2 === selectedDate.week() % 2) {
 			return this.data.week;
 		} else {
-			return this.isNumerator ? "Числитель" : "Знаменатель";
+			return this.isDenominator ? "Числитель" : "Знаменатель";
 		}
 	}
 
