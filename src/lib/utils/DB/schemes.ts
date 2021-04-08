@@ -48,6 +48,9 @@ const UserSchema = createSchema({
 	ban: Type.boolean({ required: true }),
 	group: Type.string({ required: true }),
 	inform: Type.boolean({ required: true }),
+	reported_replacements: Type.array({ required: true }).of(
+		Type.string({ required: true }),
+	),
 	reg_date: Type.date({ required: true }),
 });
 
@@ -55,6 +58,9 @@ const ChatSchema = createSchema({
 	id: Type.number({ required: true, unique: true }),
 	group: Type.string({ required: true }),
 	inform: Type.boolean({ required: true }),
+	reported_replacements: Type.array({ required: true }).of(
+		Type.string({ required: true }),
+	),
 });
 
 export {

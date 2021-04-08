@@ -18,6 +18,7 @@ export default class Chat {
 			data = new InternalUtils.Bot_DB.models.chat({
 				id: this.id,
 				group: "",
+				reported_replacements: [],
 				inform: false,
 			});
 			InternalUtils.logger.sendLog(
