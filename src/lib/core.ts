@@ -52,7 +52,7 @@ new Interval(async () => {
 						.textButton({
 							label: "Отключить рассылку",
 							payload: {
-								command: "Отключить рассылку",
+								command: "Изменения отключить",
 							},
 							color: Keyboard.NEGATIVE_COLOR,
 						}),
@@ -102,7 +102,7 @@ new Interval(async () => {
 						.textButton({
 							label: "Отключить рассылку",
 							payload: {
-								command: "Отключить рассылку",
+								command: "Изменения отключить",
 							},
 							color: Keyboard.NEGATIVE_COLOR,
 						}),
@@ -114,7 +114,7 @@ new Interval(async () => {
 			await chat.save();
 		});
 	}
-}, 5 * 60 * 1000);
+}, 1.5 * 60 * 1000);
 
 InternalUtils.API_DB.connection.once("open", connectDB_Handler);
 
