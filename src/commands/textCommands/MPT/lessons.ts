@@ -112,10 +112,14 @@ new TextCommand(
 		}
 
 		if (selectedDate.day() === 0) {
-			return await message.sendMessage(
-				`${selectedDate.format("DD.MM.YYYY")} воскресенье.`,
-				{ keyboard: responseKeyboard },
-			);
+			if (!message.args[1]) {
+				selectedDate.add(1, "day");
+			} else {
+				return await message.sendMessage(
+					`${selectedDate.format("DD.MM.YYYY")} воскресенье.`,
+					{ keyboard: responseKeyboard },
+				);
+			}
 		}
 
 		const parsedTimetable = InternalUtils.mpt.parseTimetable(selectedDate);

@@ -1,6 +1,6 @@
 import TextCommand from "../../../lib/utils/classes/textCommand";
 
-new TextCommand(/ник(?:\s(.*))?$/i, ["Ник"], async (message) => {
+new TextCommand(/^(?:ник)(?:\s(.*))?$/i, ["Ник"], async (message) => {
 	if (!message.args[1]) {
 		return;
 	}

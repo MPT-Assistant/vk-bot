@@ -144,7 +144,7 @@ export default class MPT {
 						teacher: lesson.teacher[0],
 					});
 				} else if (
-					lesson.name[0] !== `-` &&
+					lesson.name[1] !== `-` &&
 					selectedDateWeekLegend === "Знаменатель"
 				) {
 					responseLessons.lessons.push({

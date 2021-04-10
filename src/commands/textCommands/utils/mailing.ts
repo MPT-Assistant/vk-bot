@@ -1,8 +1,8 @@
 import TextCommand from "../../../lib/utils/classes/textCommand";
 
 new TextCommand(
-	/^(включить|отключить)(?:\sрассылку)$/i,
-	["Отключить рассылку", "Включить рассылку"],
+	/^(?:изменения)(?:\s(включить|отключить))$/i,
+	["Изменения включить", "Изменения отключить"],
 	async (message) => {
 		const isEnable = message.args[1].toLowerCase() === "включить";
 		if (message.chat) {
