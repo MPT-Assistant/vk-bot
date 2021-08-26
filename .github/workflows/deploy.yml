@@ -1,0 +1,56 @@
+name: Deploy to server
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retrieving modified files
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_SERVER_HOST }}
+          port: ${{ secrets.DEPLOY_SERVER_PORT }}
+          username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
+          key: ${{ secrets.DEPLOY_SERVER_KEY }}
+          script_stop: true
+          script: |
+            cd /root/Bots/vk-bot
+            git fetch --all
+            git checkout master
+            git reset --hard origin/master
+            git pull
+      - name: Build
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_SERVER_HOST }}
+          port: ${{ secrets.DEPLOY_SERVER_PORT }}
+          username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
+          key: ${{ secrets.DEPLOY_SERVER_KEY }}
+          script_stop: true
+          script: |
+            cd /root/Bots/vk-bot
+            rm -rf ./node_modules/
+            rm -rf ./dist/
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            npm install --legacy-peer-deps
+            npm run build
+      - name: Start
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_SERVER_HOST }}
+          port: ${{ secrets.DEPLOY_SERVER_PORT }}
+          username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
+          key: ${{ secrets.DEPLOY_SERVER_KEY }}
+          script_stop: true
+          script: |
+            cd /root/Bots/vk-bot
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            pm2 stop ./dist/main.js -s || true
+            pm2 start ./dist/main.js --name="VKBot" -s || true
+      - name: Final
+        run: echo "Succesfully deployed"
