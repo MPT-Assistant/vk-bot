@@ -1,6 +1,8 @@
 import DB from "./DB";
 import VK from "./VK";
 
+import "./commands/textCommandsLoader";
+
 (async function () {
 	await DB.api.connection.asPromise();
 	console.log("API DB connected");
