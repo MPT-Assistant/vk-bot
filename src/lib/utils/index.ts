@@ -5,8 +5,12 @@ import VK from "../VK";
 
 import TextCommand from "./TextCommand";
 
+import mpt from "./mpt";
+
 class Utils {
-	public textCommands: TextCommand[] = [];
+	public readonly textCommands: TextCommand[] = [];
+
+	public mpt = mpt;
 
 	public async getUserData(
 		id: number,
