@@ -44,4 +44,33 @@ const replacementSchema = createSchema(
 	{ versionKey: false },
 );
 
-export default { groupSchema, replacementSchema };
+const timetableScheme = createSchema(
+	{
+		num: Type.number({ required: true }),
+		type: Type.string({ required: true }),
+		start: {
+			hour: Type.number({ required: true }),
+			minute: Type.number({ required: true }),
+		},
+		end: {
+			hour: Type.number({ required: true }),
+			minute: Type.number({ required: true }),
+		},
+	},
+	{ _id: false },
+);
+
+const configScheme = createSchema(
+	{
+		currentWeek: Type.string({ required: true }),
+		timetable: Type.array({ required: true }).of(timetableScheme),
+	},
+	{ versionKey: false },
+);
+
+export default {
+	configScheme,
+	timetableScheme,
+	groupSchema,
+	replacementSchema,
+};

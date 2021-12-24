@@ -1,1 +1,5 @@
-console.log(`Hello, world!`);
+import DB from "./DB";
+
+(async function () {
+	//
+})();
