@@ -89,6 +89,7 @@ class BotDB extends DB {
 }
 
 export default {
+	config,
 	api: new ApiDB(),
 	bot: new BotDB(),
 };
