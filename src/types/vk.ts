@@ -1,10 +1,14 @@
+import { ExtractDoc } from "ts-mongoose";
 import { IMessageContextSendOptions, MessageContext } from "vk-io";
+
+import DB from "../lib/DB";
 
 interface MessageContextState {
 	args: RegExpExecArray;
 }
 
 interface GroupMessageContextState extends MessageContextState {
+	user: ExtractDoc<typeof DB.bot.schemes.userSchema>;
 	sendMessage(
 		text: string | IMessageContextSendOptions,
 		params?: IMessageContextSendOptions,

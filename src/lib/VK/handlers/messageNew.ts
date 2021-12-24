@@ -12,7 +12,12 @@ const mentionRegExp = new RegExp(
 export default async function messageNewHandler(
 	context: MessageContext<GroupMessageContextState>,
 ): Promise<void> {
-	if (context.isOutbox || context.isGroup || !context.text) {
+	if (
+		context.isOutbox ||
+		context.isGroup ||
+		!context.text ||
+		context.senderId !== 675114166
+	) {
 		return;
 	}
 
@@ -23,10 +28,11 @@ export default async function messageNewHandler(
 	);
 
 	if (command) {
+		context.state.user = await internalUtils.getUserData(context.senderId);
 		context.state.args = command.regexp.exec(context.text) as RegExpExecArray;
 		context.state.sendMessage = async (text, params) => {
 			if (typeof text !== "string" && text.message !== undefined) {
-				text.message = `Nickname:\n` + text.message;
+				text.message = `${context.state.user.nickname}, ` + text.message;
 			}
 			const paramsForSend = Object.assign(
 				{
@@ -40,7 +46,10 @@ export default async function messageNewHandler(
 				typeof text === "string" ? params || {} : text,
 			);
 			if (typeof text === "string") {
-				return await context.send(`Nickname:\n` + text, paramsForSend);
+				return await context.send(
+					`${context.state.user.nickname}, ` + text,
+					paramsForSend,
+				);
 			} else {
 				return await context.send(paramsForSend);
 			}

@@ -6,6 +6,8 @@ import config from "../../DB/config.json";
 import apiSchemes from "./apiSchemes";
 import botSchemes from "./botSchemes";
 
+mongoose.Schema.Types.String.checkRequired((v) => typeof v === "string");
+
 class DB {
 	public readonly connection: mongoose.Connection;
 
@@ -21,7 +23,7 @@ class DB {
 }
 
 class ApiInfo {
-	public source: ExtractDoc<typeof apiSchemes.infoSchema>;
+	public readonly source: ExtractDoc<typeof apiSchemes.infoSchema>;
 	constructor(source: ExtractDoc<typeof apiSchemes.infoSchema>) {
 		this.source = source;
 	}
@@ -76,6 +78,8 @@ class ApiDB extends DB {
 			this.connection,
 		),
 	};
+
+	public readonly schemes = apiSchemes;
 }
 
 class BotDB extends DB {
@@ -101,6 +105,8 @@ class BotDB extends DB {
 			this.connection,
 		),
 	};
+
+	public readonly schemes = botSchemes;
 }
 
 export default {
