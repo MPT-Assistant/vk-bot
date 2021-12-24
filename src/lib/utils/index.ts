@@ -32,6 +32,25 @@ class Utils {
 		}
 		return userData;
 	}
+
+	public async getChatData(
+		id: number,
+	): Promise<ExtractDoc<typeof DB.bot.schemes.chatSchema>> {
+		const chatData = await DB.bot.models.chat.findOne({
+			id,
+		});
+		if (!chatData) {
+			const newChatData = new DB.bot.models.user({
+				id,
+				group: "",
+				inform: false,
+				reportedReplacements: [],
+			});
+			await newChatData.save();
+			return newChatData;
+		}
+		return chatData;
+	}
 }
 
 export default new Utils();

@@ -9,6 +9,7 @@ interface MessageContextState {
 
 interface GroupMessageContextState extends MessageContextState {
 	user: ExtractDoc<typeof DB.bot.schemes.userSchema>;
+	chat?: ExtractDoc<typeof DB.bot.schemes.chatSchema>;
 	sendMessage(
 		text: string | IMessageContextSendOptions,
 		params?: IMessageContextSendOptions,
