@@ -11,20 +11,20 @@ class TextCommand {
 	) => Promise<unknown>;
 
 	constructor({
-		regexpOrString,
+		alias,
 		templates = [],
 		process,
 	}: {
-		regexpOrString: RegExp | string;
+		alias: RegExp | string;
 		templates?: string[];
 		process: (
 			message: MessageContext<GroupMessageContextState>,
 		) => Promise<unknown>;
 	}) {
-		if (typeof regexpOrString === "string") {
-			regexpOrString = new RegExp(`^(?:${regexpOrString})$`, "i");
+		if (typeof alias === "string") {
+			alias = new RegExp(`^(?:${alias})$`, "i");
 		}
-		this.regexp = regexpOrString;
+		this.regexp = alias;
 		this.templates = templates;
 		this.process = process;
 

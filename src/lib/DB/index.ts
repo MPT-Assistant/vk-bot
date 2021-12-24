@@ -20,8 +20,23 @@ class DB {
 	}
 }
 
+class ApiInfo {
+	public source: ExtractDoc<typeof apiSchemes.infoSchema>;
+	constructor(source: ExtractDoc<typeof apiSchemes.infoSchema>) {
+		this.source = source;
+	}
+
+	get isNumerator() {
+		return this.source.currentWeek === "Числитель";
+	}
+
+	get isDenominator() {
+		return this.source.currentWeek === "Знаменатель";
+	}
+}
+
 class ApiDB extends DB {
-	public info!: ExtractDoc<typeof apiSchemes.infoSchema>;
+	public info!: ApiInfo;
 
 	constructor() {
 		super({ dbName: "API" });
@@ -31,7 +46,7 @@ class ApiDB extends DB {
 	public async updateInfo(): Promise<void> {
 		const response = await this.models.info.findOne();
 		if (response) {
-			this.info = response;
+			this.info = new ApiInfo(response);
 		}
 	}
 

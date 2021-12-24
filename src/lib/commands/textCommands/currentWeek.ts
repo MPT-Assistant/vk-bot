@@ -3,8 +3,10 @@ import TextCommand from "../../utils/TextCommand";
 import DB from "../../DB";
 
 new TextCommand({
-	regexpOrString: "чз",
+	alias: "чз",
 	process: (context) => {
-		return context.state.sendMessage(`Сейчас ${DB.api.info.currentWeek}`);
+		return context.state.sendMessage(
+			`Сейчас ${DB.api.info.isNumerator ? "числитель" : "знаменатель"}`,
+		);
 	},
 });
