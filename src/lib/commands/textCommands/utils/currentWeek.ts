@@ -1,6 +1,6 @@
-import TextCommand from "../../utils/TextCommand";
+import TextCommand from "../../../utils/TextCommand";
 
-import DB from "../../DB";
+import DB from "../../../DB";
 
 new TextCommand({
 	alias: "чз",

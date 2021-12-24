@@ -1,4 +1,4 @@
-import TextCommand from "../../utils/TextCommand";
+import TextCommand from "../../../utils/TextCommand";
 
 new TextCommand({
 	alias: /^(?:помощь|help|start|команды)$/i,
