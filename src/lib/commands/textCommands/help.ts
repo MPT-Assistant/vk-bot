@@ -3,7 +3,7 @@ import TextCommand from "../../utils/TextCommand";
 new TextCommand({
 	alias: /^(?:помощь|help|start|команды)$/i,
 	process: (message) => {
-		return message.sendMessage(
+		return message.state.sendMessage(
 			`${
 				!message.isChat
 					? "Для использования полного функционала бота рекомендуется добавить его в беседу.\n"

@@ -61,5 +61,8 @@ export default async function messageNewHandler(
 		};
 		await command.process(context);
 		await context.state.user.save();
+		if (context.state.chat) {
+			await context.state.chat.save();
+		}
 	}
 }
