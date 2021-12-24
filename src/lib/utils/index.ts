@@ -40,7 +40,7 @@ class Utils {
 			id,
 		});
 		if (!chatData) {
-			const newChatData = new DB.bot.models.user({
+			const newChatData = new DB.bot.models.chat({
 				id,
 				group: "",
 				inform: false,

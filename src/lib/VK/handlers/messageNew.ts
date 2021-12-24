@@ -30,7 +30,9 @@ export default async function messageNewHandler(
 	if (command) {
 		context.state.user = await internalUtils.getUserData(context.senderId);
 		if (context.isChat) {
-			context.state.chat = await internalUtils.getChatData(context.senderId);
+			context.state.chat = await internalUtils.getChatData(
+				context.chatId as number,
+			);
 		}
 		context.state.args = command.regexp.exec(context.text) as RegExpExecArray;
 		context.state.sendMessage = async (text, params) => {
