@@ -1,11 +1,14 @@
 import { MessageContext } from "vk-io";
+import { GroupMessageContextState } from "../../types/vk";
 
 import utils from ".";
 
 class TextCommand {
 	public regexp: RegExp;
 	public templates: string[];
-	public process: (message: MessageContext) => Promise<unknown>;
+	public process: (
+		message: MessageContext<GroupMessageContextState>,
+	) => Promise<unknown>;
 
 	constructor({
 		regexpOrString,
@@ -14,7 +17,9 @@ class TextCommand {
 	}: {
 		regexpOrString: RegExp | string;
 		templates?: string[];
-		process: (message: MessageContext) => Promise<unknown>;
+		process: (
+			message: MessageContext<GroupMessageContextState>,
+		) => Promise<unknown>;
 	}) {
 		if (typeof regexpOrString === "string") {
 			regexpOrString = new RegExp(`^(?:${regexpOrString})$`, "i");

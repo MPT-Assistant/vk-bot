@@ -5,6 +5,6 @@ import DB from "../../DB";
 new TextCommand({
 	regexpOrString: "чз",
 	process: (context) => {
-		return context.send(`Сейчас ${DB.api.info.currentWeek}`);
+		return context.state.sendMessage(`Сейчас ${DB.api.info.currentWeek}`);
 	},
 });
