@@ -1,6 +1,6 @@
-import "./textCommands/currentWeek";
-import "./textCommands/profile";
+import "./textCommands/utils/currentWeek";
+import "./textCommands/utils/profile";
 import "./textCommands/utils/chat";
-import "./textCommands/nickname";
-import "./textCommands/help";
-import "./textCommands/mailing";
+import "./textCommands/utils/nickname";
+import "./textCommands/utils/help";
+import "./textCommands/utils/mailing";
