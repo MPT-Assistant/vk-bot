@@ -47,7 +47,7 @@ class ApiDB extends DB {
 
 class BotDB extends DB {
 	constructor() {
-		super({ dbName: "vk-bot" });
+		super({ dbName: "vk" });
 	}
 
 	public readonly models = {
