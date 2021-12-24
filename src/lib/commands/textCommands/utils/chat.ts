@@ -1,5 +1,5 @@
 import { Keyboard } from "vk-io";
-import TextCommand from "../../utils/TextCommand";
+import TextCommand from "../../../utils/TextCommand";
 
 new TextCommand({
 	alias: /^(?:чат)$/i,
