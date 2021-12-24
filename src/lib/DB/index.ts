@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ExtractDoc, ExtractProps, typedModel } from "ts-mongoose";
+import { ExtractDoc, typedModel } from "ts-mongoose";
 
 import config from "../../DB/config.json";
 
@@ -21,25 +21,25 @@ class DB {
 }
 
 class ApiDB extends DB {
-	public config!: ExtractDoc<typeof apiSchemes.configScheme>;
+	public info!: ExtractDoc<typeof apiSchemes.infoSchema>;
 
 	constructor() {
 		super({ dbName: "API" });
-		this.connection.once("open", () => this.updateConfig());
+		this.connection.once("open", () => this.updateInfo());
 	}
 
-	public async updateConfig(): Promise<void> {
-		const response = await this.models.config.findOne();
+	public async updateInfo(): Promise<void> {
+		const response = await this.models.info.findOne();
 		if (response) {
-			this.config = response;
+			this.info = response;
 		}
 	}
 
 	public readonly models = {
-		config: typedModel(
-			"config",
-			apiSchemes.configScheme,
-			"config",
+		info: typedModel(
+			"info",
+			apiSchemes.infoSchema,
+			"info",
 			undefined,
 			undefined,
 			this.connection,
