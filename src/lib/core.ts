@@ -1,9 +1,8 @@
-import moment from "moment";
-
 import DB from "./DB";
 import VK from "./VK";
 
 import "./commands/textCommandsLoader";
+import "./commands/eventCommandsLoader";
 
 (async function () {
 	await DB.api.connection.asPromise();
