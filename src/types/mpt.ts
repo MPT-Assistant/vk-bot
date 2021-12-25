@@ -1,5 +1,13 @@
 import { Moment, PreciseRangeValueObject } from "moment";
 
+type Week = "Числитель" | "Знаменатель";
+
+interface Lesson {
+	num: number;
+	name: string;
+	teacher: string;
+}
+
 interface ParsedTimetableElement {
 	status: "await" | "process" | "finished";
 	num: number;
@@ -10,4 +18,4 @@ interface ParsedTimetableElement {
 	diffEnd: PreciseRangeValueObject;
 }
 
-export { ParsedTimetableElement };
+export { ParsedTimetableElement, Week, Lesson };

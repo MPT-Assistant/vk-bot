@@ -3,7 +3,7 @@ import { KeyboardBuilder, Keyboard } from "vk-io";
 
 import DB from "../DB";
 
-import { ParsedTimetableElement } from "../../types/mpt";
+import { ParsedTimetableElement, Week, Lesson } from "../../types/mpt";
 
 class MPT {
 	public parseTimetable(date: moment.Moment): ParsedTimetableElement[] {
@@ -218,6 +218,98 @@ class MPT {
 		}
 
 		return builder;
+	}
+
+	public async getGroupSchedule(group: string, selectedDate: moment.Moment) {
+		const groupData = await DB.api.models.group.findOne({
+			name: group,
+		});
+
+		const replacements = await DB.api.models.replacement.find({
+			group,
+			date: {
+				$gte: selectedDate.startOf("day").toDate(),
+				$lte: selectedDate.endOf("day").toDate(),
+			},
+		});
+
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const schedule = groupData!.schedule.find(
+			(day) => day.num === selectedDate.day(),
+		)!;
+
+		const week = this.getWeekLegend(selectedDate);
+
+		const lessons: Lesson[] = [];
+
+		for (const lesson of schedule.lessons) {
+			if (lesson.name.length === 1) {
+				lessons.push({
+					num: lesson.num,
+					name: lesson.name[0],
+					teacher: lesson.teacher[0],
+				});
+			} else {
+				if (lesson.name[0] !== `-` && week === "Числитель") {
+					lessons.push({
+						num: lesson.num,
+						name: lesson.name[0],
+						teacher: lesson.teacher[0],
+					});
+				} else if (lesson.name[1] !== `-` && week === "Знаменатель") {
+					lessons.push({
+						num: lesson.num,
+						name: lesson.name[1] as string,
+						teacher: lesson.teacher[1] as string,
+					});
+				}
+			}
+		}
+
+		if (replacements.length !== 0) {
+			for (const replacement of replacements) {
+				const currentLesson = lessons.find(
+					(lesson) => lesson.num === replacement.lessonNum,
+				);
+
+				if (!currentLesson) {
+					lessons.push({
+						num: replacement.lessonNum,
+						name: replacement.newLessonName,
+						teacher: replacement.newLessonTeacher,
+					});
+				} else {
+					currentLesson.name = replacement.newLessonName;
+					currentLesson.teacher = replacement.newLessonTeacher;
+				}
+			}
+
+			lessons.sort((firstLesson, secondLesson) => {
+				if (firstLesson.num > secondLesson.num) {
+					return 1;
+				} else if (firstLesson.num < secondLesson.num) {
+					return -1;
+				} else {
+					return 0;
+				}
+			});
+		}
+
+		return {
+			week,
+			schedule,
+			replacements,
+			lessons,
+		};
+	}
+
+	public getWeekLegend(selectedDate: moment.Moment): Week {
+		const currentWeek = moment().week();
+		if (currentWeek % 2 === selectedDate.week() % 2) {
+			return DB.api.info.isDenominator ? "Знаменатель" : "Числитель";
+		} else {
+			return DB.api.info.isDenominator ? "Числитель" : "Знаменатель";
+		}
 	}
 }
 
