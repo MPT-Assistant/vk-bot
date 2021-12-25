@@ -7,12 +7,14 @@ import DB from "../../../DB";
 new TextCommand({
 	alias: /(?:regchat|привязать)(?:\s(.*))?$/i,
 	process: async (message) => {
-		if (message.isDM || !message.chat) {
-			return await message.sendMessage("команда доступна только в беседах.");
+		if (message.isDM || !message.state.chat) {
+			return await message.state.sendMessage(
+				"команда доступна только в беседах.",
+			);
 		}
 
-		if (!message.args[1]) {
-			return await message.sendMessage("укажите название группы");
+		if (!message.state.args[1]) {
+			return await message.state.sendMessage("укажите название группы");
 		}
 		const selectedGroup = await DB.api.models.group.findOne({
 			name: message.state.args[1],
@@ -59,13 +61,13 @@ new TextCommand({
 
 				responseText += `\n${i + 1}. ${diff[i].group}`;
 			}
-			return await message.sendMessage(
-				`группы ${message.args[1]} не найдено, попробуйте ещё раз.${responseText}`,
+			return await message.state.sendMessage(
+				`группы ${message.state.args[1]} не найдено, попробуйте ещё раз.${responseText}`,
 				{ keyboard: responseKeyboard },
 			);
 		} else {
-			message.chat.data.group = selectedGroup.name;
-			return await message.sendMessage(
+			message.state.chat.group = selectedGroup.name;
+			return await message.state.sendMessage(
 				`Вы установили для беседы группу по умолчанию ${selectedGroup.name}.\n(${selectedGroup.specialty})`,
 			);
 		}
