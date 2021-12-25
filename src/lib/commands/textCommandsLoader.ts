@@ -6,3 +6,4 @@ import "./textCommands/utils/help";
 import "./textCommands/utils/mailing";
 
 import "./textCommands/MPT/lessons";
+import "./textCommands/MPT/setGroup";
