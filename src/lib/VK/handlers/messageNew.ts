@@ -37,7 +37,9 @@ export default async function messageNewHandler(
 		context.state.args = command.regexp.exec(context.text) as RegExpExecArray;
 		context.state.sendMessage = async (text, params) => {
 			if (typeof text !== "string" && text.message !== undefined) {
-				text.message = `${context.state.user.nickname}, ` + text.message;
+				text.message =
+					`@id${context.senderId}  (${context.state.user.nickname}), ` +
+					text.message;
 			}
 			const paramsForSend = Object.assign(
 				{
@@ -52,7 +54,7 @@ export default async function messageNewHandler(
 			);
 			if (typeof text === "string") {
 				return await context.send(
-					`${context.state.user.nickname}, ` + text,
+					`@id${context.senderId} (${context.state.user.nickname}), ` + text,
 					paramsForSend,
 				);
 			} else {
