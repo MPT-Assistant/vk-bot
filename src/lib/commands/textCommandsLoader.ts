@@ -7,3 +7,4 @@ import "./textCommands/utils/mailing";
 
 import "./textCommands/MPT/lessons";
 import "./textCommands/MPT/setGroup";
+import "./textCommands/MPT/regChat";

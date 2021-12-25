@@ -5,10 +5,14 @@ import TextCommand from "../../../utils/TextCommand";
 import DB from "../../../DB";
 
 new TextCommand({
-	alias: /(?:установить группу|уг)(?:\s(.*))?$/i,
+	alias: /(?:regchat|привязать)(?:\s(.*))?$/i,
 	process: async (message) => {
-		if (!message.state.args[1]) {
-			return await message.state.sendMessage("укажите название группы");
+		if (message.isDM || !message.chat) {
+			return await message.sendMessage("команда доступна только в беседах.");
+		}
+
+		if (!message.args[1]) {
+			return await message.sendMessage("укажите название группы");
 		}
 		const selectedGroup = await DB.api.models.group.findOne({
 			name: message.state.args[1],
@@ -47,7 +51,7 @@ new TextCommand({
 					label: diff[i].group,
 					color: buttonColors[i],
 					payload: {
-						type: "setGroup",
+						type: "regChat",
 						group: diff[i].group,
 					},
 				});
@@ -55,14 +59,14 @@ new TextCommand({
 
 				responseText += `\n${i + 1}. ${diff[i].group}`;
 			}
-			return await message.state.sendMessage(
-				`группы ${message.state.args[1]} не найдено, попробуйте ещё раз.${responseText}`,
+			return await message.sendMessage(
+				`группы ${message.args[1]} не найдено, попробуйте ещё раз.${responseText}`,
 				{ keyboard: responseKeyboard },
 			);
 		} else {
-			message.state.user.group = selectedGroup.name;
-			return await message.state.sendMessage(
-				`Вы установили себе группу ${selectedGroup.name}.\n(${selectedGroup.specialty})`,
+			message.chat.data.group = selectedGroup.name;
+			return await message.sendMessage(
+				`Вы установили для беседы группу по умолчанию ${selectedGroup.name}.\n(${selectedGroup.specialty})`,
 			);
 		}
 	},
