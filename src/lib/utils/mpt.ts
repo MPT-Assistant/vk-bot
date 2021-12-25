@@ -4,6 +4,7 @@ import { KeyboardBuilder, Keyboard } from "vk-io";
 import DB from "../DB";
 
 import { ParsedTimetableElement, Week, Lesson } from "../../types/mpt";
+import { ExtractDoc } from "ts-mongoose";
 
 class MPT {
 	public parseTimetable(date: moment.Moment): ParsedTimetableElement[] {
@@ -220,13 +221,12 @@ class MPT {
 		return builder;
 	}
 
-	public async getGroupSchedule(group: string, selectedDate: moment.Moment) {
-		const groupData = await DB.api.models.group.findOne({
-			name: group,
-		});
-
+	public async getGroupSchedule(
+		group: ExtractDoc<typeof DB.api.schemes.groupSchema>,
+		selectedDate: moment.Moment,
+	) {
 		const replacements = await DB.api.models.replacement.find({
-			group,
+			group: group.name,
 			date: {
 				$gte: selectedDate.startOf("day").toDate(),
 				$lte: selectedDate.endOf("day").toDate(),
@@ -234,7 +234,7 @@ class MPT {
 		});
 
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const schedule = groupData!.schedule.find(
+		const schedule = group.schedule.find(
 			(day) => day.num === selectedDate.day(),
 		)!;
 
