@@ -1,30 +1,28 @@
-import { getRandomId, Keyboard } from "vk-io";
-import InternalUtils from "./utils/classes/utils";
-import { Interval } from "simple-scheduler-task";
-import "../commands/textCommands/loader";
-import "../commands/eventCommands/loader";
-import vk from "./vk";
+import DB from "./DB";
+import VK from "./VK";
+
+import "./commands/textCommandsLoader";
+import "./commands/eventCommandsLoader";
 import moment from "moment";
+import { getRandomId, Keyboard } from "vk-io";
 
-new Interval(async () => {
-	await InternalUtils.mpt.getLastDump();
-}, 30000);
+async function tempUpdate() {
+	DB.api.updateInfo();
 
-new Interval(async () => {
-	for (const replacement of InternalUtils.mpt.data.replacements) {
-		const usersNotInformed = await InternalUtils.Bot_DB.models.user.find({
+	for await (const replacement of DB.api.models.replacement.find({})) {
+		const usersNotInformed = await DB.bot.models.user.find({
 			group: replacement.group,
 			inform: true,
-			reported_replacements: {
+			reportedReplacements: {
 				$nin: [replacement.hash],
 			},
 		});
 		usersNotInformed.map(async (user) => {
-			user.reported_replacements.push(replacement.hash);
-			user.markModified("reported_replacements");
+			user.reportedReplacements.push(replacement.hash);
+			user.markModified("reportedReplacements");
 			const replacementDate = moment(replacement.date).format("DD.MM.YYYY");
 			try {
-				await vk.api.messages.send({
+				await VK.api.messages.send({
 					peer_id: user.id,
 					random_id: getRandomId(),
 					message: `Обнаружена новая замена на ${replacementDate}
@@ -62,19 +60,19 @@ new Interval(async () => {
 			}
 			await user.save();
 		});
-		const chatsNotInformed = await InternalUtils.Bot_DB.models.chat.find({
+		const chatsNotInformed = await DB.bot.models.chat.find({
 			group: replacement.group,
 			inform: true,
-			reported_replacements: {
+			reportedReplacements: {
 				$nin: [replacement.hash],
 			},
 		});
 		chatsNotInformed.map(async (chat) => {
-			chat.reported_replacements.push(replacement.hash);
-			chat.markModified("reported_replacements");
+			chat.reportedReplacements.push(replacement.hash);
+			chat.markModified("reportedReplacements");
 			const replacementDate = moment(replacement.date).format("DD.MM.YYYY");
 			try {
-				await vk.api.messages.send({
+				await VK.api.messages.send({
 					chat_id: chat.id,
 					random_id: getRandomId(),
 					message: `Обнаружена новая замена на ${replacementDate}
@@ -114,20 +112,17 @@ new Interval(async () => {
 			await chat.save();
 		});
 	}
-}, 1.5 * 60 * 1000);
-
-InternalUtils.API_DB.connection.once("open", connectDB_Handler);
-
-InternalUtils.Bot_DB.connection.once("open", connectDB_Handler);
-
-function connectDB_Handler() {
-	if (
-		InternalUtils.API_DB.connection.readyState === 1 &&
-		InternalUtils.Bot_DB.connection.readyState === 1
-	) {
-		InternalUtils.mpt.getLastDump();
-		vk.updates
-			.startPolling()
-			.then(() => console.log("Polling started at", new Date()));
-	}
 }
+
+(async function () {
+	await DB.api.connection.asPromise();
+	console.log("API DB connected");
+	await DB.bot.connection.asPromise();
+	console.log("Bot DB connected");
+	await VK.updates.start();
+	console.log("Polling started");
+
+	setInterval(tempUpdate, 5 * 60 * 1000);
+
+	tempUpdate();
+})();
