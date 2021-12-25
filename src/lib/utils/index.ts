@@ -4,12 +4,14 @@ import DB from "../DB";
 import VK from "../VK";
 
 import TextCommand from "./TextCommand";
+import EventCommand from "./EventCommand";
 
 import mpt from "./mpt";
 import commands from "./commands";
 
 class Utils {
 	public readonly textCommands: TextCommand[] = [];
+	public readonly eventCommands: EventCommand[] = [];
 
 	public readonly mpt = mpt;
 

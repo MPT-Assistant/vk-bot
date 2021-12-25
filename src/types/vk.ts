@@ -16,4 +16,9 @@ interface GroupMessageContextState extends MessageContextState {
 	): Promise<MessageContext<Record<string, unknown>>>;
 }
 
-export { GroupMessageContextState };
+interface GroupEventContextState {
+	user: ExtractDoc<typeof DB.bot.schemes.userSchema>;
+	chat?: ExtractDoc<typeof DB.bot.schemes.chatSchema>;
+}
+
+export { GroupMessageContextState, GroupEventContextState };
