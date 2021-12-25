@@ -17,7 +17,7 @@ new TextCommand({
 			return await message.state.sendMessage("укажите название группы");
 		}
 		const selectedGroup = await DB.api.models.group.findOne({
-			name: message.state.args[1],
+			name: new RegExp(`^${message.state.args[1]}$`, "i"),
 		});
 
 		if (!selectedGroup) {

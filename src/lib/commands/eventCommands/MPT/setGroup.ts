@@ -14,7 +14,7 @@ new EventCommand({
 				text: `Группы ${event.eventPayload.group} не найдено`,
 			});
 		} else {
-			event.user.data.group = selectedGroup.name;
+			event.state.user.group = selectedGroup.name;
 			return await event.answer({
 				type: "show_snackbar",
 				text: `Вы установили себе группу ${selectedGroup.name}.\n(${selectedGroup.specialty})`,

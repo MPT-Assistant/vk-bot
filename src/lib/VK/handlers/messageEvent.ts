@@ -32,6 +32,7 @@ export default async function messageEventHandler(
 			}
 			return;
 		} catch (err) {
+			console.log(err);
 			return await event.answer({
 				type: "show_snackbar",
 				text: "Ошиб очка",
