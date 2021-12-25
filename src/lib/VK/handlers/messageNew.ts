@@ -12,12 +12,7 @@ const mentionRegExp = new RegExp(
 export default async function messageNewHandler(
 	context: MessageContext<GroupMessageContextState>,
 ): Promise<void> {
-	if (
-		context.isOutbox ||
-		context.isGroup ||
-		!context.text ||
-		context.senderId !== 675114166
-	) {
+	if (context.isOutbox || context.isGroup || !context.text) {
 		return;
 	}
 
