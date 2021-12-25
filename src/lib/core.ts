@@ -2,7 +2,6 @@ import moment from "moment";
 
 import DB from "./DB";
 import VK from "./VK";
-import utils from "./utils";
 
 import "./commands/textCommandsLoader";
 
@@ -13,6 +12,4 @@ import "./commands/textCommandsLoader";
 	console.log("Bot DB connected");
 	await VK.updates.start();
 	console.log("Polling started");
-
-	console.log(await utils.mpt.getGroupSchedule("СА50-1-18", moment()));
 })();
