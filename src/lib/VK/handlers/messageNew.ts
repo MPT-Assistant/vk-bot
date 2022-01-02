@@ -23,38 +23,38 @@ export default async function messageNewHandler(
 	);
 
 	if (command) {
-		context.state.user = await internalUtils.getUserData(context.senderId);
-		if (context.isChat) {
-			context.state.chat = await internalUtils.getChatData(
-				context.chatId as number,
-			);
-		}
-		context.state.args = command.regexp.exec(context.text) as RegExpExecArray;
-		context.state.sendMessage = async (text, params) => {
-			if (typeof text !== "string" && text.message !== undefined) {
-				text.message =
-					`@id${context.senderId}  (${context.state.user.nickname}), ` +
-					text.message;
-			}
-			const paramsForSend = Object.assign(
-				{
-					disable_mentions: true,
-					forward: JSON.stringify({
-						peer_id: context.peerId,
-						conversation_message_ids: context.conversationMessageId,
-						is_reply: 1,
-					}),
-				},
-				typeof text === "string" ? params || {} : text,
-			);
-			if (typeof text === "string") {
-				return await context.send(
-					`@id${context.senderId} (${context.state.user.nickname}), ` + text,
-					paramsForSend,
+		context.state = {
+			args: command.regexp.exec(context.text) as RegExpExecArray,
+			user: await internalUtils.getUserData(context.senderId),
+			chat: context.isChat
+				? await internalUtils.getChatData(context.chatId as number)
+				: undefined,
+			sendMessage: async (text, params) => {
+				if (typeof text !== "string" && text.message !== undefined) {
+					text.message =
+						`@id${context.senderId}  (${context.state.user.nickname}), ` +
+						text.message;
+				}
+				const paramsForSend = Object.assign(
+					{
+						disable_mentions: true,
+						forward: JSON.stringify({
+							peer_id: context.peerId,
+							conversation_message_ids: context.conversationMessageId,
+							is_reply: 1,
+						}),
+					},
+					typeof text === "string" ? params || {} : text,
 				);
-			} else {
-				return await context.send(paramsForSend);
-			}
+				if (typeof text === "string") {
+					return await context.send(
+						`@id${context.senderId} (${context.state.user.nickname}), ` + text,
+						paramsForSend,
+					);
+				} else {
+					return await context.send(paramsForSend);
+				}
+			},
 		};
 		await command.process(context);
 		await context.state.user.save();
