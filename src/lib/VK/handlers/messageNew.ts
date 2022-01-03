@@ -18,7 +18,7 @@ export default async function messageNewHandler(
 
 	context.text = context.text.replace(mentionRegExp, ``);
 
-	if (context.hasMessagePayload && context.messagePayload.command) {
+	if (context.hasMessagePayload && context.messagePayload.cmd) {
 		context.text = context.messagePayload.cmd;
 	}
 
