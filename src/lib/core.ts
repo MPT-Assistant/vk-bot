@@ -36,7 +36,7 @@ async function tempUpdate() {
 			.textButton({
 				label: "Расписание",
 				payload: {
-					command: `Расписание ${replacementDate}`,
+					cmd: `Расписание ${replacementDate}`,
 				},
 				color: Keyboard.SECONDARY_COLOR,
 			})
@@ -44,7 +44,7 @@ async function tempUpdate() {
 			.textButton({
 				label: "Отключить рассылку",
 				payload: {
-					command: "Изменения отключить",
+					cmd: "Изменения отключить",
 				},
 				color: Keyboard.NEGATIVE_COLOR,
 			});

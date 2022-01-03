@@ -19,7 +19,7 @@ ID: ${context.senderId}
 				context.state.user.inform ? "Отключить" : "Включить"
 			} уведомления`,
 			payload: {
-				command: `изменения ${
+				cmd: `изменения ${
 					context.state.user.inform ? "отключить" : "включить"
 				}`,
 			},

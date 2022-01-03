@@ -13,7 +13,7 @@ new TextCommand({
 				message.state.chat.inform ? "Отключить" : "Включить"
 			} уведомления`,
 			payload: {
-				command: `изменения ${
+				cmd: `изменения ${
 					message.state.chat.inform ? "отключить" : "включить"
 				}`,
 			},

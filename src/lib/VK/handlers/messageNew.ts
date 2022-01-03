@@ -18,13 +18,17 @@ export default async function messageNewHandler(
 
 	context.text = context.text.replace(mentionRegExp, ``);
 
+	if (context.hasMessagePayload && context.messagePayload.command) {
+		context.text = context.messagePayload.cmd;
+	}
+
 	const command = internalUtils.textCommands.find((x) =>
 		x.check(context.text as string),
 	);
 
 	if (command) {
 		context.state = {
-			args: command.regexp.exec(context.text) as RegExpExecArray,
+			args: command.regexp.exec(context.text as string) as RegExpExecArray,
 			user: await internalUtils.getUserData(context.senderId),
 			chat: context.isChat
 				? await internalUtils.getChatData(context.chatId as number)

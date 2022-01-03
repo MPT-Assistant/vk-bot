@@ -95,21 +95,21 @@ class MPT {
 				label: "ПН",
 				color: "secondary",
 				payload: {
-					command: textCommand + " " + getNextSelectDay("понедельник"),
+					cmd: textCommand + " " + getNextSelectDay("понедельник"),
 				},
 			});
 			builder.textButton({
 				label: "ВТ",
 				color: "secondary",
 				payload: {
-					command: textCommand + " " + getNextSelectDay("вторник"),
+					cmd: textCommand + " " + getNextSelectDay("вторник"),
 				},
 			});
 			builder.textButton({
 				label: "СР",
 				color: "secondary",
 				payload: {
-					command: textCommand + " " + getNextSelectDay("среда"),
+					cmd: textCommand + " " + getNextSelectDay("среда"),
 				},
 			});
 			builder.row();
@@ -117,21 +117,21 @@ class MPT {
 				label: "ЧТ",
 				color: "secondary",
 				payload: {
-					command: textCommand + " " + getNextSelectDay("четверг"),
+					cmd: textCommand + " " + getNextSelectDay("четверг"),
 				},
 			});
 			builder.textButton({
 				label: "ПТ",
 				color: "secondary",
 				payload: {
-					command: textCommand + " " + getNextSelectDay("пятница"),
+					cmd: textCommand + " " + getNextSelectDay("пятница"),
 				},
 			});
 			builder.textButton({
 				label: "СБ",
 				color: "secondary",
 				payload: {
-					command: textCommand + " " + getNextSelectDay("суббота"),
+					cmd: textCommand + " " + getNextSelectDay("суббота"),
 				},
 			});
 			builder.row();
@@ -139,14 +139,14 @@ class MPT {
 				label: "Вчера",
 				color: "negative",
 				payload: {
-					command: textCommand + " вчера",
+					cmd: textCommand + " вчера",
 				},
 			});
 			builder.textButton({
 				label: "Завтра",
 				color: "positive",
 				payload: {
-					command: textCommand + " завтра",
+					cmd: textCommand + " завтра",
 				},
 			});
 		} else {
