@@ -61,5 +61,10 @@ export default async function messageNewHandler(
 		if (context.state.chat) {
 			await context.state.chat.save();
 		}
+	} else if (!context.isChat) {
+		await context.reply({
+			message: "Такой команды не существует\nСписок команд:",
+			attachment: `article-188434642_189203_12d88f37969ae1c641`,
+		});
 	}
 }
