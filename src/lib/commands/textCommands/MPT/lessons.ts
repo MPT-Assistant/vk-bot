@@ -100,6 +100,15 @@ new TextCommand({
 			selectedDate,
 		);
 
+		if (scheduleOnDay.lessons.length === 0) {
+			return await context.state.sendMessage(
+				`на ${selectedDate.format("DD.MM.YYYY")} пар у группы ${
+					groupData.name
+				} не найдено`,
+				{ keyboard: responseKeyboard },
+			);
+		}
+
 		if (scheduleOnDay.replacements.length !== 0) {
 			responseKeyboard.row();
 			responseKeyboard.callbackButton({
@@ -129,15 +138,6 @@ new TextCommand({
 
 		const selectedDayName = selectedDate.format("dddd").split("");
 		selectedDayName[0] = selectedDayName[0].toUpperCase();
-
-		if (scheduleOnDay.lessons.length === 0) {
-			return await context.state.sendMessage(
-				`на ${selectedDate.format("DD.MM.YYYY")} пар у группы ${
-					groupData.name
-				} не найдено`,
-				{ keyboard: responseKeyboard },
-			);
-		}
 
 		return await context.state.sendMessage(
 			`расписание на ${selectedDate.format("DD.MM.YYYY")}:
