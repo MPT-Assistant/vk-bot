@@ -53,6 +53,14 @@ class ApiDB extends DB {
 	}
 
 	public readonly models = {
+		specialty: typedModel(
+			"specialty",
+			apiSchemes.specialtySchema,
+			"specialties",
+			undefined,
+			undefined,
+			this.connection,
+		),
 		info: typedModel(
 			"info",
 			apiSchemes.infoSchema,

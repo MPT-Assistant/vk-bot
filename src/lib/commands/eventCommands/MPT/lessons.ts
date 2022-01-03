@@ -54,6 +54,13 @@ new EventCommand({
 			selectedDate,
 		);
 
+		if (parsedSchedule.lessons.length === 0) {
+			return await event.answer({
+				type: "show_snackbar",
+				text: `На ${selectedDate.format("DD.MM.YYYY")} пар не найдено.`,
+			});
+		}
+
 		let responseLessonsText = "";
 
 		for (const lesson of parsedSchedule.lessons) {
